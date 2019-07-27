@@ -9,71 +9,121 @@ class Charts extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dispatchData: []
+            dispatchData: [],
+            dispatchCallMonthRecord: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            counselData: [],
+            counselCallMonthRecord: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         }
-        this.getDispatchData = this.getDispatchData.bind(this);
+        this.createDispatchMonths = this.createDispatchMonths.bind(this);
+        this.createCounselMonths = this.createCounselMonths.bind(this);
     }
-    
     componentDidMount() {
         console.log("inside chart.js");
+
+        //FETCH DISPATCH DATA
         fetch('/api/get-cad-data')
             .then(results => results.json())
-            .then(json => this.getDispatchData(json));
+            .then(json => this.createDispatchMonths(json));
 
-        //DISPATCH CHART
-        const myDispatchChart = this.dispatchChart.current.getContext("2d");
-        
-        new Chart(myDispatchChart, {
-            type: "bar",
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                datasets: [
-                    {
-                        label: 'All Calls',
-                        backgroundColor: 'rgba(255,99,132,0.2)',
-                        borderColor: 'rgba(255,99,132,1)',
-                        borderWidth: 1,
-                        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-                        hoverBorderColor: 'rgba(255,99,132,1)',
-                        data: [65, 59, 80, 81, 56, 55, 40, 44, 32, 90, 72, 13, 3, 69]
-                    }
-                ]
-            },
-            options: {
-                //Customize chart options
-            }
-        });
+        //FETCH COUNSEL DATA
+        fetch('/api/get-cad-data')
+            .then(results => results.json())
+            .then(json => this.createCounselMonths(json));
 
-
-        //COUNSEL CHART
-        const myCounselChart = this.counselChart.current.getContext("2d");
-        
-        new Chart(myCounselChart, {
-            type: "bar",
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                datasets: [
-                    {
-                        label: 'All Calls',
-                        backgroundColor: 'rgba(255,99,132,0.2)',
-                        borderColor: 'rgba(255,99,132,1)',
-                        borderWidth: 1,
-                        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-                        hoverBorderColor: 'rgba(255,99,132,1)',
-                        data: [23, 78, 45, 86, 21, 44, 77, 120, 44, 66, 99, 35, 59, 42]
-                    }
-                ]
-            },
-            options: {
-                //Customize chart options
-            }
-        });
     }
 
-    getDispatchData(data) {
+    createDispatchMonths(data) {
         this.setState({ dispatchData: data });
-        console.log(this.state.dispatchData);
+
+        //increments call count for each month
+        for(var i = 0; i < this.state.dispatchData.length; i++) {
+            var date = new Date(this.state.dispatchData[i].IncDate);
+            var month = date.getMonth();
+
+            var count = this.state.dispatchCallMonthRecord[month];
+            count++;
+            var prevRecord = [...this.state.dispatchCallMonthRecord];
+                prevRecord[month] = count;
+                this.setState({dispatchCallMonthRecord: prevRecord});
+
+        }
+        this.createDispatchChart();
+       
+        console.log(this.state.dispatchCallMonthRecord);
+
     }
+
+    createCounselMonths(data) {
+        this.setState({ counselData: data });
+
+        //increments call count for each month
+        for(var i = 0; i < this.state.counselData.length; i++) {
+            var date = new Date(this.state.counselData[i].IncDate);
+            var month = date.getMonth();
+
+            var count = this.state.counselCallMonthRecord[month];
+            count++;
+            var prevRecord = [...this.state.counselCallMonthRecord];
+                prevRecord[month] = count;
+                this.setState({counselCallMonthRecord: prevRecord});
+        }
+        this.createCounselChart();
+       
+        console.log(this.state.counselCallMonthRecord);
+
+    }
+
+
+
+    createDispatchChart() {
+         const myDispatchChart = this.dispatchChart.current.getContext("2d");
+        
+         new Chart(myDispatchChart, {
+             type: "bar",
+             data: {
+                 labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                 datasets: [
+                     {
+                         label: 'All Calls',
+                         backgroundColor: 'rgba(97, 144, 255,0.5)',
+                         borderColor: 'rgba(97, 144, 255,1)',
+                         borderWidth: 2,
+                         hoverBackgroundColor: 'rgba(15, 87, 255,0.4)',
+                         hoverBorderColor: 'rgba(15, 87, 255,1)',
+                         data: this.state.dispatchCallMonthRecord
+                     }
+                 ]
+             },
+             options: {
+                 //Customize chart options
+             }
+         });
+    }
+
+    createCounselChart() {
+       const myCounselChart = this.counselChart.current.getContext("2d");
+        
+       new Chart(myCounselChart, {
+           type: "bar",
+           data: {
+               labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+               datasets: [
+                   {
+                       label: 'All Calls',
+                       backgroundColor: 'rgba(255,99,132,0.2)',
+                       borderColor: 'rgba(255,99,132,1)',
+                       borderWidth: 1,
+                       hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+                       hoverBorderColor: 'rgba(255,99,132,1)',
+                       data: this.state.counselCallMonthRecord
+                   }
+               ]
+           },
+           options: {
+               //Customize chart options
+           }
+       });
+   }
 
 
     render() {
