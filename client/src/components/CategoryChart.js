@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Chart from "chart.js";
-import "./Charts.css";
+import "./CategoryChart.css";
 
 class CategoryCharts extends Component {
     dispatchChart = React.createRef();
@@ -10,9 +10,17 @@ class CategoryCharts extends Component {
         super(props);
         this.state = {
             dispatchData: [],
-            dispatchCallMonthRecord: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            dispatchMonth1: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            dispatchMonth2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            dispatchMonth3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            dispatchMonth4: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            dispatchMonth5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             counselData: [],
-            counselCallMonthRecord: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            counselMonth1: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            counselMonth2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            counselMonth3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            counselMonth4: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            counselMonth5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         }
         this.createDispatchMonths = this.createDispatchMonths.bind(this);
         this.createCounselMonths = this.createCounselMonths.bind(this);
@@ -39,17 +47,51 @@ class CategoryCharts extends Component {
         for(var i = 0; i < this.state.dispatchData.length; i++) {
             var date = new Date(this.state.dispatchData[i].IncDate);
             var month = date.getMonth();
+            var type = this.state.dispatchData[i].IncType;
+            var recordType;
+            switch(type) {
+                case 514:
+                    var count = this.state.dispatchMonth1[month];
+                    count++;
+                    var prevRecord = [...this.state.dispatchMonth1];
+                        prevRecord[month] = count;
+                        this.setState({dispatchMonth1: prevRecord});
+                    break;
+                case 574:
+                    count = this.state.dispatchMonth2[month];
+                    count++;
+                    prevRecord = [...this.state.dispatchMonth2];
+                        prevRecord[month] = count;
+                        this.setState({dispatchMonth2: prevRecord});
+                    break;
+                case 505:
+                    count = this.state.dispatchMonth3[month];
+                    count++;
+                    prevRecord = [...this.state.dispatchMonth3];
+                        prevRecord[month] = count;
+                        this.setState({dispatchMonth3: prevRecord});
+                    break;
+                case 578:
+                    count = this.state.dispatchMonth4[month];
+                    count++;
+                    prevRecord = [...this.state.dispatchMonth4];
+                        prevRecord[month] = count;
+                        this.setState({dispatchMonth4: prevRecord});
+                    break;
+                default:
+                    count = this.state.dispatchMonth5[month];
+                    count++;
+                    prevRecord = [...this.state.dispatchMonth5];
+                        prevRecord[month] = count;
+                        this.setState({dispatchMonth5: prevRecord});
+                
+            }
 
-            var count = this.state.dispatchCallMonthRecord[month];
-            count++;
-            var prevRecord = [...this.state.dispatchCallMonthRecord];
-                prevRecord[month] = count;
-                this.setState({dispatchCallMonthRecord: prevRecord});
+            
 
         }
         this.createDispatchChart();
        
-        console.log(this.state.dispatchCallMonthRecord);
 
     }
 
@@ -60,16 +102,50 @@ class CategoryCharts extends Component {
         for(var i = 0; i < this.state.counselData.length; i++) {
             var date = new Date(this.state.counselData[i].IncDate);
             var month = date.getMonth();
+            var type = this.state.counselData[i].IncType;
+            var recordType;
+            switch(type) {
+                case 514:
+                    var count = this.state.counselMonth1[month];
+                    count++;
+                    var prevRecord = [...this.state.counselMonth1];
+                        prevRecord[month] = count;
+                        this.setState({counselMonth1: prevRecord});
+                    break;
+                case 574:
+                    count = this.state.counselMonth2[month];
+                    count++;
+                    prevRecord = [...this.state.counselMonth2];
+                        prevRecord[month] = count;
+                        this.setState({counselMonth2: prevRecord});
+                    break;
+                case 505:
+                    count = this.state.counselMonth3[month];
+                    count++;
+                    prevRecord = [...this.state.counselMonth3];
+                        prevRecord[month] = count;
+                        this.setState({counselMonth3: prevRecord});
+                    break;
+                case 578:
+                    count = this.state.counselMonth4[month];
+                    count++;
+                    prevRecord = [...this.state.counselMonth4];
+                        prevRecord[month] = count;
+                        this.setState({counselMonth4: prevRecord});
+                    break;
+                default:
+                    count = this.state.counselMonth5[month];
+                    count++;
+                    prevRecord = [...this.state.counselMonth5];
+                        prevRecord[month] = count;
+                        this.setState({counselMonth5: prevRecord});
+                
+            }
 
-            var count = this.state.counselCallMonthRecord[month];
-            count++;
-            var prevRecord = [...this.state.counselCallMonthRecord];
-                prevRecord[month] = count;
-                this.setState({counselCallMonthRecord: prevRecord});
+            
+
         }
         this.createCounselChart();
-       
-        console.log(this.state.counselCallMonthRecord);
 
     }
 
@@ -84,14 +160,50 @@ class CategoryCharts extends Component {
                  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                  datasets: [
                      {
-                         label: 'All Calls',
-                         backgroundColor: 'rgba(97, 144, 255,0.5)',
+                         label: 'Safety Escort-Transport',
+                         backgroundColor: 'rgba(97, 144, 255, 0.5)',
                          borderColor: 'rgba(97, 144, 255,1)',
                          borderWidth: 2,
                          hoverBackgroundColor: 'rgba(15, 87, 255,0.4)',
                          hoverBorderColor: 'rgba(15, 87, 255,1)',
-                         data: this.state.dispatchCallMonthRecord
-                     }
+                         data: this.state.dispatchMonth1
+                     },
+                     {
+                        label: 'Welfare Check',
+                        backgroundColor: 'rgba(255, 153, 51, 0.5)',
+                        borderColor: 'rgba(255, 153, 51, 1)',
+                        borderWidth: 2,
+                        hoverBackgroundColor: 'rgba(204, 102, 0, 0.4)',
+                        hoverBorderColor: 'rgba(204, 102, 0, 1)',
+                        data: this.state.dispatchMonth2
+                    },
+                    {
+                        label: 'Suicide or Attempt',
+                        backgroundColor: 'rgba(51, 255, 51, 0.5)',
+                        borderColor: 'rgba(51, 255, 51,1)',
+                        borderWidth: 2,
+                        hoverBackgroundColor: 'rgba(0, 170, 0,0.4)',
+                        hoverBorderColor: 'rgba(0, 170, 0,1)',
+                        data: this.state.dispatchMonth3
+                    },
+                    {
+                        label: 'Counseling Center Transfers',
+                        backgroundColor: 'rgba(255, 51, 51, 0.5)',
+                        borderColor: 'rgba(255, 51, 51,1)',
+                        borderWidth: 2,
+                        hoverBackgroundColor: 'rgba(204, 0, 0,0.4)',
+                        hoverBorderColor: 'rgba(204, 0, 0,1)',
+                        data: this.state.dispatchMonth4
+                    },
+                    {
+                        label: 'Other',
+                        backgroundColor: 'rgba(160, 160, 160, 0.5)',
+                        borderColor: 'rgba(160, 160, 160,1)',
+                        borderWidth: 2,
+                        hoverBackgroundColor: 'rgba(64, 64, 64,0.4)',
+                        hoverBorderColor: 'rgba(64, 64, 64,1)',
+                        data: this.state.dispatchMonth5
+                    }
                  ]
              },
              options: {
@@ -108,16 +220,52 @@ class CategoryCharts extends Component {
            data: {
                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                datasets: [
-                   {
-                       label: 'All Calls',
-                       backgroundColor: 'rgba(255,99,132,0.2)',
-                       borderColor: 'rgba(255,99,132,1)',
-                       borderWidth: 1,
-                       hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-                       hoverBorderColor: 'rgba(255,99,132,1)',
-                       data: this.state.counselCallMonthRecord
-                   }
-               ]
+                {
+                    label: 'Category 1',
+                    backgroundColor: 'rgba(97, 144, 255, 0.5)',
+                    borderColor: 'rgba(97, 144, 255,1)',
+                    borderWidth: 2,
+                    hoverBackgroundColor: 'rgba(15, 87, 255,0.4)',
+                    hoverBorderColor: 'rgba(15, 87, 255,1)',
+                    data: this.state.counselMonth1
+                },
+                {
+                   label: 'Category 2',
+                   backgroundColor: 'rgba(255, 153, 51, 0.5)',
+                   borderColor: 'rgba(255, 153, 51, 1)',
+                   borderWidth: 2,
+                   hoverBackgroundColor: 'rgba(204, 102, 0, 0.4)',
+                   hoverBorderColor: 'rgba(204, 102, 0, 1)',
+                   data: this.state.counselMonth2
+               },
+               {
+                   label: 'Category 3',
+                   backgroundColor: 'rgba(51, 255, 51, 0.5)',
+                   borderColor: 'rgba(51, 255, 51,1)',
+                   borderWidth: 2,
+                   hoverBackgroundColor: 'rgba(0, 170, 0,0.4)',
+                   hoverBorderColor: 'rgba(0, 170, 0,1)',
+                   data: this.state.counselMonth3
+               },
+               {
+                   label: 'Category 4',
+                   backgroundColor: 'rgba(255, 51, 51, 0.5)',
+                   borderColor: 'rgba(255, 51, 51,1)',
+                   borderWidth: 2,
+                   hoverBackgroundColor: 'rgba(204, 0, 0,0.4)',
+                   hoverBorderColor: 'rgba(204, 0, 0,1)',
+                   data: this.state.counselMonth4
+               },
+               {
+                   label: 'Other',
+                   backgroundColor: 'rgba(160, 160, 160, 0.5)',
+                   borderColor: 'rgba(160, 160, 160,1)',
+                   borderWidth: 2,
+                   hoverBackgroundColor: 'rgba(64, 64, 64,0.4)',
+                   hoverBorderColor: 'rgba(64, 64, 64,1)',
+                   data: this.state.counselMonth5
+               }
+            ]
            },
            options: {
                //Customize chart options
@@ -130,7 +278,7 @@ class CategoryCharts extends Component {
         return (
             <div>
                 <div className="row">
-                    <div className=" col-lg-6">
+                    <div className=" col-12">
                         <div className="card dispatchCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
                                 <h5 className="card-title">Dispatch</h5>
@@ -141,7 +289,7 @@ class CategoryCharts extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className=" col-lg-6">
+                    <div className=" col-12">
                         <div className="card counselCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
                                 <h5 className="card-title">Counsel</h5>
