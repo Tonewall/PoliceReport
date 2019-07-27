@@ -5,6 +5,8 @@ import "./CategoryChart.css";
 class CategoryCharts extends Component {
     dispatchChart = React.createRef();
     counselChart = React.createRef();
+    dispatchDoughnut = React.createRef();
+    counselDoughnut = React.createRef();
 
     constructor(props) {
         super(props);
@@ -15,19 +17,19 @@ class CategoryCharts extends Component {
             dispatchMonth3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             dispatchMonth4: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             dispatchMonth5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            dispatchCategory: [0, 0, 0, 0, 0],
             counselData: [],
             counselMonth1: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             counselMonth2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             counselMonth3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             counselMonth4: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             counselMonth5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            counselCategory: [0, 0, 0, 0, 0]
         }
         this.createDispatchMonths = this.createDispatchMonths.bind(this);
         this.createCounselMonths = this.createCounselMonths.bind(this);
     }
     componentDidMount() {
-        console.log("inside chart.js");
-
         //FETCH DISPATCH DATA
         fetch('/api/get-cad-data')
             .then(results => results.json())
@@ -48,7 +50,6 @@ class CategoryCharts extends Component {
             var date = new Date(this.state.dispatchData[i].IncDate);
             var month = date.getMonth();
             var type = this.state.dispatchData[i].IncType;
-            var recordType;
             switch(type) {
                 case 514:
                     var count = this.state.dispatchMonth1[month];
@@ -56,43 +57,83 @@ class CategoryCharts extends Component {
                     var prevRecord = [...this.state.dispatchMonth1];
                         prevRecord[month] = count;
                         this.setState({dispatchMonth1: prevRecord});
+
+                    //Increment Category for Doughnut Graph
+                    count = this.state.dispatchCategory[0];
+                    count++;
+                    prevRecord = [...this.state.dispatchCategory];
+                        prevRecord[0] = count;
+                        this.setState({dispatchCategory: prevRecord});
                     break;
+
+
                 case 574:
                     count = this.state.dispatchMonth2[month];
                     count++;
                     prevRecord = [...this.state.dispatchMonth2];
                         prevRecord[month] = count;
                         this.setState({dispatchMonth2: prevRecord});
+
+                    //Increment Category for Doughnut Graph
+                    count = this.state.dispatchCategory[1];
+                    count++;
+                    prevRecord = [...this.state.dispatchCategory];
+                        prevRecord[1] = count;
+                        this.setState({dispatchCategory: prevRecord});
                     break;
+
+
                 case 505:
                     count = this.state.dispatchMonth3[month];
                     count++;
                     prevRecord = [...this.state.dispatchMonth3];
                         prevRecord[month] = count;
                         this.setState({dispatchMonth3: prevRecord});
+
+                    //Increment Category for Doughnut Graph
+                    count = this.state.dispatchCategory[2];
+                    count++;
+                    prevRecord = [...this.state.dispatchCategory];
+                        prevRecord[2] = count;
+                        this.setState({dispatchCategory: prevRecord});
                     break;
+
+
                 case 578:
                     count = this.state.dispatchMonth4[month];
                     count++;
                     prevRecord = [...this.state.dispatchMonth4];
                         prevRecord[month] = count;
                         this.setState({dispatchMonth4: prevRecord});
+
+                    //Increment Category for Doughnut Graph
+                    count = this.state.dispatchCategory[3];
+                    count++;
+                    prevRecord = [...this.state.dispatchCategory];
+                        prevRecord[3] = count;
+                        this.setState({dispatchCategory: prevRecord});
                     break;
+
+
                 default:
                     count = this.state.dispatchMonth5[month];
                     count++;
                     prevRecord = [...this.state.dispatchMonth5];
                         prevRecord[month] = count;
                         this.setState({dispatchMonth5: prevRecord});
+
+                    //Increment Category for Doughnut Graph
+                    count = this.state.dispatchCategory[4];
+                    count++;
+                    prevRecord = [...this.state.dispatchCategory];
+                        prevRecord[4] = count;
+                        this.setState({dispatchCategory: prevRecord});
+                    break;
                 
             }
-
-            
-
         }
         this.createDispatchChart();
-       
-
+        this.createDispatchDougnut();
     }
 
     createCounselMonths(data) {
@@ -103,7 +144,6 @@ class CategoryCharts extends Component {
             var date = new Date(this.state.counselData[i].IncDate);
             var month = date.getMonth();
             var type = this.state.counselData[i].IncType;
-            var recordType;
             switch(type) {
                 case 514:
                     var count = this.state.counselMonth1[month];
@@ -111,45 +151,78 @@ class CategoryCharts extends Component {
                     var prevRecord = [...this.state.counselMonth1];
                         prevRecord[month] = count;
                         this.setState({counselMonth1: prevRecord});
+
+                    //Increment Category for Doughnut Graph
+                    count = this.state.counselCategory[0];
+                    count++;
+                    prevRecord = [...this.state.counselCategory];
+                        prevRecord[0] = count;
+                        this.setState({counselCategory: prevRecord});
                     break;
+
                 case 574:
                     count = this.state.counselMonth2[month];
                     count++;
                     prevRecord = [...this.state.counselMonth2];
                         prevRecord[month] = count;
                         this.setState({counselMonth2: prevRecord});
+
+                    //Increment Category for Doughnut Graph
+                    count = this.state.counselCategory[1];
+                    count++;
+                    prevRecord = [...this.state.counselCategory];
+                        prevRecord[1] = count;
+                        this.setState({counselCategory: prevRecord});
                     break;
+
                 case 505:
                     count = this.state.counselMonth3[month];
                     count++;
                     prevRecord = [...this.state.counselMonth3];
                         prevRecord[month] = count;
                         this.setState({counselMonth3: prevRecord});
+
+                    //Increment Category for Doughnut Graph
+                    count = this.state.counselCategory[2];
+                    count++;
+                    prevRecord = [...this.state.counselCategory];
+                        prevRecord[2] = count;
+                        this.setState({counselCategory: prevRecord});
                     break;
+
                 case 578:
                     count = this.state.counselMonth4[month];
                     count++;
                     prevRecord = [...this.state.counselMonth4];
                         prevRecord[month] = count;
                         this.setState({counselMonth4: prevRecord});
+
+                    //Increment Category for Doughnut Graph
+                    count = this.state.counselCategory[3];
+                    count++;
+                    prevRecord = [...this.state.counselCategory];
+                        prevRecord[3] = count;
+                        this.setState({counselCategory: prevRecord});
                     break;
+
                 default:
                     count = this.state.counselMonth5[month];
                     count++;
                     prevRecord = [...this.state.counselMonth5];
                         prevRecord[month] = count;
                         this.setState({counselMonth5: prevRecord});
-                
+
+                    //Increment Category for Doughnut Graph
+                    count = this.state.counselCategory[4];
+                    count++;
+                    prevRecord = [...this.state.counselCategory];
+                        prevRecord[4] = count;
+                        this.setState({counselCategory: prevRecord});
             }
-
-            
-
-        }
+      }
         this.createCounselChart();
-
+        this.createCounselDougnut();
     }
-
-
 
     createDispatchChart() {
          const myDispatchChart = this.dispatchChart.current.getContext("2d");
@@ -205,9 +278,6 @@ class CategoryCharts extends Component {
                         data: this.state.dispatchMonth5
                     }
                  ]
-             },
-             options: {
-                 //Customize chart options
              }
          });
     }
@@ -266,19 +336,88 @@ class CategoryCharts extends Component {
                    data: this.state.counselMonth5
                }
             ]
-           },
-           options: {
-               //Customize chart options
            }
        });
    }
+
+   createDispatchDougnut() {
+    const myDispatchDoughnut = this.dispatchDoughnut.current.getContext("2d");
+     
+        new Chart(myDispatchDoughnut, {
+            type: "doughnut",
+            data: {
+                datasets: [{
+                    data: this.state.dispatchCategory,
+                    backgroundColor: [
+                        "rgba(15, 87, 255, 0.5)",
+                        "rgba(204, 102, 0, 0.5)",
+                        "rgba(0, 170, 01, 0.5)",
+                        "rgba(204, 0, 0, 0.5)",
+                        "rgba(64, 64, 64, 0.5)"
+                      ],
+                      borderColor: [
+                        "#rgba(15, 87, 255, 1)",
+                        "rgba(204, 102, 0, 1)",
+                        "rgba(0, 170, 0, 1)",
+                        "rgba(204, 0, 0, 1)",
+                        "rgba(64, 64, 64, 1)"
+                      ],
+                      borderWidth: [1, 1, 1, 1, 1]
+                }],
+                labels: [
+                    'Safety Escort-Transport',
+                    'Welfare Check',
+                    'Suicide of Attempt',
+                    'Counseling Center Transfers',
+                    'Other',
+                ],
+                
+            }
+        });
+    }
+
+   createCounselDougnut() {
+    const myCounselDoughnut = this.counselDoughnut.current.getContext("2d");
+     
+        new Chart(myCounselDoughnut, {
+            type: "doughnut",
+            data: {
+                datasets: [{
+                    data: this.state.counselCategory,
+                    backgroundColor: [
+                        "rgba(15, 87, 255, 0.5)",
+                        "rgba(204, 102, 0, 0.5)",
+                        "rgba(0, 170, 01, 0.5)",
+                        "rgba(204, 0, 0, 0.5)",
+                        "rgba(64, 64, 64, 0.5)"
+                      ],
+                      borderColor: [
+                        "#rgba(15, 87, 255, 1)",
+                        "rgba(204, 102, 0, 1)",
+                        "rgba(0, 170, 0, 1)",
+                        "rgba(204, 0, 0, 1)",
+                        "rgba(64, 64, 64, 1)"
+                      ],
+                      borderWidth: [1, 1, 1, 1, 1]
+                }],
+                labels: [
+                    'Category 1',
+                    'Category 2',
+                    'Category 3',
+                    'Category 4',
+                    'Other',
+                ],
+                
+            }
+        });
+    }
 
 
     render() {
         return (
             <div>
                 <div className="row">
-                    <div className=" col-12">
+                    <div className=" col-8">
                         <div className="card dispatchCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
                                 <h5 className="card-title">Dispatch</h5>
@@ -289,13 +428,38 @@ class CategoryCharts extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className=" col-12">
+                    <div className=" col-4">
+                        <div className="card dispatchCategory shadow p-3 mb-5 bg-white rounded">
+                            <div className="card-body">
+                                <h5 className="card-title">Dispatch Categories</h5>
+                                <canvas
+                                    id="myChart"
+                                    ref={this.dispatchDoughnut}
+                                />
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className=" col-8">
                         <div className="card counselCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
                                 <h5 className="card-title">Counsel</h5>
                                 <canvas
                                     id="myChart"
                                     ref={this.counselChart}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className=" col-4">
+                        <div className="card counselCategory shadow p-3 mb-5 bg-white rounded">
+                            <div className="card-body">
+                                <h5 className="card-title">Counsel Categories</h5>
+                                <canvas
+                                    id="myChart"
+                                    ref={this.counselDoughnut}
                                 />
                             </div>
                         </div>

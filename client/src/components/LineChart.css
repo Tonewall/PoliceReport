@@ -1,7 +1,6 @@
+
 .dispatchCard, .counselCard {
     width: 80%;
     margin: auto;
-}
-.dispatchCategory, .counselCategory {
-    margin-right: 20px;
+    margin-top: 8%;
 }

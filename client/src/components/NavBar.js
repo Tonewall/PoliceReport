@@ -11,10 +11,13 @@ export default class NavBar extends Component {
             <div className="navBarLinks">
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item">
-                    <a className="nav-link" href="/">Regular Chart</a>
+                        <a className="nav-link" href="/">Regular Chart</a>
                     </li>
                     <li className="nav-item">
-                    <a className="nav-link" href="/CategoryChart">Category Chart</a>
+                        <a className="nav-link" href="/CategoryChart">Category Chart</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link" href="/LineChart">Line Chart</a>
                     </li>
                 </ul>
             </div>

@@ -18,8 +18,6 @@ class Charts extends Component {
         this.createCounselMonths = this.createCounselMonths.bind(this);
     }
     componentDidMount() {
-        console.log("inside chart.js");
-
         //FETCH DISPATCH DATA
         fetch('/api/get-cad-data')
             .then(results => results.json())
@@ -48,9 +46,6 @@ class Charts extends Component {
 
         }
         this.createDispatchChart();
-       
-        console.log(this.state.dispatchCallMonthRecord);
-
     }
 
     createCounselMonths(data) {
@@ -68,9 +63,6 @@ class Charts extends Component {
                 this.setState({counselCallMonthRecord: prevRecord});
         }
         this.createCounselChart();
-       
-        console.log(this.state.counselCallMonthRecord);
-
     }
 
 
@@ -93,9 +85,6 @@ class Charts extends Component {
                          data: this.state.dispatchCallMonthRecord
                      }
                  ]
-             },
-             options: {
-                 //Customize chart options
              }
          });
     }
@@ -118,9 +107,6 @@ class Charts extends Component {
                        data: this.state.counselCallMonthRecord
                    }
                ]
-           },
-           options: {
-               //Customize chart options
            }
        });
    }
