@@ -5,12 +5,20 @@ import "./Charts.css";
 class Charts extends Component {
     dispatchChart = React.createRef();
     counselChart = React.createRef();
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            dispatchData: []
+        }
+        this.getDispatchData = this.getDispatchData.bind(this);
+    }
     
     componentDidMount() {
         console.log("inside chart.js");
         fetch('/api/get-cad-data')
-            .then(results => results.text())
-            .then(text => console.log(text));
+            .then(results => results.json())
+            .then(json => this.getDispatchData(json));
 
         //DISPATCH CHART
         const myDispatchChart = this.dispatchChart.current.getContext("2d");
@@ -62,6 +70,11 @@ class Charts extends Component {
         });
     }
 
+    getDispatchData(data) {
+        this.setState({ dispatchData: data });
+        console.log(this.state.dispatchData);
+    }
+
 
     render() {
         return (
@@ -70,7 +83,7 @@ class Charts extends Component {
                     <div className=" col-lg-6">
                         <div className="card dispatchCard">
                             <div className="card-body">
-                                <h5 class="card-title">Dispatch</h5>
+                                <h5 className="card-title">Dispatch</h5>
                                 <canvas
                                     id="myChart"
                                     ref={this.dispatchChart}
@@ -81,7 +94,7 @@ class Charts extends Component {
                     <div className=" col-lg-6">
                         <div className="card counselCard">
                             <div className="card-body">
-                                <h5 class="card-title">Counsel</h5>
+                                <h5 className="card-title">Counsel</h5>
                                 <canvas
                                     id="myChart"
                                     ref={this.counselChart}

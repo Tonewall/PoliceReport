@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
             }
             else{
                 console.log("inside cad router");
-                res.send(recordset);
+                res.send(recordset.recordsets[0]);
             }
         });
     });
