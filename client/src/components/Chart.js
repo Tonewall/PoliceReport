@@ -131,7 +131,7 @@ class Charts extends Component {
             <div>
                 <div className="row">
                     <div className=" col-lg-6">
-                        <div className="card dispatchCard">
+                        <div className="card dispatchCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
                                 <h5 className="card-title">Dispatch</h5>
                                 <canvas
@@ -142,7 +142,7 @@ class Charts extends Component {
                         </div>
                     </div>
                     <div className=" col-lg-6">
-                        <div className="card counselCard">
+                        <div className="card counselCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
                                 <h5 className="card-title">Counsel</h5>
                                 <canvas
