@@ -8,6 +8,11 @@
   pointer-events: none;
 }
 
+.mainBody {
+  background: rgba(124, 240, 255, 0.473);
+  height: 100%;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

@@ -417,10 +417,10 @@ class CategoryCharts extends Component {
         return (
             <div>
                 <div className="row">
-                    <div className=" col-8">
+                    <div className=" col-lg-8">
                         <div className="card dispatchCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
-                                <h5 className="card-title">Dispatch</h5>
+                                <h5 className="card-title">CAD</h5>
                                 <canvas
                                     id="myChart"
                                     ref={this.dispatchChart}
@@ -428,10 +428,10 @@ class CategoryCharts extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className=" col-4">
+                    <div className=" col-lg-4">
                         <div className="card dispatchCategory shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
-                                <h5 className="card-title">Dispatch Categories</h5>
+                                <h5 className="card-title">CAD Categories</h5>
                                 <canvas
                                     id="myChart"
                                     ref={this.dispatchDoughnut}
@@ -442,10 +442,10 @@ class CategoryCharts extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className=" col-8">
+                    <div className=" col-lg-8">
                         <div className="card counselCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
-                                <h5 className="card-title">Counsel</h5>
+                                <h5 className="card-title">Counseling Center</h5>
                                 <canvas
                                     id="myChart"
                                     ref={this.counselChart}
@@ -453,10 +453,10 @@ class CategoryCharts extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className=" col-4">
+                    <div className=" col-lg-4">
                         <div className="card counselCategory shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
-                                <h5 className="card-title">Counsel Categories</h5>
+                                <h5 className="card-title">Counseling Center Categories</h5>
                                 <canvas
                                     id="myChart"
                                     ref={this.counselDoughnut}

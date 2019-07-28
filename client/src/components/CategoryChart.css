@@ -3,5 +3,6 @@
     margin: auto;
 }
 .dispatchCategory, .counselCategory {
-    margin-right: 20px;
+    margin-right: 10%;
+    margin-left: -10%;
 }

@@ -114,12 +114,12 @@ class Charts extends Component {
 
     render() {
         return (
-            <div>
+            <div className="regularChartMain">
                 <div className="row">
                     <div className=" col-lg-6">
                         <div className="card dispatchCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
-                                <h5 className="card-title">Dispatch</h5>
+                                <h5 className="card-title">CAD</h5>
                                 <canvas
                                     id="myChart"
                                     ref={this.dispatchChart}
@@ -130,7 +130,7 @@ class Charts extends Component {
                     <div className=" col-lg-6">
                         <div className="card counselCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
-                                <h5 className="card-title">Counsel</h5>
+                                <h5 className="card-title">Counseling Center</h5>
                                 <canvas
                                     id="myChart"
                                     ref={this.counselChart}
