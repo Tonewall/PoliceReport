@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import DataView from './components/Data';
 import NavBar from './components/NavBar';
+import FullReport from './components/FullReport';
 import 'bootstrap/dist/css/bootstrap.css';
 
 class App extends Component {
@@ -13,6 +14,7 @@ class App extends Component {
                     <div>
                         <NavBar />
                         <Route exact path="/" component={DataView} />
+                        <Route exact path="/full-report" component={FullReport} />
                     </div>
                 </Router>
             </div>
