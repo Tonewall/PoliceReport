@@ -1,4 +1,6 @@
-
+.main {
+    height: 100vh;
+}
 .dispatchCard, .counselCard {
     width: 80%;
     margin: auto;

@@ -1,10 +1,8 @@
 import React, { Component }  from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import ChartView from './components/Chart';
+import DataView from './components/Data';
 import NavBar from './components/NavBar';
-import CategoryChart from './components/CategoryChart';
-import LineChart from './components/LineChart';
 import 'bootstrap/dist/css/bootstrap.css';
 
 class App extends Component {
@@ -14,9 +12,7 @@ class App extends Component {
                 <Router>
                     <div>
                         <NavBar />
-                        <Route exact path="/" component={ChartView} />
-                        <Route path="/CategoryChart" component={CategoryChart} />
-                        <Route path="/LineChart" component={LineChart} />
+                        <Route exact path="/" component={DataView} />
                     </div>
                 </Router>
             </div>

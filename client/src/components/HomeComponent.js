@@ -6,8 +6,8 @@ class HomeComponent extends React.Component {
     render() {
 
         return (
-            <div className="chart">
-                CHART Component
+            <div className="data">
+                DATA Component
             </div>
         );
     }
