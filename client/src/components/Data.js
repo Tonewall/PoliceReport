@@ -120,7 +120,7 @@ class Data extends Component {
                     description: 'some description',
                     location: 'Delta Sig',
                     date: '2019/09/20',
-                    time: '07:26pm',
+                    time: '7:26pm',
                   },
               ]
             }
@@ -167,6 +167,7 @@ class Data extends Component {
                             striped
                             bordered
                             hover
+                            entries={20}
                             data={this.state.crimeData}
                         />
                     </div>
