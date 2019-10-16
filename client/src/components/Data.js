@@ -129,13 +129,14 @@ class Data extends Component {
     componentDidMount() {
         this.createData();
         //FETCH DISPATCH DATA
-        fetch('/api/get-cad-data')
-            .then(results => results.json())
-            .then(json => console.log(json));
+        // fetch('/api/get-cad-data')
+        //     .then(results => results.json())
+        //     .then(json => console.log(json));
+        this.getData();
 
         //FETCH COUNSEL DATA
-        fetch('/api/get-cad-data')
-            .then(results => results.json());
+        // fetch('/api/get-cad-data')
+        //     .then(results => results.json());
 
     }
     // generateFullReport(crimeData) {
