@@ -1,0 +1,10 @@
+.fullReportCard {
+    height: 80vh;
+}
+.errorMessage {
+    font-size: 30px;
+    text-align: center;
+}
+.card-header {
+    text-align: center;
+}

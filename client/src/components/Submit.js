@@ -25,7 +25,7 @@ class Submit extends Component {
     render() {
         return (
             <div className="main">
-                <div className="card">
+                <div className="card submitCard">
                 <form>
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -65,6 +65,7 @@ class Submit extends Component {
                             <option>Underage Drinking</option>
                             <option>Traffic Violation</option>
                             <option>Public Misconduct</option>
+                            <option>Murder</option>
                             <option>Other</option>
                         </select>
                         </div>

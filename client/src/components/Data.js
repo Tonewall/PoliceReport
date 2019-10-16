@@ -13,7 +13,7 @@ class Data extends Component {
                 rows: []
             },
         }
-        // this.generateFullReport = this.generateFullReport.bind(this);
+        this.createData = this.createData.bind(this);
     }
     createData() {
             this.setState({crimeData : {
@@ -28,13 +28,13 @@ class Data extends Component {
                   label: 'Type',
                   field: 'type',
                   sort: 'asc',
-                  width: 150
+                  width: 100
                 },
                 {
                   label: 'Description',
                   field: 'description',
                   sort: 'asc',
-                  width: 300
+                  width: 400
                 },
                 {
                   label: 'Location',
@@ -126,39 +126,17 @@ class Data extends Component {
         });
     }
     componentDidMount() {
+        this.createData();
+        this.getData();
         //FETCH DISPATCH DATA
         // fetch('/api/get-cad-data')
         //     .then(results => results.json())
         //     .then(json => console.log(json));
-        // this.getData();
-
-        //FETCH COUNSEL DATA
-        // fetch('/api/get-cad-data')
-        //     .then(results => results.json());
 
     }
-    // generateFullReport(crimeData) {
-    //     if (!crimeData) {
-    //         this.setState({
-    //           errors: "Search must be run before report can be generated."
-    //         });
-    //       } else {
-    //         fetch(`/api/reports/update-last-report/`, {
-    //           method: "POST",
-    //           headers: {
-    //             Accept: "application/json",
-    //             "Content-Type": "application/json"
-    //           },
-    //           body: JSON.stringify({ reportType: this.state.reportType })
-    //         })
-    //           .then(response => response.json())
-    //           .catch(error => console.log("error fetching data from backend", error));
-    //       }
-    // }
     getData() {
-        fetch('')
-            .then(response => response.json())
-            .then(response => console.log(response))
+        fetch('/showall')
+            .then(results => console.log(results))
             .then(err => console.error(err))
     }
 
