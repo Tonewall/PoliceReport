@@ -13,7 +13,6 @@ class Data extends Component {
                 rows: []
             },
         }
-        this.createData = this.createData.bind(this);
         // this.generateFullReport = this.generateFullReport.bind(this);
     }
     createData() {
@@ -127,12 +126,11 @@ class Data extends Component {
         });
     }
     componentDidMount() {
-        this.createData();
         //FETCH DISPATCH DATA
         // fetch('/api/get-cad-data')
         //     .then(results => results.json())
         //     .then(json => console.log(json));
-        this.getData();
+        // this.getData();
 
         //FETCH COUNSEL DATA
         // fetch('/api/get-cad-data')
@@ -157,7 +155,12 @@ class Data extends Component {
     //           .catch(error => console.log("error fetching data from backend", error));
     //       }
     // }
-
+    getData() {
+        fetch('')
+            .then(response => response.json())
+            .then(response => console.log(response))
+            .then(err => console.error(err))
+    }
 
     render() {
         return (
