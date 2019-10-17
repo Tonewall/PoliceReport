@@ -6,4 +6,3 @@ exports.config =
     trustedConnection: true
   }
 };
-

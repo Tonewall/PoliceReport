@@ -8,13 +8,14 @@ class Data extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            crimeData:{
+            crimeData: {
                 coulumns: [],
                 rows: []
             },
         }
-        this.createData = this.createData.bind(this);
+        //this.createData = this.createData.bind(this);
     }
+    /*
     createData() {
             this.setState({crimeData : {
               columns: [
@@ -125,8 +126,56 @@ class Data extends Component {
             }
         });
     }
+    */
+
+    populateData = function (data) {
+        this.setState({
+            crimeData: {
+                columns: [
+                    {
+                        label: 'CaseId',
+                        field: 'CaseId',
+                        sort: 'asc',
+                        width: 50
+                    },
+                    {
+                        label: 'Date',
+                        field: 'Date',
+                        sort: 'asc',
+                        width: 100
+                    },
+                    {
+                        label: 'Time',
+                        field: 'Time',
+                        sort: 'asc',
+                        width: 400
+                    },
+                    {
+                        label: 'Location',
+                        field: 'location',
+                        sort: 'asc',
+                        width: 200
+                    },
+                    {
+                        label: 'Officer',
+                        field: 'Officer',
+                        sort: 'asc',
+                        width: 150
+                    },
+                    {
+                        label: 'Description',
+                        field: 'Description',
+                        sort: 'asc',
+                        width: 100
+                    }
+                ],
+                rows: data
+            }
+        }
+        )
+    }
+
     componentDidMount() {
-        this.createData();
         this.getData();
         //FETCH DISPATCH DATA
         // fetch('/api/get-cad-data')
@@ -136,7 +185,11 @@ class Data extends Component {
     }
     getData() {
         fetch('/showall')
-            .then(results => console.log(results))
+            .then(results => results.json().then(data => {
+                console.log("Hey Tony, below is retrieved from the server")
+                console.log(data)
+                this.populateData(data)
+            }))
             .then(err => console.error(err))
     }
 

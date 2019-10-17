@@ -7,5 +7,4 @@ console.log("\n\n/////***** Server Initializing *****/////\n")
 require('./router')(app);
 
 // Open connection from external ip
-app.listen(8080, '0.0.0.0');
-
+app.listen(5000, '0.0.0.0');
