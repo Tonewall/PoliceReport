@@ -1,0 +1,23 @@
+.direct_query_main_wrapper {
+    height: 100%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column
+}
+
+.query_box {
+    background: white;
+    flex: 1;
+}
+
+.query_button {
+    background: rgb(75, 216, 75);
+    font-weight: bold;
+    width: 120px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.query_result {
+    flex:3;
+}

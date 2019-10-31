@@ -35,12 +35,11 @@ function add_router(app)
         });
     });
 
-    app.get('/direct_query/:query', function(req, res)
+    app.get('/direct-query/:query', function(req, res)
     {
-        console.log(req.params.query);
         db_query(req.params.query, (err, result) => {
-            if(!err) res.send(result);
-            else res.status(500).send({error: "database failure"});
+            if(!err) res.send(JSON.stringify(result));
+            else res.send([err.message]);
         });
     });
 }

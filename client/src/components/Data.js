@@ -15,7 +15,7 @@ class Data extends Component {
         }
         //this.createData = this.createData.bind(this);
     }
-    /*
+    
     createData() {
             this.setState({crimeData : {
               columns: [
@@ -126,7 +126,7 @@ class Data extends Component {
             }
         });
     }
-    */
+    
 
     populateData = function (data) {
         this.setState({
