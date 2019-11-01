@@ -8,6 +8,7 @@
 .query_box {
     background: white;
     flex: 1;
+    min-height: 20vh;
 }
 
 .query_button {
@@ -19,5 +20,5 @@
 }
 
 .query_result {
-    flex:3;
+    flex:2;
 }
