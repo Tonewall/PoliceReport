@@ -32,6 +32,7 @@ export default class NavBar extends Component {
                             <a className="dropdown-item" href="/GTPD-OCA-Search">Search by OCA</a>
                             <a className="dropdown-item" href="/GTPD-Repeat-Offenders">Repeat Offenders</a>
                             <a className="dropdown-item" href="/GTPD-Buildings">Buildings Information</a>
+                            <a className="dropdown-item" href="/Officers">Officers</a>
                         </div>
                     </li>
                     <li className="nav-item dropdown">
@@ -41,7 +42,6 @@ export default class NavBar extends Component {
                         <div className="dropdown-menu" style={{backgroundColor:bgColors.White}} aria-labelledby="navbarDropdown">
                             <a className="dropdown-item" href="/GTPD">All Data</a>
                             <div className="dropdown-divider"></div>
-                            <a className="dropdown-item" href="/GTPD-Arrests">Arrests</a>
                             <a className="dropdown-item" href="/GTPD-Filter">Filter</a>
                         </div>
                     </li>
