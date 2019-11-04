@@ -5,7 +5,7 @@ import DataView from './components/Data';
 import NavBar from './components/NavBar';
 import FullReport from './components/FullReport';
 import Submit from './components/Submit';
-import GtpdLocations from './components/GtpdLocations';
+import GtpdFilter from './components/GtpdFilter';
 import 'bootstrap/dist/css/bootstrap.css';
 
 /* For server debugging */
@@ -23,7 +23,7 @@ class App extends Component {
 
                         {/* For server debugging */}
                         <Route exact path="/direct-query" component={DirectQuery} />
-                        <Route exact path="/GTPD-Filter" component={GtpdLocations} />
+                        <Route exact path="/GTPD-Filter" component={GtpdFilter} />
 
                 </Router>
             </div>

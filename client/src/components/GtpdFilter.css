@@ -1,0 +1,11 @@
+.filterMain {
+    min-height: 110vh;
+}
+.searchButton {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.filterTypeCards {
+    margin-bottom: 20px;
+}

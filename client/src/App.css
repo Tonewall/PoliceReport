@@ -10,7 +10,7 @@
 
 .mainBody {
   background: rgba(155, 149, 137, 0.473);
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column
 }
