@@ -188,7 +188,7 @@ class Data extends Component {
             .then(results => results.json().then(data => {
                 console.log("Hey Tony, below is retrieved from the server")
                 console.log(data)
-                this.populateData(data)
+                //this.populateData(data)
             }))
             .then(err => console.error(err))
     }

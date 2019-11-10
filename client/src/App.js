@@ -19,7 +19,7 @@ class App extends Component {
                         <NavBar />
                         <Route exact path="/" component={DataView} />
                         <Route exact path="/full-report" component={FullReport} />
-                        <Route exact path="/submit" component={Submit} />
+                        {/* <Route exact path="/submit" component={Submit} /> */}
 
                         {/* For server debugging */}
                         <Route exact path="/direct-query" component={DirectQuery} />
