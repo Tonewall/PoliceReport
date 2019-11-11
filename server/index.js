@@ -1,7 +1,7 @@
 
 const app = require('express')();
 
-console.log("\n\n/////***** Server Initializing *****/////\n")
+console.log("\n\n[Server] Starting server on port 5000")
 
 // add router
 require('./router')(app);

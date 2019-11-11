@@ -129,6 +129,7 @@ class Data extends Component {
     
 
     populateData = function (data) {
+        console.log(data);
         this.setState({
             crimeData: {
                 columns: [
@@ -152,7 +153,7 @@ class Data extends Component {
                     },
                     {
                         label: 'Location',
-                        field: 'location',
+                        field: 'Location',
                         sort: 'asc',
                         width: 200
                     },
@@ -177,19 +178,16 @@ class Data extends Component {
 
     componentDidMount() {
         this.getData();
-        //FETCH DISPATCH DATA
-        // fetch('/api/get-cad-data')
-        //     .then(results => results.json())
-        //     .then(json => console.log(json));
-
     }
+
     getData() {
         fetch('/showall')
-            .then(results => results.json().then(data => {
+            .then(results => {console.log(2); 
+                results.json().then(data => {
                 console.log(data)
-                //this.populateData(data)
-            }))
-            .then(err => console.error(err))
+                this.populateData(data)
+            })})
+            .catch(err => console.error(err))
     }
 
     render() {
