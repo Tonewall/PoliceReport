@@ -23,7 +23,7 @@ export default class NavBar extends Component {
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item dropdown">
                         <a className="nav-link dropdown-toggle" href="/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            GTPD
+                            Records
                         </a>
                         <div className="dropdown-menu" style={{backgroundColor:bgColors.White}} aria-labelledby="navbarDropdown">
                             <a className="dropdown-item" href="/GTPD">All Data</a>
@@ -37,24 +37,19 @@ export default class NavBar extends Component {
                     </li>
                     <li className="nav-item dropdown">
                         <a className="nav-link dropdown-toggle" href="/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            APD
-                        </a>
-                        <div className="dropdown-menu" style={{backgroundColor:bgColors.White}} aria-labelledby="navbarDropdown">
-                            <a className="dropdown-item" href="/GTPD">All Data</a>
-                            <div className="dropdown-divider"></div>
-                            <a className="dropdown-item" href="/GTPD-Filter">Filter</a>
-                        </div>
-                    </li>
-                    <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Statistics
                         </a>
                         <div className="dropdown-menu" style={{backgroundColor:bgColors.White}} aria-labelledby="navbarDropdown">
-                            <a className="dropdown-item" href="/Statistics-Locations">By Location</a>
-                            <a className="dropdown-item" href="/Statistics-Shifts">By Shifts</a>
-                            <a className="dropdown-item" href="/Statistics-Officer">By Officers</a>
-                            <a className="dropdown-item" href="/Statistics-Time">By Time</a>
-                            <a className="dropdown-item" href="/Statistics-Date">By Date</a>
+                            <a className="dropdown-item disabled" href="/">GTPD</a>
+                            <a className="dropdown-item" href="/Statistics-GTPD-Locations">By Location</a>
+                            <a className="dropdown-item" href="/Statistics-GTPD-Shifts">By Shift</a>
+                            <a className="dropdown-item" href="/Statistics-GTPD-Officer">By Officer</a>
+                            <a className="dropdown-item" href="/Statistics-GTPD-Time">By Time</a>
+                            <a className="dropdown-item" href="/Statistics-GTPD-Date">By Date</a>
+                            <div className="dropdown-divider"></div>
+                            <a className="dropdown-item disabled" href="/">APD</a>
+                            <a className="dropdown-item" href="/Statistics-APD-Time">By Time</a>
+                            <a className="dropdown-item" href="/Statistics-APD-Date">By Date</a>
                         </div>
                     </li>
                     {/* <li className="nav-item">

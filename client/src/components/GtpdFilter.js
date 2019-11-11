@@ -6,16 +6,32 @@ import Select from "react-select";
 
 //options for the dropdown selects
 const buildingOptions = [
-    {value: 'barnesAndNobles', label: 'Barnes & Nobles'},
-    {value: 'collegeOfComputing', label: 'College of Computing'},
-    {value: 'crc', label: 'CRC'},
-    {value: 'culc', label: 'CULC'},
-    {value: 'gtpd', label: 'GTPD'},
-    {value: 'klaus', label: 'Klaus'},
-    {value: 'library', label: 'Library'},
-    {value: 'stamps', label: 'Stamps'},
-    {value: 'studentCenter', label: 'Student Center'},
+    {value: '10th and Home Family Housing', label: '10th and Home Family Housing', type: 'Housing'},
+    {value: 'Alpha Gamma Delta', label: 'Alpha Gamma Delta', type: 'Greek'},
+    {value: 'Alpha Sigma Phi', label: 'Alpha Sigma Phi', type: 'Greek'},
+    {value: 'Alpha Xi Delta', label: 'Alpha Xi Delta', type: 'Greek'},
+    {value: 'Baker Building', label: 'Baker Building', type: 'Research'},
+    {value: 'Beringause Building', label: 'Beringause Building', type: 'Administration'},
+    {value: 'Broadband Institute Residential Laboratory', label: 'Broadband Institute Residential Laboratory', type: 'Academic'},
+    {value: 'Brock Football Practice Facility', label: 'Brock Football Practice Facility', type: 'Athletic'},
+    {value: 'Campus Safety Facility', label: 'Campus Safety Facility', type: 'Administration'},
+    {value: 'CATEA', label: 'CATEA', type: 'Academic'},
+    {value: 'Centennial Research Building', label: 'Centennial Research Building', type: 'Research'},
+    {value: 'Center Street Apartments', label: 'Center Street Apartments', type: 'Housing'},
+    {value: 'Chandler Stadium', label: 'Chandler Stadium', type: 'Athletic'},
+    {value: 'Dalney Parking Deck', label: 'Dalney Parking Deck', type: 'Parking'},
+    {value: 'Engineered Biosystems Building (EBB)', label: 'Engineered Biosystems Building (EBB)', type: 'Research'},
+    {value: 'Facilities Operations Garage/Warehouse', label: 'CFacilities Operations Garage/WarehouseRC', type: 'Administration'},
+    {value: 'Facilities, 955 Fowler', label: 'Facilities, 955 Fowler', type: 'Administration'},
+    {value: 'Ford ES&T (Environmental Science & Technology)', label: 'Ford ES&T (Environmental Science & Technology)', type: 'Academic'},
+    {value: 'Georgia Public Broadcasting - GTRI', label: 'Georgia Public Broadcasting - GTRI', type: 'Academic'},
+    {value: 'Georgia Tech Water Sports', label: 'Georgia Tech Water Sports', type: 'Athletic'},
+    {value: 'Golf Practice Facility', label: 'Golf Practice Facility', type: 'Athletic'},
+    {value: 'Graduate Living Center', label: 'Graduate Living Center', type: 'Housing'},
+    {value: 'Griffin Track', label: 'Griffin Track', type: 'Athletic'},
+    {value: 'GTRI Conference Center & Parking Deck', label: 'GTRI Conference Center & Parking Deck', type: 'Research'},
 ];
+var newBuildingOptions = [];
 const crimeTypeOptions = [
     {value: 'aggravatedAssault', label: 'Aggravated Assault'},
     {value: 'arson', label: 'Arson'},
@@ -63,22 +79,24 @@ const departmentOptions = [
     {value: 'bothDepartment', label: 'Both Departments'},
 ];
 const gtLocationTypeOptions = [
-    {value: 'campusHousing', label: 'Campus Housing'},
-    {value: 'greekHousing', label: 'Greek Housing'},
-    {value: 'offCampus', label: 'Off Campus'},
-    {value: 'noncam', label: 'NONCAM'},
+    {value: 'Any', label: 'Any'},
+    {value: 'Housing', label: 'Housing'},
+    {value: 'Greek', label: 'Greek'},
+    {value: 'Research', label: 'Research'},
+    {value: 'Administration', label: 'Administration'},
+    {value: 'Academic', label: 'Academic'},
+    {value: 'Athletic', label: 'Athletic'},
+    {value: 'Parking', label: 'Parking'},
+    {value: 'Religious', label: 'Religious'},
+    {value: 'Mixed Use', label: 'Mixed Use'},
+    {value: 'Green Space', label: 'Green Space'},
+    
 ];
 const apdLocationTypeOptions = [
     {value: 'apd', label: 'APD 1'},
     {value: 'apd', label: 'APD 2'},
     {value: 'apd', label: 'APD 3'},
     {value: 'apd', label: 'APD 4'},
-];
-const zoneOptions = [
-    {value: 'zOne', label: 'Zone One'},
-    {value: 'zTwo', label: 'Zone Two'},
-    {value: 'zThree', label: 'Zone Three'},
-    {value: 'zFour', label: 'Zone Four'},
 ];
 const outcomeOptions = [
     {value: 'felony', label: 'Felony'},
@@ -102,8 +120,7 @@ class gtpdFilter extends Component {
         selectedShift: null,
         selectedArrest: null,
         selectedDepartment: {value: 'bothDepartment', label: 'Both Departments'},
-        selectedGTLocationType: null,
-        selectedZone: null,
+        selectedGTLocationType: {value: 'Any', label: 'Any'},
         selectedOutcome: null,
         selectedDate: null,
         selectedAPDLocationType: null,
@@ -150,7 +167,6 @@ class gtpdFilter extends Component {
                         value={this.selectedGTLocationType} 
                         onChange={this.setGTLocationType} 
                         options={gtLocationTypeOptions} 
-                        isMulti={true}
                         placeholder={"Any"}
                         />
                     </div>
@@ -161,19 +177,7 @@ class gtpdFilter extends Component {
                         <Select 
                         value={this.selectedBuilding} 
                         onChange={this.setBuilding} 
-                        options={buildingOptions} 
-                        isMulti={true}
-                        placeholder={"Any"}
-                        />
-                    </div>
-                    <label className="col-12 col-form-label">
-                        Zones
-                    </label>
-                    <div>
-                        <Select 
-                        value={this.selectedZone} 
-                        onChange={this.setZone} 
-                        options={zoneOptions} 
+                        options={newBuildingOptions} 
                         isMulti={true}
                         placeholder={"Any"}
                         />
@@ -191,7 +195,6 @@ class gtpdFilter extends Component {
                         value={this.selectedAPDLocationType} 
                         onChange={this.setAPDLocationType} 
                         options={apdLocationTypeOptions} 
-                        isMulti={true}
                         placeholder={"Any"}
                         />
                     </div>
@@ -208,7 +211,6 @@ class gtpdFilter extends Component {
                         value={this.selectedGTLocationType} 
                         onChange={this.setGTLocationType} 
                         options={gtLocationTypeOptions} 
-                        isMulti={true}
                         placeholder={"Any"}
                         />
                     </div>
@@ -219,19 +221,7 @@ class gtpdFilter extends Component {
                         <Select 
                         value={this.selectedBuilding} 
                         onChange={this.setBuilding} 
-                        options={buildingOptions} 
-                        isMulti={true}
-                        placeholder={"Any"}
-                        />
-                    </div>
-                    <label className="col-12 col-form-label">
-                        Georgia Tech Zones
-                    </label>
-                    <div>
-                        <Select 
-                        value={this.selectedZone} 
-                        onChange={this.setZone} 
-                        options={zoneOptions} 
+                        options={newBuildingOptions} 
                         isMulti={true}
                         placeholder={"Any"}
                         />
@@ -244,7 +234,6 @@ class gtpdFilter extends Component {
                         value={this.selectedAPDLocationType} 
                         onChange={this.setAPDLocationType} 
                         options={apdLocationTypeOptions} 
-                        isMulti={true}
                         placeholder={"Any"}
                         />
                     </div>
@@ -258,12 +247,22 @@ class gtpdFilter extends Component {
     
     setGTLocationType = selectedGTLocationType => {
         this.setState({selectedGTLocationType});
+        //populating the newbuildingoptions with the desired buildings
+        var j = 0;
+        newBuildingOptions = [];
+        if(selectedGTLocationType.value !== "Any") {
+            for(var i = 0; i < buildingOptions.length; i++) {
+                if(buildingOptions[i].type === selectedGTLocationType.value) {
+                    newBuildingOptions[j] = buildingOptions[i];
+                    j++;
+                }
+            }
+        } else {
+            newBuildingOptions = buildingOptions;
+        }
     }
     setAPDLocationType = selectedAPDLocationType => {
         this.setState({selectedAPDLocationType});
-    }
-    setZone = selectedZone => {
-        this.setState({selectedZone});
     }
     setOutcome = selectedOutcome => {
         this.setState({selectedOutcome});
@@ -310,14 +309,6 @@ class gtpdFilter extends Component {
             selectedOutcome, 
             selectedDate, 
         } = this.state;
-        // const { selectedCrimeType } = this.state;
-        // const { selectedShift } = this.state;
-        // const { selectedArrest } = this.state;
-        // const { selectedDepartment } = this.state;
-        // const { selectedGTLocationType } = this.state;
-        // const { selectedZone } = this.state;
-        // const { selectedOutcome } = this.state;
-        // const { selectedDate } = this.state;
 
 
         return(
@@ -349,48 +340,6 @@ class gtpdFilter extends Component {
                                             </div>
                                         </div>
                                         {this.changeDepartment(selectedDepartment)}
-                                        
-                                            {/* {selectedDepartment == "gtpDepartment" &&
-                                            <div className="GTFilters">
-                                            <label className="col-12 col-form-label">
-                                                Location Type
-                                            </label>
-                                            <div>
-                                                <Select 
-                                                value={selectedGTLocationType} 
-                                                onChange={this.setGTLocationType} 
-                                                options={gtLocationTypeOptions} 
-                                                isMulti={true}
-                                                placeholder={"Any"}
-                                                />
-                                            </div>
-                                            <label className="col-12 col-form-label">
-                                                Buildings
-                                            </label>
-                                            <div>
-                                                <Select 
-                                                value={selectedBuilding} 
-                                                onChange={this.setBuilding} 
-                                                options={buildingOptions} 
-                                                isMulti={true}
-                                                placeholder={"Any"}
-                                                />
-                                            </div>
-                                            <label className="col-12 col-form-label">
-                                                Zones
-                                            </label>
-                                            <div>
-                                                <Select 
-                                                value={selectedZone} 
-                                                onChange={this.setZone} 
-                                                options={zoneOptions} 
-                                                isMulti={true}
-                                                placeholder={"Any"}
-                                                />
-                                            </div>
-                                            </div>
-
-                                        } */}
                                             
                                         
                                     </div>
@@ -438,8 +387,6 @@ class gtpdFilter extends Component {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="col-lg-4 col-6">
                                 <div className="card filterTypeCards shiftCard">
                                     <h4 className="card-header">Personnel</h4>
                                     <div className="card-body">
@@ -463,24 +410,30 @@ class gtpdFilter extends Component {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div className="col-lg-4 col-6">
+
                                 <div className="card filterTypeCards dateCard">
                                     <h4 className="card-header">Date</h4>
                                     <div className="card-body">
-                                        <label className="col-12 col-form-label">
-                                            Date Range
-                                        </label>
-                                        <div>
-                                            <Select 
-                                            value={selectedDate} 
-                                            onChange={this.setDate} 
-                                            options={dateOptions} 
-                                            placeholder={"Custom"}
-                                            />
+                                        <div className="col-12 dateFilters">
+                                            <label className="col-12 col-form-label">
+                                                Date Range
+                                            </label>
+                                            <div>
+                                                <Select 
+                                                value={selectedDate} 
+                                                onChange={this.setDate} 
+                                                options={dateOptions} 
+                                                placeholder={"Custom"}
+                                                />
+                                            </div>
                                         </div>
+                                        
                                         <div className="col-12">
                                             <label className="dateLabel">From:</label>
                                         </div>
-                                        <div className="col-12">
+                                        <div className="col-12 dateFilters">
                                             <DatePicker
                                                 selected={this.state.startDate}
                                                 onChange={this.handleStartChange}
@@ -489,7 +442,7 @@ class gtpdFilter extends Component {
                                         <div className="col-12">
                                             <label className="dateLabel">To:</label>
                                         </div>
-                                        <div className="col-12">
+                                        <div className="col-12 dateFilters">
                                             <DatePicker
                                                 selected={this.state.endDate}
                                                 onChange={this.handleEndChange}
