@@ -9,8 +9,10 @@
 }
 
 .mainBody {
-  background: rgba(155, 149, 137, 0.473);
-  height: 100%;
+  background: rgba(124, 149, 170, 0.473);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column
 }
 
 .App-header {

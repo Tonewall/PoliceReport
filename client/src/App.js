@@ -4,20 +4,24 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import DataView from './components/Data';
 import NavBar from './components/NavBar';
 import FullReport from './components/FullReport';
-import Submit from './components/Submit';
+import GtpdFilter from './components/GtpdFilter';
 import 'bootstrap/dist/css/bootstrap.css';
+
+/* For server debugging */
+import DirectQuery from './components/DirectQuerying/DirectQuery';
 
 class App extends Component {
     render() {
         return (
             <div className="mainBody">
                 <Router>
-                    <div>
                         <NavBar />
                         <Route exact path="/" component={DataView} />
                         <Route exact path="/full-report" component={FullReport} />
-                        <Route exact path="/submit" component={Submit} />
-                    </div>
+                        {/* For server debugging */}
+                        <Route exact path="/direct-query" component={DirectQuery} />
+                        <Route exact path="/GTPD-Filter" component={GtpdFilter} />
+
                 </Router>
             </div>
         );
