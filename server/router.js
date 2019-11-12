@@ -21,6 +21,17 @@ function db_query(query_string, next)
         conn.connect().then((conn)=> {
             conn.query(query_string).then((result)=>
             {
+                /* Below comment is duplicate of result preprocessing code in DirectQuery.js.  
+                 * Thinking of a way to get that preprocessing done within the router */
+                /*
+                var data = result.recordset.
+                data.forEach(element => {
+                    Object.keys(element).forEach(key => {
+                        if(element[key] == null)    element[key]='-'
+                        else if(element[key] == true) element[key]='true'
+                        else if(element[key] == false)    element[key]='false'
+                    });
+                });*/
                 next(null, result.recordset);
                 release();
             });

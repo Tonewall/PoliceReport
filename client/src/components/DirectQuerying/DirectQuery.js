@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { MDBDataTable, MDBBtn } from 'mdbreact';
+import { MDBDataTable } from 'mdbreact';
 import './DirectQuery.css'
 
 export default class DirectQuery extends Component {
@@ -53,19 +53,24 @@ export default class DirectQuery extends Component {
     run_query = () => {
         fetch('/direct-query/'+this.state.user_query)
             .then(result => result.json().then(data=> {
-                {/*this.setState({query_result: JSON.stringify(data)});*/}
                 this.populateData(data)
             }))
     }
 
     populateData = function (data) {
+        /* Need to preprocess query result before */
+        data.forEach(element => {
+            Object.keys(element).forEach(key => {
+                if(element[key] == null)    element[key]='-'
+                else if(element[key] == true) element[key]='true'
+                else if(element[key] == false)    element[key]='false'
+            });
+        });
         this.setState({
             query_result: {
-                columns: Object.keys(data[0]).map((key)=>{ return {label: key, field: key, sort: key, width: 200}}),
+                columns: Object.keys(data[0]).map((key)=>{ return {label: key, field: key, width: 200}}).slice(10, 20),
                 rows: data
             }
-        }
-        )
+        });
     }
-
 }
