@@ -21,7 +21,7 @@ function db_query(query_string, next)
         conn.connect().then((conn)=> {
             conn.query(query_string).then((result)=>
             {
-                next(null, result.recordset.flat());
+                next(null, result.recordset);
                 release();
             });
         }).catch(error => {
