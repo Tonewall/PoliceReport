@@ -1,8 +1,6 @@
 module.exports = 
 {
-  //user: 'syun91',
-  //password: 'Tommy68566856@',
-  server: 'gtpd-curie',
+  server: '130.207.68.107',
   database: 'CrimeAnalytics',
   Trusted_Connection: 'Yes',
   Driver: '{SQL Server Native Client 11.0}',
