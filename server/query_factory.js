@@ -6,6 +6,8 @@ module.exports.get_query = function() {
     return sprintf("SELECT TOP (%d) [CaseId], [Date], [Time], [Location], [Officer], [Description] FROM [Crime_Report]", 1000);
 }
 
+module.exports.locations = 
+"SELECT [Building Name],[Loc Type],[St #],[Street-MSAG] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
 
 /* Address Ranking Query configured
 

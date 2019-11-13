@@ -34,6 +34,9 @@ function db_query(query_string, next)
                 });*/
                 next(null, result.recordset);
                 release();
+            }).catch(error=>{
+                next(error, null);
+                release();
             });
         }).catch(error => {
             next(error, null);
@@ -45,6 +48,7 @@ function db_query(query_string, next)
 // Router
 function add_router(app)
 {
+    /* For now, pulls data from fake table, but will from [Incident Offenses-GTPD+APD] table */
     app.get('/showall', function(req, res)
     {
         queryString = query_factory.get_query();
@@ -54,11 +58,20 @@ function add_router(app)
         });
     });
 
+    /* Direct querying for debugging purpose */
     app.get('/direct-query/:query', function(req, res)
     {
         db_query(req.params.query, (err, result) => {
             if(!err) res.send(JSON.stringify(result));
-            else res.send([err.message]);
+            else res.status(400).send([err]);
+        });
+    });
+
+    /* Gets location data */
+    app.get('/locations', function(req, res)
+    {
+        db_query(query_factory.locations, (err, result) => {
+            res.send(result);
         });
     });
 }
@@ -75,14 +88,16 @@ config_db = async (next) => {
             res(result)
         })
     })
-    username = await username_resolver
+    //username = await username_resolver
+    username='syun91'
 
     password_resolver = new Promise(async (res, err) => {
         read({prompt: 'Password: ', silent: true, replace: '*'}, (err, result, def)=>{
             res(result)
         })
     })
-    password = await password_resolver
+    //password = await password_resolver
+    password='Tommy68566856!@'
 
     config.user = username;
     config.password = password;

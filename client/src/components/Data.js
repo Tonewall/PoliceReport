@@ -129,7 +129,6 @@ class Data extends Component {
     
 
     populateData = function (data) {
-        console.log(data);
         this.setState({
             crimeData: {
                 columns: [
@@ -182,9 +181,8 @@ class Data extends Component {
 
     getData() {
         fetch('/showall')
-            .then(results => {console.log(2); 
+            .then(results => {
                 results.json().then(data => {
-                console.log(data)
                 this.populateData(data)
             })})
             .catch(err => console.error(err))
