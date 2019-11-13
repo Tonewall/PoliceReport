@@ -88,16 +88,14 @@ config_db = async (next) => {
             res(result)
         })
     })
-    //username = await username_resolver
-    username='syun91'
+    username = await username_resolver
 
     password_resolver = new Promise(async (res, err) => {
         read({prompt: 'Password: ', silent: true, replace: '*'}, (err, result, def)=>{
             res(result)
         })
     })
-    //password = await password_resolver
-    password='Tommy68566856!@'
+    password = await password_resolver
 
     config.user = username;
     config.password = password;
