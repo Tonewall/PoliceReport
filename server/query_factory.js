@@ -7,7 +7,7 @@ module.exports.get_query = function() {
 }
 
 module.exports.locations = 
-"SELECT [Building Name],[Loc Type],[St #],[Street-MSAG] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
+"SELECT [Building Name],[Loc Type],[St #],[Street-MSAG],[Loc Code] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
 
 /* Address Ranking Query configured
 

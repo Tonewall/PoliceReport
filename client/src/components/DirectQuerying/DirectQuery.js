@@ -82,8 +82,8 @@ export default class DirectQuery extends Component {
         data.forEach(element => {
             Object.keys(element).forEach(key => {
                 if(element[key] == null)    element[key]='-'
-                else if(element[key] == true) element[key]='true'
-                else if(element[key] == false)    element[key]='false'
+                else if(element[key] === true) element[key]='true'
+                else if(element[key] === false)    element[key]='false'
             });
         });
         this.setState({
