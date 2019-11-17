@@ -54,7 +54,7 @@ function add_router(app)
         queryString = query_factory.get_query();
         db_query(queryString, (err, result) => {
             if(!err) res.send(result);
-            else res.status(500).send(err);
+            else res.status(400).send(err);
         });
     });
 
@@ -71,9 +71,15 @@ function add_router(app)
     app.get('/locations', function(req, res)
     {
         db_query(query_factory.locations, (err, result) => {
-            res.send(result);
+            if(!err) res.send(result);
+            else res.status(400).send(err);
         });
     });
+
+    app.get('/filter', function(req, res)
+    {
+        /* get filter criteria as a body */
+    })
 }
 
 
