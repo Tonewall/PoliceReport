@@ -9,6 +9,28 @@ module.exports.get_query = function() {
 module.exports.locations = 
 "SELECT [Building Name],[Loc Type],[St #],[Street-MSAG],[Loc Code] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
 
+module.exports.get_incident_detail = function(incident_number) {
+    return sprintf('\
+        SELECT [OCA Number]\n\
+            , [Case Disposition]\n\
+            , [Unit]\n\
+            , [Officer Name]\n\
+            , [Report Date]\n\
+            , [From Date]\n\
+            , [From Time]\n\
+            , [To Date]\n\
+            , [To Time]\n\
+            , [Avg Date]\n\
+            , [Avg Time]\n\
+            , [DTEdit]\n\
+            , [Shift]\n\
+            , [Video]\n\
+            , [VClear]\n\
+        FROM [Incident Offenses-GTPD+APD] left join [Times] on ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
+        WHERE ([OCA Number]=\'%d\')\
+    ', incident_number)
+}
+
 /* Address Ranking Query configured
 
 DECLARE @START_DATE Date = '10-10-2010';

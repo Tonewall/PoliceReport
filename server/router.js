@@ -79,7 +79,22 @@ function add_router(app)
     app.get('/filter', function(req, res)
     {
         /* get filter criteria as a body */
-    })
+    });
+
+    app.get('/incident-number/:incident_number', function(req, res)
+    {
+        query = query_factory.get_incident_detail(req.params.incident_number)
+        db_query(query_factory.get_incident_detail(req.params.incident_number), (err, result) => {
+            if(!err) 
+            {
+                if(result[0] != null)
+                    res.send(result[0]);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
 }
 
 
