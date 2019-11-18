@@ -64,7 +64,12 @@ export default class DirectQuery extends Component {
     }
 
     run_query = () => {
-        fetch('/direct-query/'+this.state.user_query)
+        fetch('/direct-query',
+                {
+                    method: 'post',
+                    body: this.state.user_query
+                }
+            )
             .then(function(response) {
                 if(!response.ok) {
                     throw Error(response.statusText);

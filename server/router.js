@@ -59,7 +59,7 @@ function add_router(app)
     });
 
     /* Direct querying for debugging purpose */
-    app.get('/direct-query/:query', function(req, res)
+    app.post('/direct-query', function(req, res)
     {
         db_query(req.params.query, (err, result) => {
             if(!err) res.send(JSON.stringify(result));
