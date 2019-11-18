@@ -26,7 +26,7 @@ module.exports.get_incident_detail = function(incident_number) {
             , [Shift]\n\
             , [Video]\n\
             , [VClear]\n\
-        FROM [Incident Offenses-GTPD+APD] left join [Times] on ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
+        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD] left join [CrimeAnalytics].[dbo].[Times] on ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
         WHERE ([OCA Number]=\'%d\')\
     ', incident_number)
 }
