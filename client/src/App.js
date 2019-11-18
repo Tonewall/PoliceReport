@@ -18,7 +18,7 @@ class App extends Component {
                 <Router>
                         <NavBar />
                         <Route exact path="/" component={DataView} />
-                        <Route exact path="/full-report" component={FullReport} />
+                        <Route exact path="/full-report/:incidentNumber" component={FullReport} />
                         <Route exact path="/GTPD-Incident-Search" component={IncidentNumber} />
                         {/* For server debugging */}
                         <Route exact path="/direct-query" component={DirectQuery} />
