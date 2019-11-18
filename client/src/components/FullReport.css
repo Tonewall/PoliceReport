@@ -1,6 +1,6 @@
 .fullReportCard {
     min-height: 80vh;
-    width:95vw;
+    width: 900px;
 }
 .errorMessage {
     font-size: 30px;
@@ -8,4 +8,23 @@
 }
 .card-header {
     text-align: center;
+}
+
+.topReport {
+    margin:auto;
+    margin-bottom: 20px;
+}
+.caseDisp {
+    margin-left: 10px;
+}
+
+.whenCard {
+    margin-top: 10px;
+    padding: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+.whenTitle {
+    font-size: 15px;
+    font-weight: bold;
 }
