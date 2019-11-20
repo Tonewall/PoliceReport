@@ -18,13 +18,17 @@
     margin-left: 10px;
 }
 
-.whenCard {
+.whenCard, .whereCard, .offenseCard {
     margin-top: 10px;
     padding: 20px;
     padding-left: 30px;
     padding-right: 30px;
 }
-.whenTitle {
+.whenTitle, .whereTitle, .whatTitle {
     font-size: 15px;
     font-weight: bold;
+}
+.loading {
+    margin: auto;
+    font-size: 30px;
 }

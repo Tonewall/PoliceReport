@@ -26,8 +26,38 @@ module.exports.get_incident_detail = function(incident_number) {
             , [Shift]\n\
             , [Video]\n\
             , [VClear]\n\
+            , [LType]\n\
+            , [Location Code]\n\
+            , [Patrol Zone]\n\
+            , [Location Landmark]\n\
+            , [Address]\n\
+            , [Intersection]\n\
+            , [Apt-Rm-Ste]\n\
+            , [Alcohol]\n\
+            , [Drug]\n\
+            , [Weapon]\n\
+            , [Offense]\n\
+            , [NIBRSOffense]\n\
+            , [Premises]\n\
+            , [Offn From]\n\
+            , [UCR Changed]\n\
+            , [PType]\n\
+            , [UCInc+]\n\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD] left join [CrimeAnalytics].[dbo].[Times] on ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
         WHERE ([OCA Number]=\'%d\')\
+    ', incident_number)
+}
+
+module.exports.get_offense_description = function(incident_number) {
+    return sprintf('\
+        SELECT [IncidentNumber]\n\
+            , [SequenceNumber]\n\
+            , [OffenseCode]\n\
+            , [AttemptComplete]\n\
+            , [OffenseDescription]\n\
+            , [Counts]\n\
+        FROM [CrimeAnalytics].[dbo].[tblIncidentOffense]\n\
+        WHERE ([IncidentNumber]=\'%d\')\
     ', incident_number)
 }
 
@@ -35,6 +65,13 @@ module.exports.get_incident_detail = function(incident_number) {
 
 DECLARE @START_DATE Date = '10-10-2010';
 DECLARE @END_DATE Date = '10-10-2019';
+
+        , [SequenceNumber]\n\
+        , [Offense Code]\n\
+        , [AttemptComplete]\n\
+        , [OffenseDescription]\n\
+        , [Counts]\n\
+        FROM [CrimeAnalytics].[dbo].[tblIncidentOffense]\n\
 
 
 SELECT [Incident Offenses-GTPD+APD].[St Num], [Incident Offenses-GTPD+APD].Street, [Codes-Addresses-Unique].[Building Name], [Codes-Addresses-Unique].[Loc Type], Count([Incident Offenses-GTPD+APD].[OCA Number]) AS [CountOfOCA Number], Min([Incident Offenses-GTPD+APD].[Report Date]) AS [MinOfReport Date], Max([Incident Offenses-GTPD+APD].[Report Date]) AS [MaxOfReport Date]

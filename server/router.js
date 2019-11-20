@@ -95,6 +95,20 @@ function add_router(app)
             else res.status(400).send(err);
         });
     });
+    app.get('/offense-description/:incident_number', function(req, res)
+    {
+        query = query_factory.get_offense_description(req.params.incident_number)
+        db_query(query_factory.get_offense_description(req.params.incident_number), (err, result) => {
+            if(!err) 
+            {
+                if(result[0] != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
 }
 
 
