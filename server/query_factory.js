@@ -3,7 +3,7 @@ const sprintf = require('sprintf-js').sprintf;
 // TODO: add more methods for common query generation
 
 module.exports.get_query = function() {
-    return sprintf("SELECT TOP (%d) [CaseId], [Date], [Time], [Location], [Officer], [Description] FROM [Crime_Report]", 1000);
+    return sprintf("SELECT TOP (%d) [CaseId], [Date], [Time], [Location], [Officer], [Description] FROM [CrimeAnalytics].[dbo].[Crime_Report]", 1000);
 }
 
 module.exports.locations = 
@@ -56,10 +56,16 @@ module.exports.get_offense_description = function(incident_number) {
             , [AttemptComplete]\n\
             , [OffenseDescription]\n\
             , [Counts]\n\
-        FROM [CrimeAnalytics].[dbo].[tblIncidentOffense]\n\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
         WHERE ([IncidentNumber]=\'%d\')\
     ', incident_number)
 }
+
+module.exports.get_narrative = function(incident_number) {
+    
+}
+
+
 
 /* Address Ranking Query configured
 
