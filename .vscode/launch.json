@@ -1,3 +1,4 @@
+/* For server debugging
 {
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
@@ -14,4 +15,22 @@
             "program": "${workspaceFolder}\\server\\index.js"
         }
     ]
+}
+*/
+
+/* For client debugging*/
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      }
+    }
+  ]
 }
