@@ -76,7 +76,7 @@ function add_router(app)
         });
     });
 
-    app.get('/filter', function(req, res)
+    app.post('/filter', function(req, res)
     {
         /* get filter criteria as a body */
     });
@@ -84,7 +84,7 @@ function add_router(app)
     app.get('/incident-number/:incident_number', function(req, res)
     {
         query = query_factory.get_incident_detail(req.params.incident_number)
-        db_query(query_factory.get_incident_detail(req.params.incident_number), (err, result) => {
+        db_query(query, (err, result) => {
             if(!err) 
             {
                 if(result[0] != null)
@@ -98,10 +98,68 @@ function add_router(app)
     app.get('/offense-description/:incident_number', function(req, res)
     {
         query = query_factory.get_offense_description(req.params.incident_number)
-        db_query(query_factory.get_offense_description(req.params.incident_number), (err, result) => {
+        db_query(query, (err, result) => {
             if(!err) 
             {
-                if(result[0] != null)
+                if(result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+    app.get('/narrative/:incident_number', function(req, res)
+    {
+        query = query_factory.get_narrative(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if(!err) 
+            {
+                if(result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+    app.get('/offender-info/:incident_number', function(req, res)
+    {
+        query = query_factory.get_offender_info(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if(!err) 
+            {
+                if(result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+    
+    app.get('/arrest-info/:incident_number', function(req, res)
+    {
+        query = query_factory.get_arreest_info(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if(!err) 
+            {
+                if(result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+
+    app.get('/property/:incident_number', function(req, res)
+    {
+        query = query_factory.get_property(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if(!err) 
+            {
+                if(result != null)
                     res.send(result);
                 else
                     res.status(400).send('No data found');

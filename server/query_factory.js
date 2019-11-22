@@ -11,37 +11,37 @@ module.exports.locations =
 
 module.exports.get_incident_detail = function(incident_number) {
     return sprintf('\
-        SELECT [OCA Number]\n\
-            , [Case Disposition]\n\
-            , [Unit]\n\
-            , [Officer Name]\n\
-            , [Report Date]\n\
-            , [From Date]\n\
-            , [From Time]\n\
-            , [To Date]\n\
-            , [To Time]\n\
-            , [Avg Date]\n\
-            , [Avg Time]\n\
-            , [DTEdit]\n\
-            , [Shift]\n\
-            , [Video]\n\
-            , [VClear]\n\
-            , [LType]\n\
-            , [Location Code]\n\
-            , [Patrol Zone]\n\
-            , [Location Landmark]\n\
-            , [Address]\n\
-            , [Intersection]\n\
-            , [Apt-Rm-Ste]\n\
-            , [Alcohol]\n\
-            , [Drug]\n\
-            , [Weapon]\n\
-            , [Offense]\n\
-            , [NIBRSOffense]\n\
-            , [Premises]\n\
-            , [Offn From]\n\
-            , [UCR Changed]\n\
-            , [PType]\n\
+        SELECT [OCA Number]\
+            , [Case Disposition]\
+            , [Unit]\
+            , [Officer Name]\
+            , [Report Date]\
+            , [From Date]\
+            , [From Time]\
+            , [To Date]\
+            , [To Time]\
+            , [Avg Date]\
+            , [Avg Time]\
+            , [DTEdit]\
+            , [Shift]\
+            , [Video]\
+            , [VClear]\
+            , [LType]\
+            , [Location Code]\
+            , [Patrol Zone]\
+            , [Location Landmark]\
+            , [Address]\
+            , [Intersection]\
+            , [Apt-Rm-Ste]\
+            , [Alcohol]\
+            , [Drug]\
+            , [Weapon]\
+            , [Offense]\
+            , [NIBRSOffense]\
+            , [Premises]\
+            , [Offn From]\
+            , [UCR Changed]\
+            , [PType]\
             , [UCInc+]\n\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD] left join [CrimeAnalytics].[dbo].[Times] on ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
         WHERE ([OCA Number]=\'%d\')\
@@ -50,22 +50,110 @@ module.exports.get_incident_detail = function(incident_number) {
 
 module.exports.get_offense_description = function(incident_number) {
     return sprintf('\
-        SELECT [IncidentNumber]\n\
-            , [SequenceNumber]\n\
-            , [OffenseCode]\n\
-            , [AttemptComplete]\n\
-            , [OffenseDescription]\n\
+        SELECT [IncidentNumber]\
+            , [SequenceNumber]\
+            , [OffenseCode]\
+            , [AttemptComplete]\
+            , [OffenseDescription]\
             , [Counts]\n\
         FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
-        WHERE ([IncidentNumber]=\'%d\')\
+        WHERE ([IncidentNumber]=\'%d\')\n\
+        ORDER BY [SequenceNumber] ASC\
     ', incident_number)
 }
 
 module.exports.get_narrative = function(incident_number) {
-    
+    return sprintf('\
+        SELECT [SequenceNumber]\
+            , [DateEntered]\
+            , [OfficerName]\
+            , [Narrative] as Text\n\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentSupplement]\n\
+        WHERE ([IncidentNumber]=\'%d\' and [Narrative] is not null)\n\
+        ORDER BY [SequenceNumber] ASC\
+    ', incident_number)
 }
 
+module.exports.get_offender_info = function(incident_number) {
+    return sprintf('\
+        SELECT [SequenceNumber]\
+            , CONCAT([LastName], \', \', [FirstName], \' \', [MiddleName]) AS OffenderName\
+            , [Race]\
+            , [Sex]\
+            , [DateOfBirth]\
+            , [Age]\
+            , [Juvenile]\
+            , [Wanted]\
+            , [DriverLicenseNumber]\
+            , [Height]\
+            , [Weight]\
+            , [HairColor]\
+            , [HomeAddress]\
+            , [HomeCity]\
+            , [Warrant]\
+            , [Arrest]\
+            , [SSN]\
+            , [Occupation]\
+            , [Employer]\n\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\n\
+        WHERE ([IncidentNumber]=\'%d\')\n\
+        ORDER BY [SequenceNumber] ASC\
+    ', incident_number)
+}
 
+module.exports.get_arreest_info = function(incident_number) {
+    return sprintf('\
+        SELECT [SequenceNumber]\
+            , CONCAT([LastName], \', \', [FirstName], \' \', [MiddleName]) AS OffenderName\
+            , [Race]\
+            , [Sex]\
+            , [ArrestAddress]\
+            , [ArrestDate]\
+            , [ArrestTime]\
+            , [DateOfBirth]\
+            , [Age]\
+            , [Height]\
+            , [Weight]\
+            , [HomeAddress]\
+            , [HomeCity]\
+            , [ArrestingOfficerName] AS ArrestOfficer\
+            , [DateOfOffense] AS OffenseDate\
+            , [Juvenile]\
+            , [HairColor]\
+            , [DriverLicenseNumber]\
+            , [SSN]\
+            , [DrugUse]\
+            , [Occupation]\
+            , [Employer]\n\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentArrest]\n\
+        WHERE ([IncidentNumber]=\'%d\')\n\
+        ORDER BY [SequenceNumber] ASC\
+    ', incident_number)
+}
+
+module.exports.get_property = function(incident_number) {
+    return sprintf('\
+        SELECT [SequenceNumber]\
+            , [Property Data Value] AS PropertyType\
+            , [Status]\
+            , [ItemDescription]\
+            , [Make]\
+            , [Model]\
+            , [VehicleYear]\
+            , [VehicleType]\
+            , [VehicleStyle]\
+            , [LicensePlateState]\
+            , [LicensePlateNumber]\
+            , [ItemValue]\
+            , [Recovered]\
+            , [ObtainedAddress]\
+            , [ObtainedCity]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty] left join [CrimeAnalytics].[dbo].[Codes-NIBRS DE 15 Property Description] \
+                on ([tblIncidentProperty].[TypeCode] = [Codes-NIBRS DE 15 Property Description].[Property Code])\n\
+        WHERE ([IncidentNumber]=\'%d\')\n\
+        ORDER BY [SequenceNumber] ASC\
+    ', incident_number)
+}
 
 /* Address Ranking Query configured
 
