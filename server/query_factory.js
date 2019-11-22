@@ -9,7 +9,7 @@ module.exports.get_query = function() {
 module.exports.locations = 
 "SELECT [Building Name],[Loc Type],[St #],[Street-MSAG],[Loc Code] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
 
-module.exports.get_incident_detail = function(incident_number) {
+module.exports.get_incident_basic = function(incident_number) {
     return sprintf('\
         SELECT [OCA Number]\
             , [Case Disposition]\
@@ -62,7 +62,7 @@ module.exports.get_offense_description = function(incident_number) {
     ', incident_number)
 }
 
-module.exports.get_narrative = function(incident_number) {
+module.exports.get_narratives = function(incident_number) {
     return sprintf('\
         SELECT [SequenceNumber]\
             , [DateEntered]\

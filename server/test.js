@@ -1,9 +1,12 @@
-a = []
-for(var i=0;i<10000;i++)
+a = new Promise(async (res, rej) => {
+    rej(123)
+    res(456)
+})
+
+b = async function() 
 {
-    a.push(i)
+    result = await a.catch(err=>console.log(err))
+    console.log(result);
 }
-a.forEach(element => {
-    console.log(element)
-});
-console.log('HI!')
+
+b()

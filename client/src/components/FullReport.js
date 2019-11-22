@@ -14,7 +14,7 @@ class fullReport extends Component {
     }
 
     populateReport(incidentNumber) {
-        fetch('/incident-number/'+incidentNumber)
+        fetch('/incident-number-basic/'+incidentNumber)
             .then(results => {
                 results.json().then(data=> {
                     this.setState({case: data})
