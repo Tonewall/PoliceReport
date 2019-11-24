@@ -63,7 +63,7 @@ class fullReport extends Component {
     }
 
     getReport() {
-        var bgColors = { "Gray": "#dddddd" };
+        
         if(this.state.case != null) {
             //getting Time
             var fromTime = new Date(this.state.case['From Time']).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
@@ -146,45 +146,7 @@ class fullReport extends Component {
                     <div className="row">
                         <div className="offenseCard card col-10">
                             <h2 className="card-header">Offense Description</h2>
-                            <Carousel
-                            showThumbs={false}
-                            showIndicators={false}>
-                                <div className="offenseDescriptionElement">
-                                    <div className="card offenseDescriptionElementCard"style={{backgroundColor:bgColors.Gray}}>
-                                        <div classname="card-body" >
-                                        <div className="row">
-                                            <div className="whatTitle col-3">What (Offense)</div>
-                                            <div className="col-3"><b>Alcohol: </b>{this.state.case['Video'] != null && this.state.case['Alcohol'].toString()}</div>
-                                            <div className="col-3"><b>Drug: </b>{this.state.case['VClear'] != null && this.state.case['Drug'].toString()}</div>
-                                        </div>
-                                        <hr></hr>
-                                        <div className="row">
-                                            <div className="where col-4"><b>Old Offense: </b>{this.state.case['Offense']}</div>
-                                            <div className="where col-4"><b>NIBRS Offense: </b>{this.state.case['NIBRSOffense']}</div>
-                                            <div className="where col-4"><b># Premises: </b>{this.state.case['Premises']}</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="where col-4"><b>Offense From: </b>{this.state.case['Offn From']}</div>
-                                            <div className="where col-4"><b>UCR Changed: </b>{this.state.case['UCR Changed']}</div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="where col-4"><b>Prop. Type: </b>{this.state.case['PType']}</div>
-                                            <div className="where col-4"><b>Weapon: </b>{this.state.case['Weapon']}</div>
-                                            <div className="where col-4"><b>UCInc+: </b>{this.state.case['UCInc+']}</div>
-                                        </div>
-                                        </div>
-                                    </div>
-                                    <img alt=""></img>
-                                </div>
-                                <div className="offenseDescriptionElement">
-                                    Second
-                                    
-                                </div>
-                            </Carousel>
-
-                            
-                            
-                            
+                                {this.getOffenseDescription()}
                         </div>
                         
                     </div>
@@ -208,6 +170,46 @@ class fullReport extends Component {
                 </div>
             )
         }
+    }
+
+    getOffenseDescription() {
+        var bgColors = { "Gray": "#dddddd" };
+        var result = [];
+        for(var i = 0; i < 2; i++) {
+            result.push(
+                <div className="offenseDescriptionElement">
+                    <div className="card offenseDescriptionElementCard"style={{backgroundColor:bgColors.Gray}}>
+                        <div classname="card-body" >
+                            <div className="row">
+                                <div className="where col-4"><b>OCA #: </b>{}</div>
+                                <div className="where col-4"><b>Seq #: </b>{i+1}</div>
+                                <div className="where col-4"><b>Offense Code: </b>{}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-4"><b>Attempt Complete: </b>{}</div>
+                                <div className="where col-4"><b>Counts: </b>{}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-12"><b>Offense Description: </b>{}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-4"><b>Statute: </b>{}</div>
+                                <div className="where col-4"><b>Misdemeanor - Felony: </b>{}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <img alt=""></img>
+                </div>
+            );
+        }
+        return (
+            <Carousel
+            showThumbs={false}
+            showIndicators={false}>
+                {result}
+            </Carousel>
+        )
+        
     }
 
     
