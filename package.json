@@ -18,17 +18,20 @@
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "jquery": "^1.9.1",
     "mdbreact": "^4.22.0",
     "morgan": "~1.9.1",
     "mssql": "^6.0.0",
     "react": "^16.10.2",
     "react-datepicker": "^2.9.6",
     "react-dom": "^16.10.2",
+    "react-responsive-carousel": "^3.1.51",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.2.0",
     "react-select": "^3.0.8",
     "read": "^1.0.7",
-    "sprintf-js": "^1.1.2"
+    "sprintf-js": "^1.1.2",
+    "typescript": "^3.7.2"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"
