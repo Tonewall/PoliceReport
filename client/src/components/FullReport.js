@@ -24,8 +24,7 @@ class fullReport extends Component {
         fetch('/incident-number-basic/'+incidentNumber)
             .then(results => {
                 results.json().then(data=> {
-                    this.setState({case: data},
-                        function() {console.log(this.state.case)})
+                    this.setState({case: data})
                 })
             })
             .catch(err => console.error(err))
@@ -198,7 +197,6 @@ class fullReport extends Component {
             )
         }
     }
-
     getOffenseDescription() {
         var style = {
             backgroundColor: "#dddddd",
@@ -388,17 +386,18 @@ class fullReport extends Component {
         var result = [];
         if(this.state.arrestInfo != null) {
             for(var i = 0; i < arrest.length; i++) {
+                var arrestTime = new Date(arrest[i]['ArrestTime']).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
                 result.push(
                     <div className="offenseDescriptionElement" key={i}>
                         <div className="offenseDescriptionElementCard"style={style}>
                             <div className="row">
-                                <div className="where col-3"><b>Arrest Date: </b>{arrest[i]['ArrestDate']}</div>
+                                <div className="where col-3"><b>Arrest Date: </b>{arrest[i]['ArrestDate'] && arrest[i]['ArrestDate'].substring(0,10)}</div>
                                 <div className="where col-3"><b>Arrest Officer: </b>{arrest[i]['ArrestOfficer']}</div>
-                                <div className="where col-3"><b>Arrest Time: </b>{arrest[i]['ArrestTime']}</div>
+                                <div className="where col-3"><b>Arrest Time: </b>{arrestTime}</div>
                                 <div className="where col-3"><b>Arrest Address: </b>{arrest[i]['ArrestAddress']}</div>
                             </div>
                             <div className="row">
-                                <div className="where col-3"><b>Offense Date: </b>{arrest[i]['OffenseDate']}</div>
+                                <div className="where col-3"><b>Offense Date: </b>{arrest[i]['OffenseDate'] && arrest[i]['OffenseDate'].substring(0,10)}</div>
                                 <div className="where col-3"><b>Drug Use: </b>{arrest[i]['DrugUse']}</div>
                             </div>
                             <div className="row">
