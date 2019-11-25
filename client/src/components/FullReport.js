@@ -12,6 +12,7 @@ class fullReport extends Component {
         offenderInfo: null,
         arrestInfo: null,
         propertyInfo: null,
+        MO: null,
     }
     
 
@@ -63,10 +64,16 @@ class fullReport extends Component {
                 })
             })
             .catch(err => console.error(err))
+        fetch('/MO/'+incidentNumber)
+            .then(results => {
+                results.json().then(data=> {
+                    this.setState({MO: data})
+                })
+            })
+            .catch(err => console.error(err))
     }
 
     getReport() {
-        
         if(this.state.case != null) {
             //getting Time
             var fromTime = new Date(this.state.case['From Time']).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
@@ -81,6 +88,34 @@ class fullReport extends Component {
                         <div className="topFullReport col-2"><b>Officer: </b> {this.state.case['Officer Name']}</div>
                         <div className="topFullReport col-2"><b>VClear: </b> {this.state.case['VClear'] != null && this.state.case['VClear'].toString()}</div>
                         <div className="topFullReport col-2"><b>Video: </b> {this.state.case['Video'] != null && this.state.case['Video'].toString()}</div>
+                    </div>
+                    <div className="row">
+                        <div className="col-1"></div>
+                        <div className="topFullReport col-3"><b>GT Type: </b>{this.state.case['GTtype']}</div>
+                        <div className="topFullReport col-3"><b>EMS: </b>{this.state.case['EMS']}</div>
+                        <div className="topFullReport col-3"><b>Suicide: </b>{this.state.case['Suicide']}</div>
+                    </div>
+                    <div className="row">
+                        <div className="col-1"></div>
+                        <div className="topFullReport col-3"><b>GT Status: </b>{this.state.case['GTstatus']}</div>
+                        <div className="topFullReport col-3"><b>Injured: </b>{this.state.case['Injured']}</div>
+                        <div className="topFullReport col-3"><b>1013: </b>{this.state.case['1013']}</div>
+                    </div>
+                    <div className="row">
+                        <div className="col-1"></div>
+                        <div className="topFullReport col-3"><b>Clery: </b>{this.state.case['Clery']}</div>
+                        <div className="topFullReport col-3"><b>CSArr: </b>{this.state.case['CSArr']}</div>
+                        <div className="topFullReport col-3"><b>CSRef: </b>{this.state.case['CSRef']}</div>
+                    </div>
+                    <div className="row">
+                        <div className="col-1"></div>
+                        <div className="topFullReport col-3"><b>Clery+: </b>{this.state.case['Clery+']}</div>
+                        <div className="topFullReport col-3"><b>8399: </b>{this.state.case['8399']}</div>
+                        <div className="topFullReport col-3"><b>CSDVS: </b>{this.state.case['CSDVS']}</div>
+                    </div>
+                    <div className="row">
+                        <div className="col-1"></div>
+                        <div className="topFullReport col-3"><b>Repeat Offender: </b>{this.state.case['RO'] != null && this.state.case['RO'].toString()}</div>
                     </div>
                     <div className="row whenRow">
                         <div className="whenCard card col-10">
@@ -176,6 +211,12 @@ class fullReport extends Component {
                                 {this.getArrest()}
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="arrestCard card col-10">
+                            <h2 className="card-header">M.O. Characteristics</h2>
+                                {this.getMO()}
+                        </div>
+                    </div>
                 </div>
             )
         } else {
@@ -185,7 +226,6 @@ class fullReport extends Component {
                 </div>
             )
         }
-         
     };
 
     getTitle() {
@@ -210,7 +250,7 @@ class fullReport extends Component {
                     <div className="offenseDescriptionElement" key={i}>
                         <div className="offenseDescriptionElementCard"style={style}>
                             <div className="row">
-                                <div className="where col-4"><b>OCA #: </b>{offenseDesc[i]['IncidentNumber']}</div>
+                                <div className="where col-4"><b>OCA #: </b>{this.state.case['OCA Number']}</div>
                                 <div className="where col-4"><b>Seq #: </b>{offenseDesc[i]['SequenceNumber']}</div>
                                 <div className="where col-4"><b>Offense Code: </b>{offenseDesc[i]['OffenseCode']}</div>
                             </div>
@@ -222,8 +262,8 @@ class fullReport extends Component {
                                 <div className="where col-12"><b>Offense Description: </b>{offenseDesc[i]['OffenseDescription']}</div>
                             </div>
                             <div className="row">
-                                <div className="where col-4"><b>Statute: </b>{}</div>
-                                <div className="where col-4"><b>Misdemeanor - Felony: </b>{}</div>
+                                <div className="where col-4"><b>Statute: </b>{offenseDesc[i]['Statute']}</div>
+                                <div className="where col-4"><b>Misdemeanor - Felony: </b>{offenseDesc[i]['OffenseType']}</div>
                             </div>
                         </div>
                         <img alt=""></img>
@@ -292,17 +332,25 @@ class fullReport extends Component {
                                 <div className="where col-3"><b>Seq #: </b>{property[i]['Status']}</div>
                             </div>
                             <div className="row">
-                                <div className="where col-4"><b>Vehicle Make: </b>{this.state.case['Make']}</div>
-                                <div className="where col-4"><b>Vehicle Model: </b>{property[i]['Model']}</div>
+                                <div className="where col-3"><b>Vehicle Make: </b>{this.state.case['Make']}</div>
+                                <div className="where col-3"><b>Vehicle Model: </b>{property[i]['Model']}</div>
                             </div>
                             <div className="row">
-                                <div className="where col-4"><b>Vehicle Year: </b>{property[i]['VehicleYear']}</div>
-                                <div className="where col-4"><b>Vehicle Type: </b>{property[i]['VehicleType']}</div>
-                                <div className="where col-4"><b>Vehicle Style: </b>{property[i]['VehicleStyle']}</div>
+                                <div className="where col-3"><b>Vehicle Year: </b>{property[i]['VehicleYear']}</div>
+                                <div className="where col-3"><b>Vehicle Type: </b>{property[i]['VehicleType']}</div>
+                                <div className="where col-3"><b>Vehicle Style: </b>{property[i]['VehicleStyle']}</div>
                             </div>
                             <div className="row">
-                                <div className="where col-4"><b>License Plate #: </b>{property[i]['LicensePlateNumber']}</div>
-                                <div className="where col-4"><b>License Plate State: </b>{property[i]['LicensePlateState']}</div>
+                                <div className="where col-3"><b>Item Value: </b>${property[i]['ItemValue']}</div>
+                                <div className="where col-3"><b>Recovered: </b>{property[i]['Recovered'] != null && property[i]['Recovered'].toString()}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-3"><b>License Plate #: </b>{property[i]['LicensePlateNumber']}</div>
+                                <div className="where col-3"><b>License Plate State: </b>{property[i]['LicensePlateState']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-6"><b>Obtained Address: </b>{property[i]['ObtainedAddress']}</div>
+                                <div className="where col-3"><b>Obtained City: </b>{property[i]['ObtainedCity']}</div>
                             </div>
                             <div className="row">
                                 <div className="where col-12"><b>Item Description: </b>{property[i]['ItemDescription']}</div>
@@ -440,7 +488,35 @@ class fullReport extends Component {
         )
     }
 
-    
+    getMO() {
+        var style = {
+            backgroundColor: "#dddddd",
+            textAlign: "left"
+        }
+        var mo = this.state.MO
+        var result = [];
+        if(this.state.MO != null) {
+            for(var i = 0; i < mo.length; i++) {
+                result.push(
+                    <div className="offenseDescriptionElement" key={i}>
+                        <div className="offenseDescriptionElementCard"style={style}>
+                            <div className="row">
+                                <div className="where col-12">{mo[i]['MO']}</div>
+                            </div>
+                        </div>
+                        <img alt=""></img>
+                    </div>
+                );
+            }
+        }
+        return (
+            <Carousel
+            showThumbs={false}
+            showIndicators={false}>
+                {result}
+            </Carousel>
+        )
+    }
 
     render() {
         return(
