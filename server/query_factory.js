@@ -42,20 +42,45 @@ module.exports.get_incident_basic = function(incident_number) {
             , [Offn From]\
             , [UCR Changed]\
             , [PType]\
-            , [UCInc+]\n\
+            , [UCInc+]\
+            , [CSR]\
+            , [Clery]\
+            , [Clery+]\
+            , [CSArr]\
+            , [8399]\
+            , [CSRef]\
+            , [CSDVS]\
+            , [GTtype]\
+            , [GTstatus]\
+            , [EMS]\
+            , [Injured]\
+            , [Suicide]\
+            , [1013]\
+            , [RO]\n\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD] left join [CrimeAnalytics].[dbo].[Times] on ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
         WHERE ([OCA Number]=\'%d\')\
     ', incident_number)
 }
 
+module.exports.get_MO = function(incident_number) {
+    return sprintf('\
+    SELECT [SequenceNumber]\
+        , [MO]\n\
+    FROM [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\
+    WHERE ([IncidentNumber]=\'%d\')\n\
+    ORDER BY [SequenceNumber] ASC\
+', incident_number)
+}
+
 module.exports.get_offense_description = function(incident_number) {
     return sprintf('\
-        SELECT [IncidentNumber]\
-            , [SequenceNumber]\
+        SELECT [SequenceNumber]\
             , [OffenseCode]\
             , [AttemptComplete]\
             , [OffenseDescription]\
-            , [Counts]\n\
+            , [Counts]\
+            , [Statute]\
+            , [OffenseType]     /* Felony or Misdemeanor */\n\
         FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
         WHERE ([IncidentNumber]=\'%d\')\n\
         ORDER BY [SequenceNumber] ASC\
