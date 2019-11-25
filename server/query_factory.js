@@ -180,6 +180,9 @@ module.exports.get_property = function(incident_number) {
     ', incident_number)
 }
 
+module.exports.crimeTypes = 
+"SELECT DISTINCT [UCR_Code1],[Inc_Desc_PCase],[NIBRS_Category] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
+
 /* Address Ranking Query configured
 
 DECLARE @START_DATE Date = '10-10-2010';

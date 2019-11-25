@@ -9,22 +9,44 @@ const buildingOptions = [];
 var newBuildingOptions = buildingOptions;
 const APDBuildingOptions = [];
 var newAPDBuildingOptions = APDBuildingOptions;
-const crimeTypeOptions = [
-    {value: 'aggravatedAssault', label: 'Aggravated Assault'},
-    {value: 'arson', label: 'Arson'},
-    {value: 'autoTheft', label: 'Auto Theft'},
-    {value: 'burglary', label: 'Burglary'},
-    {value: 'drugsNarcotics', label: 'Drugs/Narcotics'},
-    {value: 'larceny', label: 'Larceny'},
-    {value: 'loitering', label: 'Loitering'},
-    {value: 'publicDisturbance', label: 'Public Disturbance'},
-    {value: 'robbery', label: 'Robbery'},
-    {value: 'rape', label: 'Rape'},
-    {value: 'trafficRelated', label: 'Traffic Related'},
-    {value: 'trespassing', label: 'Trespassing'},
-    {value: 'underageDrinking', label: 'Underage Drinking'},
-    {value: 'other', label: 'Other'},
-
+const crimeTypeOptions = [];
+var newCrimeTypeOptions = crimeTypeOptions;
+const crimeCategoryOptions = [
+    {value: 'Any', label: 'Any'},
+    {value: 'All Other Offenses', label: 'All Other Offenses'},
+    {value: 'Animal Cruelty', label: 'Animal Cruelty'},
+    {value: 'Arson', label: 'Arson'},
+    {value: 'Assault Offenses', label: 'Assault Offenses'},
+    {value: 'Bad Checks', label: 'Bad Checks'},
+    {value: 'Bribery', label: 'Bribery'},
+    {value: 'Burglary/Breaking & Entering', label: 'Burglary/Breaking & Entering'},
+    {value: 'Counterfeiting/Forgery', label: 'Counterfeiting/Forgery'},
+    {value: 'Curfew/Loitering/Vagrancy', label: 'Curfew/Loitering/Vagrancy'},
+    {value: 'Destruction/Damage/Vandalism', label: 'Destruction/Damage/Vandalism'},
+    {value: 'Disorderly Conduct', label: 'Disorderly Conduct'},
+    {value: 'Drug/Narcotic Offenses', label: 'Driving Under Influence'},
+    {value: 'Drug/Narcotic Offenses', label: 'Drug/Narcotic Offenses'},
+    {value: 'Drunkenness', label: 'Drunkenness'},
+    {value: 'Embezzlement', label: 'Embezzlement'},
+    {value: 'Extortion/Blackmail', label: 'Extortion/Blackmail'},
+    {value: 'Family Offenses, Nonviolent', label: 'Family Offenses, Nonviolent'},
+    {value: 'Fondling', label: 'Fondling'},
+    {value: 'Fraud Offenses', label: 'Fraud Offenses'},
+    {value: 'Gambling Offenses', label: 'Gambling Offenses'},
+    {value: 'Homicide Offenses', label: 'Homicide Offenses'},
+    {value: 'Kidnapping/Abduction', label: 'Kidnapping/Abduction'},
+    {value: 'Larceny/Theft Offenses', label: 'Larceny/Theft Offenses'},
+    {value: 'Liquor Law Violations', label: 'Liquor Law Violations'},
+    {value: 'Motor Vehicle Theft', label: 'Motor Vehicle Theft'},
+    {value: 'Peeping Tom', label: 'Peeping Tom'},
+    {value: 'Pornography/Obscene Material', label: 'Pornography/Obscene Material'},
+    {value: 'Prostitution Offenses', label: 'Prostitution Offenses'},
+    {value: 'Robbery', label: 'Robbery'},
+    {value: 'Sex Offenses, Forcible', label: 'Sex Offenses, Forcible'},
+    {value: 'Sex Offenses, Nonforcible', label: 'Sex Offenses, Nonforcible'},
+    {value: 'Stolen Property Offenses', label: 'Stolen Property Offenses'},
+    {value: 'Trespass of Real Property', label: 'Trespass of Real Property'},
+    {value: 'Weapons Law Violations', label: 'Weapons Law Violations'},
 ];
 const shiftOptions = [
     {value: 'aShift', label: 'A'},
@@ -115,6 +137,7 @@ class gtpdFilter extends Component {
         selectedBuilding: null,
         selectedAPDBuilding: null,
         selectedCrimeType: null,
+        selectedCrimeCategory: null,
         selectedShift: null,
         selectedArrest: null,
         selectedDepartment: {value: 'bothDepartment', label: 'Both Departments'},
@@ -128,6 +151,7 @@ class gtpdFilter extends Component {
     setBuilding = selectedBuilding => { this.setState({selectedBuilding}); };
     setAPDBuilding = selectedAPDBuilding => { this.setState({selectedAPDBuilding}); };
     setCrimeType = selectedCrimeType => { this.setState({selectedCrimeType}); };
+    setCrimeCategory = selectedCrimeCategory => { this.setState({selectedCrimeCategory}); };
     setShift = selectedShift => { this.setState({selectedShift}); }
     setArrest = selectedArrest => { this.setState({selectedArrest}); }
     setDepartment = selectedDepartment => { this.setState({selectedDepartment}); }
@@ -279,6 +303,23 @@ class gtpdFilter extends Component {
         }
     }
 
+    setCrimeCategory = selectedCrimeCategory => {
+        this.setState({selectedCrimeCategory});
+        //populating the newbuildingoptions with the desired buildings
+        var j = 0;
+        newCrimeTypeOptions = [];
+        if(selectedCrimeCategory.value !== "Any") {
+            for(var i = 0; i < crimeTypeOptions.length; i++) {
+                if(crimeTypeOptions[i]['NIBRS_Category'] === selectedCrimeCategory.value) {
+                    newCrimeTypeOptions[j] = crimeTypeOptions[i];
+                    j++;
+                }
+            }
+        } else {
+            newCrimeTypeOptions = crimeTypeOptions;
+        }
+    }
+
 
     //changing the date based on the date range chosen
     setDate = selectedDate => {
@@ -325,6 +366,7 @@ class gtpdFilter extends Component {
 
     componentDidMount() {
         this.getLocations();
+        this.getCrimeTypes();
     }
 
     //populating locations
@@ -347,11 +389,35 @@ class gtpdFilter extends Component {
         buildingOptions.sort((a, b) => (a.value > b.value) ? 1 : -1);
         APDBuildingOptions.sort((a, b) => (a.value > b.value) ? 1 : -1);
     }
+    populateCrimes(data) {
+        for(var i = 0; i < data.length; i++) {
+            if(data[i]["NIBRS_Category"] === null) {
+                crimeTypeOptions[i] = data[i];
+                crimeTypeOptions[i].value =  data[i]['Inc_Desc_PCase'];
+                crimeTypeOptions[i].label =  data[i]['Inc_Desc_PCase'];
+                crimeTypeOptions[i]['NIBRS_Category'] =  "All Other Offenses";
+            } else {
+                crimeTypeOptions[i] = data[i];
+                crimeTypeOptions[i].value = data[i]['Inc_Desc_PCase'];
+                crimeTypeOptions[i].label = data[i]['Inc_Desc_PCase'];
+            }
+        }
+        crimeTypeOptions.sort((a, b) => (a.value > b.value) ? 1 : -1);
+    }
     getLocations() {
         fetch('/locations')
             .then(results => {
                 results.json().then(data=> {
                     this.populateLocations(data)
+                })
+            })
+            .catch(err => console.error(err))
+    }
+    getCrimeTypes() {
+        fetch('/crimeTypes')
+            .then(results => {
+                results.json().then(data=> {
+                    this.populateCrimes(data)
                 })
             })
             .catch(err => console.error(err))
@@ -365,6 +431,7 @@ class gtpdFilter extends Component {
             selectedDepartment, 
             selectedOutcome, 
             selectedDate, 
+            selectedCrimeCategory,
         } = this.state;
 
 
@@ -406,13 +473,24 @@ class gtpdFilter extends Component {
                                     <h4 className="card-header">Crime</h4>
                                     <div className="card-body">
                                         <label className="col-12 col-form-label">
+                                            Category
+                                        </label>
+                                        <div>
+                                            <Select 
+                                            value={selectedCrimeCategory} 
+                                            onChange={this.setCrimeCategory} 
+                                            options={crimeCategoryOptions} 
+                                            placeholder={"Any"}
+                                            />
+                                        </div>
+                                        <label className="col-12 col-form-label">
                                             Type
                                         </label>
                                         <div>
                                             <Select 
                                             value={selectedCrimeType} 
                                             onChange={this.setCrimeType} 
-                                            options={crimeTypeOptions} 
+                                            options={newCrimeTypeOptions} 
                                             isMulti={true}
                                             placeholder={"Any"}
                                             />
