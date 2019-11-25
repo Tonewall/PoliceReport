@@ -101,7 +101,7 @@ module.exports.get_offender_info = function(incident_number) {
     ', incident_number)
 }
 
-module.exports.get_arreest_info = function(incident_number) {
+module.exports.get_arrest_info = function(incident_number) {
     return sprintf('\
         SELECT [SequenceNumber]\
             , CONCAT([LastName], \', \', [FirstName], \' \', [MiddleName]) AS OffenderName\

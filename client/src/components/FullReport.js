@@ -8,6 +8,10 @@ class fullReport extends Component {
     state = {
         case: null,
         offenseDescription: null,
+        narratives: null,
+        offenderInfo: null,
+        arrestInfo: null,
+        propertyInfo: null,
     }
     
 
@@ -20,43 +24,43 @@ class fullReport extends Component {
         fetch('/incident-number-basic/'+incidentNumber)
             .then(results => {
                 results.json().then(data=> {
-                    this.setState({case: data})
+                    this.setState({case: data},
+                        function() {console.log(this.state.case)})
                 })
             })
             .catch(err => console.error(err))
-        // fetch('/offense-description/'+incidentNumber)
-        //     .then(results => {
-        //         results.json().then(data=> {
-        //             console.log(data)
-        //             this.setState({offenseDescription: data})
-        //         })
-        //     })
-        //     .catch(err => console.error(err))
+        fetch('/offense-description/'+incidentNumber)
+            .then(results => {
+                results.json().then(data=> {
+                    this.setState({offenseDescription: data})
+                })
+            })
+            .catch(err => console.error(err))
         fetch('/narratives/'+incidentNumber)
             .then(results => {
                 results.json().then(data => {
-                    console.log(data)
+                    this.setState({narratives: data})
                 })
             })
             .catch(err => console.error(err))
         fetch('/offender-info/'+incidentNumber)
             .then(results => {
                 results.json().then(data => {
-                    console.log(data)
+                    this.setState({offenderInfo: data})
                 })
             })
             .catch(err => console.error(err))
         fetch('/arrest-info/'+incidentNumber)
             .then(results => {
                 results.json().then(data => {
-                    console.log(data)
+                    this.setState({arrestInfo: data})
                 })
             })
             .catch(err => console.error(err))
         fetch('/property-info/'+incidentNumber)
             .then(results => {
                 results.json().then(data => {
-                    console.log(data)
+                    this.setState({propertyInfo: data})
                 })
             })
             .catch(err => console.error(err))
@@ -122,7 +126,7 @@ class fullReport extends Component {
                     <div className="row">
                         <div className="offenseCard card col-10">
                             <div className="row">
-                                <div className="whatTitle col-3">What (Offense)</div>
+                                <div className="whatTitle col-3">What (Offense):</div>
                                 <div className="col-3"><b>Alcohol: </b>{this.state.case['Video'] != null && this.state.case['Alcohol'].toString()}</div>
                                 <div className="col-3"><b>Drug: </b>{this.state.case['VClear'] != null && this.state.case['Drug'].toString()}</div>
                             </div>
@@ -144,11 +148,34 @@ class fullReport extends Component {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="offenseCard card col-10">
+                        <div className="offenseDescCard card col-10">
                             <h2 className="card-header">Offense Description</h2>
-                                {this.getOffenseDescription()}
+                            {this.getOffenseDescription()}
                         </div>
-                        
+                    </div>
+                    <div className="row">
+                        <div className="narrativeCard card col-10">
+                            <h2 className="card-header">Narrative</h2>
+                            {this.getNarratives()}
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="propertyCard card col-10">
+                            <h2 className="card-header">Property</h2>
+                                {this.getProperty()}
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="offenderCard card col-10">
+                            <h2 className="card-header">Offender Information</h2>
+                                {this.getOffender()}
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="arrestCard card col-10">
+                            <h2 className="card-header">Arrest Info</h2>
+                                {this.getArrest()}
+                        </div>
                     </div>
                 </div>
             )
@@ -173,34 +200,38 @@ class fullReport extends Component {
     }
 
     getOffenseDescription() {
-        var bgColors = { "Gray": "#dddddd" };
+        var style = {
+            backgroundColor: "#dddddd",
+            textAlign: "left"
+        }
+        var offenseDesc = this.state.offenseDescription
         var result = [];
-        for(var i = 0; i < 2; i++) {
-            result.push(
-                <div className="offenseDescriptionElement">
-                    <div className="card offenseDescriptionElementCard"style={{backgroundColor:bgColors.Gray}}>
-                        <div classname="card-body" >
+        if(this.state.offenseDescription != null) {
+            for(var i = 0; i < offenseDesc.length; i++) {
+                result.push(
+                    <div className="offenseDescriptionElement" key={i}>
+                        <div className="offenseDescriptionElementCard"style={style}>
                             <div className="row">
-                                <div className="where col-4"><b>OCA #: </b>{}</div>
-                                <div className="where col-4"><b>Seq #: </b>{i+1}</div>
-                                <div className="where col-4"><b>Offense Code: </b>{}</div>
+                                <div className="where col-4"><b>OCA #: </b>{offenseDesc[i]['IncidentNumber']}</div>
+                                <div className="where col-4"><b>Seq #: </b>{offenseDesc[i]['SequenceNumber']}</div>
+                                <div className="where col-4"><b>Offense Code: </b>{offenseDesc[i]['OffenseCode']}</div>
                             </div>
                             <div className="row">
-                                <div className="where col-4"><b>Attempt Complete: </b>{}</div>
-                                <div className="where col-4"><b>Counts: </b>{}</div>
+                                <div className="where col-4"><b>Attempt Complete: </b>{offenseDesc[i]['AttemptComplete']}</div>
+                                <div className="where col-4"><b>Counts: </b>{offenseDesc[i]['Counts']}</div>
                             </div>
                             <div className="row">
-                                <div className="where col-12"><b>Offense Description: </b>{}</div>
+                                <div className="where col-12"><b>Offense Description: </b>{offenseDesc[i]['OffenseDescription']}</div>
                             </div>
                             <div className="row">
                                 <div className="where col-4"><b>Statute: </b>{}</div>
                                 <div className="where col-4"><b>Misdemeanor - Felony: </b>{}</div>
                             </div>
                         </div>
+                        <img alt=""></img>
                     </div>
-                    <img alt=""></img>
-                </div>
-            );
+                );
+            }
         }
         return (
             <Carousel
@@ -209,7 +240,205 @@ class fullReport extends Component {
                 {result}
             </Carousel>
         )
-        
+    }
+    getNarratives() {
+        var style = {
+            backgroundColor: "#dddddd",
+            textAlign: "left"
+        }
+        var narratives = this.state.narratives
+        var result = [];
+        if(this.state.narratives != null) {
+            for(var i = 0; i < narratives.length; i++) {
+                result.push(
+                    <div className="offenseDescriptionElement" key={i}>
+                        <div className="offenseDescriptionElementCard"style={style}>
+                            <div className="row">
+                                <div className="where col-4"><b>Case #: </b>{this.state.case['OCA Number']}</div>
+                                <div className="where col-4"><b>Date Entered: </b>{narratives[i]['DateEntered'] && narratives[i]['DateEntered'].substring(0,10)}</div>
+                                <div className="where col-4"><b>Officer Name: </b>{narratives[i]['OfficerName']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-12"><b>Text: </b>{narratives[i]['Text']}</div>
+                            </div>
+                        </div>
+                        <img alt=""></img>
+                    </div>
+                );
+            }
+        }
+        return (
+            <Carousel
+            showThumbs={false}
+            showIndicators={false}>
+                {result}
+            </Carousel>
+        )
+    }
+    getProperty() {
+        var style = {
+            backgroundColor: "#dddddd",
+            textAlign: "left"
+        }
+        var property = this.state.propertyInfo
+        var result = [];
+        if(this.state.propertyInfo != null) {
+            for(var i = 0; i < property.length; i++) {
+                result.push(
+                    <div className="offenseDescriptionElement" key={i}>
+                        <div className="offenseDescriptionElementCard"style={style}>
+                            <div className="row">
+                                <div className="where col-3"><b>Case #: </b>{this.state.case['OCA Number']}</div>
+                                <div className="where col-3"><b>Seq #: </b>{property[i]['SequenceNumber']}</div>
+                                <div className="where col-3"><b>Type Code: </b>{}</div>
+                                <div className="where col-3"><b>Seq #: </b>{property[i]['Status']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-4"><b>Vehicle Make: </b>{this.state.case['Make']}</div>
+                                <div className="where col-4"><b>Vehicle Model: </b>{property[i]['Model']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-4"><b>Vehicle Year: </b>{property[i]['VehicleYear']}</div>
+                                <div className="where col-4"><b>Vehicle Type: </b>{property[i]['VehicleType']}</div>
+                                <div className="where col-4"><b>Vehicle Style: </b>{property[i]['VehicleStyle']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-4"><b>License Plate #: </b>{property[i]['LicensePlateNumber']}</div>
+                                <div className="where col-4"><b>License Plate State: </b>{property[i]['LicensePlateState']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-12"><b>Item Description: </b>{property[i]['ItemDescription']}</div>
+                            </div>
+                        </div>
+                        <img alt=""></img>
+                    </div>
+                );
+            }
+        }
+        return (
+            <Carousel
+            showThumbs={false}
+            showIndicators={false}>
+                {result}
+            </Carousel>
+        )
+    }
+    getOffender() {
+        var style = {
+            backgroundColor: "#dddddd",
+            textAlign: "left"
+        }
+        var offender = this.state.offenderInfo
+        var result = [];
+        if(this.state.offenderInfo != null) {
+            for(var i = 0; i < offender.length; i++) {
+                result.push(
+                    <div className="offenseDescriptionElement" key={i}>
+                        <div className="offenseDescriptionElementCard"style={style}>
+                            <div className="row">
+                                <div className="where col-3"><b>Arrest: </b>{offender[i]['Arrest'] != null && offender[i]['Arrest'].toString()}</div>
+                                <div className="where col-3"><b>Warrant: </b>{offender[i]['Warrant'] != null && offender[i]['Warrant'].toString()}</div>
+                                <div className="where col-3"><b>Wanted: </b>{offender[i]['Wanted'] != null && offender[i]['Wanted'].toString()}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-3"><b>Name: </b>{offender[i]['OffenderName']}</div>
+                                <div className="where col-3"><b>Age: </b>{offender[i]['Age']}</div>
+                                <div className="where col-3"><b>Date of Birth: </b>{offender[i]['DateOfBirth'] && offender[i]['DateOfBirth'].substring(0,10)}</div>
+                                <div className="where col-3"><b>Sex: </b>{offender[i]['Sex']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-3"><b>Height: </b>{offender[i]['Height']}</div>
+                                <div className="where col-3"><b>Weight: </b>{offender[i]['Weight']}</div>
+                                <div className="where col-3"><b>Hair Color: </b>{offender[i]['HairColor']}</div>
+                                <div className="where col-3"><b>Race: </b>{offender[i]['Race']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-6"><b>Home Address: </b>{offender[i]['HomeAddress']}</div>
+                                <div className="where col-3"><b>Home City: </b>{offender[i]['HomeCity']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-6"><b>Driver License #: </b>{offender[i]['DriverLicenseNumber']}</div>
+                                <div className="where col-6"><b>SSN: </b>{offender[i]['SSN']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-6"><b>Employer: </b>{offender[i]['Employer']}</div>
+                                <div className="where col-3"><b>Juvenile: </b>{offender[i]['Juvenile'] != null && offender[i]['Juvenile'].toString()}</div>
+                                <div className="where col-3"><b>Occupation: </b>{offender[i]['Occupation']}</div>
+                            </div>
+                        </div>
+                        <img alt=""></img>
+                    </div>
+                );
+            }
+        }
+        return (
+            <Carousel
+            showThumbs={false}
+            showIndicators={false}>
+                {result}
+            </Carousel>
+        )
+    }
+    getArrest() {
+        var style = {
+            backgroundColor: "#dddddd",
+            textAlign: "left"
+        }
+        var arrest = this.state.arrestInfo
+        var result = [];
+        if(this.state.arrestInfo != null) {
+            for(var i = 0; i < arrest.length; i++) {
+                result.push(
+                    <div className="offenseDescriptionElement" key={i}>
+                        <div className="offenseDescriptionElementCard"style={style}>
+                            <div className="row">
+                                <div className="where col-3"><b>Arrest Date: </b>{arrest[i]['ArrestDate']}</div>
+                                <div className="where col-3"><b>Arrest Officer: </b>{arrest[i]['ArrestOfficer']}</div>
+                                <div className="where col-3"><b>Arrest Time: </b>{arrest[i]['ArrestTime']}</div>
+                                <div className="where col-3"><b>Arrest Address: </b>{arrest[i]['ArrestAddress']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-3"><b>Offense Date: </b>{arrest[i]['OffenseDate']}</div>
+                                <div className="where col-3"><b>Drug Use: </b>{arrest[i]['DrugUse']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-3"><b>Offender Name: </b>{arrest[i]['OffenderName']}</div>
+                                <div className="where col-3"><b>Age: </b>{arrest[i]['Age']}</div>
+                                <div className="where col-3"><b>Date of Birth: </b>{arrest[i]['DateOfBirth'] && arrest[i]['DateOfBirth'].substring(0,10)}</div>
+                                <div className="where col-3"><b>Sex: </b>{arrest[i]['Sex']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-3"><b>Hair Color: </b>{arrest[i]['HairColor']}</div>
+                                <div className="where col-3"><b>Height: </b>{arrest[i]['Height']}</div>
+                                <div className="where col-3"><b>Weight: </b>{arrest[i]['Weight']}</div>
+                                <div className="where col-3"><b>Race: </b>{arrest[i]['Race']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-6"><b>Home Address: </b>{arrest[i]['HomeAddress']}</div>
+                                <div className="where col-3"><b>Home City: </b>{arrest[i]['HomeCity']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-3"><b>Juvenile: </b>{arrest[i]['Juvenile'] != null && arrest[i]['Juvenile'].toString()}</div>
+                                <div className="where col-3"><b>Occupation: </b>{arrest[i]['Occupation']}</div>
+                                <div className="where col-3"><b>Employer: </b>{arrest[i]['Employer']}</div>
+                            </div>
+                            <div className="row">
+                                <div className="where col-3"><b>SSN: </b>{arrest[i]['SSN']}</div>
+                                <div className="where col-3"><b>Driver License Number: </b>{arrest[i]['DriverLicenseNumber']}</div>
+                            </div>
+                        </div>
+                        <img alt=""></img>
+                    </div>
+                );
+            }
+        }
+        return (
+            <Carousel
+            showThumbs={false}
+            showIndicators={false}>
+                {result}
+            </Carousel>
+        )
     }
 
     

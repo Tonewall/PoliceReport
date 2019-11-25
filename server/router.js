@@ -151,7 +151,7 @@ function add_router(app) {
 
             // resolve arrest_info
             arrest_info_resolver = new Promise(async (res, rej) => {
-                query = query_factory.get_arreest_info(req.params.incident_number)
+                query = query_factory.get_arrest_info(req.params.incident_number)
                 db_query(query, (err, result) => {
                     if (!err) {
                         if (result != null)
@@ -236,7 +236,7 @@ function add_router(app) {
     });
 
     app.get('/arrest-info/:incident_number', function (req, res) {
-        query = query_factory.get_arreest_info(req.params.incident_number)
+        query = query_factory.get_arrest_info(req.params.incident_number)
         db_query(query, (err, result) => {
             if (!err) {
                 if (result != null)
