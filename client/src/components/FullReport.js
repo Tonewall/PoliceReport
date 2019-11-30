@@ -8,7 +8,8 @@ class fullReport extends Component {
     state = {
         case: null,
         offenseDescription: null,
-        narratives: null,
+        narrative: null,
+        supplements: null,
         offenderInfo: null,
         arrestInfo: null,
         propertyInfo: null,
@@ -36,10 +37,17 @@ class fullReport extends Component {
                 })
             })
             .catch(err => console.error(err))
-        fetch('/narratives/'+incidentNumber)
+        fetch('/narrative/'+incidentNumber)
             .then(results => {
                 results.json().then(data => {
-                    this.setState({narratives: data})
+                    this.setState({narrative: data['Narrative']})
+                })
+            })
+            .catch(err => console.error(err))
+        fetch('/supplements/'+incidentNumber)
+            .then(results => {
+                results.json().then(data => {
+                    this.setState({supplements: data})
                 })
             })
             .catch(err => console.error(err))
@@ -189,8 +197,19 @@ class fullReport extends Component {
                     </div>
                     <div className="row">
                         <div className="narrativeCard card col-10">
-                            <h2 className="card-header">Narrative</h2>
-                            {this.getNarratives()}
+                            <div className="row">
+                                <div className="narrativeTitle col-12">Narrative</div>
+                            </div>
+                            <hr></hr>
+                            <div className="row">
+                                <div className="where col-12">{this.state.narrative}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="supplementCard card col-10">
+                            <h2 className="card-header">Supplement</h2>
+                            {this.getSupplements()}
                         </div>
                     </div>
                     <div className="row">
@@ -279,25 +298,36 @@ class fullReport extends Component {
             </Carousel>
         )
     }
-    getNarratives() {
+    getNarrative() {
+        return (
+            <div className="offenseDescriptionElement">
+                <div className="offenseDescriptionCard">
+                    <div className="where col-12">
+                        {this.state.narrative}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+    getSupplements() {
         var style = {
             backgroundColor: "#dddddd",
             textAlign: "left"
         }
-        var narratives = this.state.narratives
+        var supplements = this.state.supplements
         var result = [];
-        if(this.state.narratives != null) {
-            for(var i = 0; i < narratives.length; i++) {
+        if(this.state.supplements != null) {
+            for(var i = 0; i < supplements.length; i++) {
                 result.push(
                     <div className="offenseDescriptionElement" key={i}>
                         <div className="offenseDescriptionElementCard"style={style}>
                             <div className="row">
                                 <div className="where col-4"><b>Case #: </b>{this.state.case['OCA Number']}</div>
-                                <div className="where col-4"><b>Date Entered: </b>{narratives[i]['DateEntered'] && narratives[i]['DateEntered'].substring(0,10)}</div>
-                                <div className="where col-4"><b>Officer Name: </b>{narratives[i]['OfficerName']}</div>
+                                <div className="where col-4"><b>Date Entered: </b>{supplements[i]['DateEntered'] && supplements[i]['DateEntered'].substring(0,10)}</div>
+                                <div className="where col-4"><b>Officer Name: </b>{supplements[i]['OfficerName']}</div>
                             </div>
                             <div className="row">
-                                <div className="where col-12"><b>Text: </b>{narratives[i]['Text']}</div>
+                                <div className="where col-12"><b>Text: </b>{supplements[i]['Text']}</div>
                             </div>
                         </div>
                         <img alt=""></img>

@@ -87,7 +87,15 @@ module.exports.get_offense_description = function(incident_number) {
     ', incident_number)
 }
 
-module.exports.get_narratives = function(incident_number) {
+module.exports.get_narrative = function(incident_number) {
+    return sprintf('\
+        SELECT [Narrative]\n\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncident]\n\
+        WHERE ([IncidentNumber]=\'%d\')\n\
+    ', incident_number)
+}
+
+module.exports.get_supplements = function(incident_number) {
     return sprintf('\
         SELECT [SequenceNumber]\
             , [DateEntered]\
