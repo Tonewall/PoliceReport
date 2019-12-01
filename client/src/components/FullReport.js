@@ -23,59 +23,98 @@ class fullReport extends Component {
     }
 
     populateReport(incidentNumber) {
+        var getDetails = ()=>{
+            fetch('/offense-description/'+incidentNumber)
+                .then(results => {
+                    results.json().then(data=> {
+                        this.setState({offenseDescription: data})
+                    })
+                })
+                .catch(err => console.error(err))
+            if(this.state.case['Location Code'].includes('APD'))
+            {
+                fetch('/narrative_APD/'+incidentNumber)
+                    .then(results => {
+                        if(!results.ok) {
+                            results.text().then(txt=>console.log(txt))
+                            this.setState({narrative: 'No narrative'})
+                            return
+                        }
+                        results.json().then(data => {
+                            var text = ""
+                            for(var i=1;;i++) {
+                                if(("Expr"+i) in data)
+                                {
+                                    if(data["Expr"+i] != null)
+                                        text = text + data["Expr"+i]
+                                    else
+                                        break;
+                                }
+                                else
+                                    break;
+                            }
+                            this.setState({narrative: text})
+                        })
+                    })
+                    .catch(err => console.error(err))
+            }
+            else
+            {
+                fetch('/narrative/'+incidentNumber)
+                    .then(results => {
+                        if(!results.ok) {
+                            results.text().then(txt=>console.log(txt))
+                            this.setState({narrative: 'No narrative'})
+                            return
+                        }
+                        results.json().then(data => {
+                            this.setState({narrative: data['Narrative']})
+                        })
+                    })
+                    .catch(err => console.error(err))
+            }
+            fetch('/supplements/'+incidentNumber)
+                .then(results => {
+                    results.json().then(data => {
+                        this.setState({supplements: data})
+                    })
+                })
+                .catch(err => console.error(err))
+            fetch('/offender-info/'+incidentNumber)
+                .then(results => {
+                    results.json().then(data => {
+                        this.setState({offenderInfo: data})
+                    })
+                })
+                .catch(err => console.error(err))
+            fetch('/arrest-info/'+incidentNumber)
+                .then(results => {
+                    results.json().then(data => {
+                        this.setState({arrestInfo: data})
+                    })
+                })
+                .catch(err => console.error(err))
+            fetch('/property-info/'+incidentNumber)
+                .then(results => {
+                    results.json().then(data => {
+                        this.setState({propertyInfo: data})
+                    })
+                })
+                .catch(err => console.error(err))
+            fetch('/MO/'+incidentNumber)
+                .then(results => {
+                    results.json().then(data=> {
+                        this.setState({MO: data})
+                    })
+                })
+                .catch(err => console.error(err))
+            }
+
         fetch('/incident-number-basic/'+incidentNumber)
             .then(results => {
                 results.json().then(data=> {
                     this.setState({case: data})
-                })
-            })
-            .catch(err => console.error(err))
-        fetch('/offense-description/'+incidentNumber)
-            .then(results => {
-                results.json().then(data=> {
-                    this.setState({offenseDescription: data})
-                })
-            })
-            .catch(err => console.error(err))
-        fetch('/narrative/'+incidentNumber)
-            .then(results => {
-                results.json().then(data => {
-                    this.setState({narrative: data['Narrative']})
-                })
-            })
-            .catch(err => console.error(err))
-        fetch('/supplements/'+incidentNumber)
-            .then(results => {
-                results.json().then(data => {
-                    this.setState({supplements: data})
-                })
-            })
-            .catch(err => console.error(err))
-        fetch('/offender-info/'+incidentNumber)
-            .then(results => {
-                results.json().then(data => {
-                    this.setState({offenderInfo: data})
-                })
-            })
-            .catch(err => console.error(err))
-        fetch('/arrest-info/'+incidentNumber)
-            .then(results => {
-                results.json().then(data => {
-                    this.setState({arrestInfo: data})
-                })
-            })
-            .catch(err => console.error(err))
-        fetch('/property-info/'+incidentNumber)
-            .then(results => {
-                results.json().then(data => {
-                    this.setState({propertyInfo: data})
-                })
-            })
-            .catch(err => console.error(err))
-        fetch('/MO/'+incidentNumber)
-            .then(results => {
-                results.json().then(data=> {
-                    this.setState({MO: data})
+                    getDetails()
                 })
             })
             .catch(err => console.error(err))

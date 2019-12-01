@@ -87,6 +87,14 @@ module.exports.get_offense_description = function(incident_number) {
     ', incident_number)
 }
 
+module.exports.get_narrative_APD = function(incident_number) {
+    return sprintf('\
+        SELECT *\n\
+        FROM [CrimeAnalytics].[dbo].[APD Narratives]\n\
+        WHERE ([offense_id]=\'%d\')\n\
+    ', incident_number)
+}
+
 module.exports.get_narrative = function(incident_number) {
     return sprintf('\
         SELECT [Narrative]\n\

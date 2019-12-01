@@ -244,12 +244,29 @@ function add_router(app) {
         });
     });
 
+    app.get('/narrative_APD/:incident_number', function (req, res) {
+        query = query_factory.get_narrative_APD(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result != null && result[0] != null)
+                {
+                    res.send(result[0]);
+                }
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+
     app.get('/narrative/:incident_number', function (req, res) {
         query = query_factory.get_narrative(req.params.incident_number)
         db_query(query, (err, result) => {
             if (!err) {
-                if (result != null)
+                if (result != null && result[0] != null)
+                {
                     res.send(result[0]);
+                }
                 else
                     res.status(400).send('No data found');
             }
