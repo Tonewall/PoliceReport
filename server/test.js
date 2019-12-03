@@ -1,12 +1,7 @@
-a = new Promise(async (res, rej) => {
-    rej(123)
-    res(456)
-})
-
-b = async function() 
+var a = new Array(10000)
+for(var i=0;i<a.length;i++)
 {
-    result = await a.catch(err=>console.log(err))
-    console.log(result);
+    a[i] = i;
 }
-
-b()
+a.forEach(key=>console.log(key))
+console.log(1)

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import "./Data.css";
 import { MDBDataTable } from 'mdbreact';
+import { incident_datatable_feeds } from './CommonLibrary.js'
 // import { Link } from 'react-router-dom';
 
 class FilterResult extends Component {
@@ -16,8 +17,20 @@ class FilterResult extends Component {
         //this.createData = this.createData.bind(this);
     }
 
-    
+    populateData = function (data) {
+        /* Need to preprocess query result before */
+        var datatable_feeds = incident_datatable_feeds(data)
+        this.setState({
+            no_history: false,
+            wrong_query: false,
+            crimeData: {
+                columns: datatable_feeds['columns'],
+                rows: datatable_feeds['rows']
+            }
+        });
+    }
 
+    /*
     populateData = function (data) {
         this.setState({
             crimeData: {
@@ -64,6 +77,7 @@ class FilterResult extends Component {
         }
         )
     }
+    */
 
     componentDidMount() {
         this.getData();
@@ -85,9 +99,12 @@ class FilterResult extends Component {
                 <div className="card">
                     <div className="card-body">
                         <MDBDataTable
+                            scrollX
+                            scrollY
                             striped
                             bordered
                             hover
+                            maxHeight='66vh'
                             entries={20}
                             data={this.state.crimeData}
                         />
