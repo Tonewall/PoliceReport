@@ -422,6 +422,10 @@ class gtpdFilter extends Component {
             })
             .catch(err => console.error(err))
     }
+
+    handleSubmit(){
+        console.log(this.state)
+    }
     
     render() {
         const {
@@ -440,7 +444,7 @@ class gtpdFilter extends Component {
             <div className="card filterCard">
                 <h2 className="card-header">Filter</h2>
                 <div className="card-body">
-                    <form>
+                    <form onSubmit={this.handleSubmit}>
                         <div className="row">
                             <div className="col-lg-4 col-6">
                                 <div className="card filterTypeCards locationsCard">
