@@ -46,7 +46,7 @@ function db_query(query_string, next) {
 function add_router(app) {
     /* For now, pulls data from fake table, but will from [Incident Offenses-GTPD+APD] table */
     app.get('/showall', function (req, res) {
-        queryString = query_factory.get_query();
+        queryString = query_factory.showall();
         db_query(queryString, (err, result) => {
             if (!err) res.send(result);
             else res.status(400).send(err);
@@ -55,7 +55,7 @@ function add_router(app) {
 
     /* Direct querying for debugging purpose */
     app.post('/direct-query', function (req, res) {
-        db_query(req.params.query, (err, result) => {
+        db_query(req.body['query'], (err, result) => {
             if (!err) res.send(JSON.stringify(result));
             else res.status(400).send([err]);
         });

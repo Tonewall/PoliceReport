@@ -2,12 +2,102 @@ const sprintf = require('sprintf-js').sprintf;
 
 // TODO: add more methods for common query generation
 
-module.exports.get_query = function() {
-    return sprintf("SELECT TOP (%d) [CaseId], [Date], [Time], [Location], [Officer], [Description] FROM [CrimeAnalytics].[dbo].[Crime_Report]", 1000);
+module.exports.showall = function() {
+    return sprintf('\
+        SELECT top 1000 [OCA Number]\
+            , [Report Date]\
+            , [Offense]\
+            , [NIBRSOffense]\
+            , [SRSOffense]\
+            , [Case Status]\
+            , [Case Disposition]\
+            , [VClear]\
+            , [Video]\
+            , [Premises]\
+            , [UCInc+]\
+            , [Arson]\
+            , [GT]\
+            , [GTstatus]\
+            , [GTtype]\
+            , [PType]\
+            , [Location Code]\
+            , [LType]\
+            , [Location Landmark]\
+            , [Address]\
+            , [St Num]\
+            , [Street]\
+            , [Street Name]\
+            , [Quad]\
+            , [Intersection]\
+            , [Int]\
+            , [Apt-Rm-Ste]\
+            , [In-Out]\
+            , [MO]\
+            , [Patrol Zone]\
+            , [CC Zone]\
+            , [From Date]\
+            , [From Time]\
+            , [To Date]\
+            , [To Time]\
+            , [DTEdit]\
+            , [8399]\
+            , [Offenses]\
+            , [Entered Autos]\
+            , [Officer Name]\
+            , [Unit]\
+            , [Attempt-Complete]\
+            , [Adult-Juvenile]\
+            , [CSR]\
+            , [Clery]\
+            , [Clery2]\
+            , [Clery+]\
+            , [CSArr]\
+            , [CSRef]\
+            , [CSDVS]\
+            , [CSA]\
+            , [Alert Num]\
+            , [APDClery]\
+            , [Offn From]\
+            , [Disp From]\
+            , [Location Code From]\
+            , [UCR Changed]\
+            , [Clear Date]\
+            , [Weapon]\
+            , [Weapon-NIBRS]\
+            , [Premise Type]\
+            , [Stranger]\
+            , [Theft Location]\
+            , [Recovery Location]\
+            , [Related OCA]\
+            , [Shot]\
+            , [Carjack]\
+            , [Alcohol]\
+            , [Drug]\
+            , [Gang]\
+            , [Void]\
+            , [Juv Arr]\
+            , [Copy]\
+            , [Greek source]\
+            , [FIT]\
+            , [FV]\
+            , [EMS]\
+            , [Suicide]\
+            , [1013]\
+            , [Injured]\
+            , [ArrAdd]\
+            , [RO]\
+            , [K9]\
+            , [Longitude]\
+            , [Latitude]\
+            , [Exceptional Clearance]\
+            , [Method of Entry]\n\
+        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\n\
+        WHERE LEN([OCA Number]) = 8\n\
+        ORDER BY [OCA Number] DESC', 1000);
 }
 
 module.exports.locations = 
-"SELECT [Building Name],[Loc Type],[St #],[Street-MSAG],[Loc Code] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
+    "SELECT [Building Name],[Loc Type],[St #],[Street-MSAG],[Loc Code] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
 
 module.exports.get_incident_basic = function(incident_number) {
     return sprintf('\
@@ -64,12 +154,12 @@ module.exports.get_incident_basic = function(incident_number) {
 
 module.exports.get_MO = function(incident_number) {
     return sprintf('\
-    SELECT [SequenceNumber]\
-        , [MO]\n\
-    FROM [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\
-    WHERE ([IncidentNumber]=\'%d\')\n\
-    ORDER BY [SequenceNumber] ASC\
-', incident_number)
+        SELECT [SequenceNumber]\
+            , [MO]\n\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\
+        WHERE ([IncidentNumber]=\'%d\')\n\
+        ORDER BY [SequenceNumber] ASC\
+        ', incident_number)
 }
 
 module.exports.get_offense_description = function(incident_number) {

@@ -64,10 +64,12 @@ export default class DirectQuery extends Component {
     }
 
     run_query = () => {
+        var req_body = JSON.stringify({query:this.state.user_query})
         fetch('/direct-query',
                 {
+                    headers:{'Content-Type' : 'application/json'},
                     method: 'post',
-                    body: this.state.user_query
+                    body: req_body
                 }
             )
             .then(function(response) {
