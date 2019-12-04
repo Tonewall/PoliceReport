@@ -5,93 +5,14 @@ const sprintf = require('sprintf-js').sprintf;
 module.exports.showall = function() {
     return sprintf('\
         SELECT top 1000 [OCA Number] as [Incident Number]\
-        \
-            , [Report Date]\
-            , [Offense]\
-            , [NIBRSOffense]\
-            , [SRSOffense]\
-            , [Case Status]\
-            , [Case Disposition]\
-            , [VClear]\
-            , [Video]\
-            , [Premises]\
-            , [UCInc+]\
-            , [Arson]\
-            , [GT]\
-            , [GTstatus]\
-            , [GTtype]\
-            , [PType]\
-            , [Location Code]\
-            , [LType]\
-            , [Location Landmark]\
-            , [Address]\
-            , [St Num]\
+            , CONVERT(varchar, [Report Date], 23) as [Report Date]\
+            , convert(varchar, [From Time], 8) as [Time]\
+            , \'Offense Description\' as [Description]\
             , [Street]\
-            , [Street Name]\
-            , [Quad]\
-            , [Intersection]\
-            , [Int]\
-            , [Apt-Rm-Ste]\
-            , [In-Out]\
-            , [MO]\
-            , [Patrol Zone]\
-            , [CC Zone]\
-            , [From Date]\
-            , [From Time]\
-            , [To Date]\
-            , [To Time]\
-            , [DTEdit]\
-            , [8399]\
-            , [Offenses]\
-            , [Entered Autos]\
+            , [Location Landmark] as [Location Name]\
+            , \'Offender Name\' as [Offender Name]\
             , [Officer Name]\
-            , [Unit]\
-            , [Attempt-Complete]\
-            , [Adult-Juvenile]\
-            , [CSR]\
-            , [Clery]\
-            , [Clery2]\
-            , [Clery+]\
-            , [CSArr]\
-            , [CSRef]\
-            , [CSDVS]\
-            , [CSA]\
-            , [Alert Num]\
-            , [APDClery]\
-            , [Offn From]\
-            , [Disp From]\
-            , [Location Code From]\
-            , [UCR Changed]\
-            , [Clear Date]\
-            , [Weapon]\
-            , [Weapon-NIBRS]\
-            , [Premise Type]\
-            , [Stranger]\
-            , [Theft Location]\
-            , [Recovery Location]\
-            , [Related OCA]\
-            , [Shot]\
-            , [Carjack]\
-            , [Alcohol]\
-            , [Drug]\
-            , [Gang]\
-            , [Void]\
-            , [Juv Arr]\
-            , [Copy]\
-            , [Greek source]\
-            , [FIT]\
-            , [FV]\
-            , [EMS]\
-            , [Suicide]\
-            , [1013]\
-            , [Injured]\
-            , [ArrAdd]\
-            , [RO]\
-            , [K9]\
-            , [Longitude]\
-            , [Latitude]\
-            , [Exceptional Clearance]\
-            , [Method of Entry]\n\
+            , [GT] as [Department]\n\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\n\
         WHERE LEN([OCA Number]) = 8\n\
         ORDER BY [OCA Number] DESC', 1000);
