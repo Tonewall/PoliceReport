@@ -4,7 +4,8 @@ const sprintf = require('sprintf-js').sprintf;
 
 module.exports.showall = function() {
     return sprintf('\
-        SELECT top 1000 [OCA Number]\
+        SELECT top 1000 [OCA Number] as [Incident Number]\
+        \
             , [Report Date]\
             , [Offense]\
             , [NIBRSOffense]\

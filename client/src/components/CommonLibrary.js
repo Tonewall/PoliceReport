@@ -24,7 +24,6 @@ module.exports.incident_datatable_feeds = function(data)
             else if(element[key] === false)    element[key]='false'
         });
     });
-    
 
     return {'rows': data, 'columns': incident_columns}
 }

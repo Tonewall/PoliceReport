@@ -48,14 +48,13 @@ class Data extends Component {
     render() {
         return (
             <div className="main">
-                <div className="card">
+                <div className="card" style={{marginBottom:30}}>
                     <div className="card-body">
                         <MDBDataTable
                             scrollX
                             striped
                             bordered
                             hover
-                            maxHeight='66vh'
                             entries={20}
                             data={this.state.crimeData}
                         />
