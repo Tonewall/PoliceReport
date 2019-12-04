@@ -13,6 +13,7 @@ module.exports.showall = function() {
             , [Street]\
             , [Location Landmark] as [Location Name]\
             , CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) AS [Offender Name]\
+            , [Officer Name]\
             , CASE WHEN [GT] = 1 THEN \'GTPD\'\
                    WHEN [GT] = 0 THEN \'APD\'\
               END as [Department]\n\
