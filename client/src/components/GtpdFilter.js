@@ -24,7 +24,7 @@ const crimeCategoryOptions = [
     {value: 'Curfew/Loitering/Vagrancy', label: 'Curfew/Loitering/Vagrancy'},
     {value: 'Destruction/Damage/Vandalism', label: 'Destruction/Damage/Vandalism'},
     {value: 'Disorderly Conduct', label: 'Disorderly Conduct'},
-    {value: 'Drug/Narcotic Offenses', label: 'Driving Under Influence'},
+    {value: 'Driving Under Influence', label: 'Driving Under Influence'},
     {value: 'Drug/Narcotic Offenses', label: 'Drug/Narcotic Offenses'},
     {value: 'Drunkenness', label: 'Drunkenness'},
     {value: 'Embezzlement', label: 'Embezzlement'},
