@@ -28,8 +28,7 @@ class Data extends Component {
                 columns: datatable_feeds['columns'],
                 rows: datatable_feeds['rows']
             }
-        },
-        function(){console.log(this.state.crimeData)});
+        })
     }
     
 
@@ -47,20 +46,17 @@ class Data extends Component {
     }
 
     render() {
-        const style={paddingRight:"0"}
         return (
             <div className="main">
                 <div className="card">
                     <div className="card-body">
                         <MDBDataTable
                             scrollX
-                            scrollY
                             striped
                             bordered
                             hover
                             maxHeight='66vh'
                             entries={20}
-                            style={style}
                             data={this.state.crimeData}
                         />
                     </div>

@@ -1,8 +1,13 @@
 var incident_keys = [
-    'OCA Number', 
+    'Incident Number', 
     'Report Date', 
-    'Offense', 
-    'NIBRSOffense', 
+    'Time', 
+    'Description', 
+    'Street',
+    'Location Name', 
+    'Offender Name', 
+    'Officer Name', 
+    'Department', 
 ]
 var incident_columns = new Array(incident_keys.length)
 for(var i=0;i<incident_keys.length;i++)
