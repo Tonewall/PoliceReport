@@ -7,13 +7,18 @@ module.exports.showall = function() {
         SELECT top 1000 [OCA Number] as [Incident Number]\
             , CONVERT(varchar, [Report Date], 23) as [Report Date]\
             , convert(varchar, [From Time], 8) as [Time]\
-            , \'Offense Description\' as [Description]\
+            , CASE  WHEN [SRSOffense] is not null THEN [Inc_Desc_PCase]\
+                    WHEN [SRSOffense] is null THEN [NIBRS_Category]\
+              END as [Description]\
             , [Street]\
             , [Location Landmark] as [Location Name]\
             , \'Offender Name\' as [Offender Name]\
             , [Officer Name]\
             , [GT] as [Department]\n\
-        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\n\
+        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
+            LEFT JOIN [CrimeAnalytics].[dbo].[Codes-Offense]\
+            ON ( ([Incident Offenses-GTPD+APD].[SRSOffense] is not null AND [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[UCR_CODE1])\
+                OR ([Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] = [Codes-Offense].[NIBRS_Offense_code]))\n\
         WHERE LEN([OCA Number]) = 8\n\
         ORDER BY [OCA Number] DESC', 1000);
 }
