@@ -4,7 +4,7 @@ const sprintf = require('sprintf-js').sprintf;
 
 module.exports.showall = function() {
     return sprintf('\
-        SELECT top 1000 [OCA Number] as [Incident Number]\
+        SELECT distinct top 1000 [OCA Number] as [Incident Number]\
             , CONVERT(varchar, [Report Date], 23) as [Report Date]\
             , convert(varchar, [From Time], 8) as [Time]\
             , CASE  WHEN [SRSOffense] is not null THEN [Inc_Desc_PCase]\
@@ -14,11 +14,13 @@ module.exports.showall = function() {
             , [Location Landmark] as [Location Name]\
             , \'Offender Name\' as [Offender Name]\
             , [Officer Name]\
-            , [GT] as [Department]\n\
+            , CASE WHEN [GT] = 1 THEN \'GTPD\'\
+                   WHEN [GT] = 0 THEN \'APD\'\
+              END as [Department]\n\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
             LEFT JOIN [CrimeAnalytics].[dbo].[Codes-Offense]\
-            ON ( ([Incident Offenses-GTPD+APD].[SRSOffense] is not null AND [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[UCR_CODE1])\
-                OR ([Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] = [Codes-Offense].[NIBRS_Offense_code]))\n\
+                ON ( ([Incident Offenses-GTPD+APD].[SRSOffense] is not null AND [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[UCR_CODE1])\
+                    OR ([Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] = [Codes-Offense].[NIBRS_Offense_code]))\n\
         WHERE LEN([OCA Number]) = 8\n\
         ORDER BY [OCA Number] DESC', 1000);
 }
