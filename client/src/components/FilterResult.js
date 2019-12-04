@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import "./Data.css";
 import { MDBDataTable } from 'mdbreact';
 import { incident_datatable_feeds } from './CommonLibrary.js'
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class FilterResult extends Component {
 
@@ -14,12 +14,16 @@ class FilterResult extends Component {
                 rows: []
             },
         }
-        //this.createData = this.createData.bind(this);
     }
 
     populateData = function (data) {
         /* Need to preprocess query result before */
         var datatable_feeds = incident_datatable_feeds(data)
+        for(var i = 0; i < datatable_feeds['rows'].length; i++) {
+            var incidentNumber = datatable_feeds['rows'][i]['Incident Number']
+            var link = "./full-report/"+incidentNumber
+            datatable_feeds['rows'][i]['Incident Number'] = <Link to={link}>{incidentNumber}</Link>
+        }
         this.setState({
             no_history: false,
             wrong_query: false,
@@ -29,55 +33,6 @@ class FilterResult extends Component {
             }
         });
     }
-
-    /*
-    populateData = function (data) {
-        this.setState({
-            crimeData: {
-                columns: [
-                    {
-                        label: 'CaseId',
-                        field: 'CaseId',
-                        sort: 'asc',
-                        width: 50
-                    },
-                    {
-                        label: 'Date',
-                        field: 'Date',
-                        sort: 'asc',
-                        width: 100
-                    },
-                    {
-                        label: 'Time',
-                        field: 'Time',
-                        sort: 'asc',
-                        width: 400
-                    },
-                    {
-                        label: 'Location',
-                        field: 'Location',
-                        sort: 'asc',
-                        width: 200
-                    },
-                    {
-                        label: 'Officer',
-                        field: 'Officer',
-                        sort: 'asc',
-                        width: 150
-                    },
-                    {
-                        label: 'Description',
-                        field: 'Description',
-                        sort: 'asc',
-                        width: 100
-                    }
-                ],
-                rows: data
-            }
-        }
-        )
-    }
-    */
 
     componentDidMount() {
         this.getData();
@@ -100,11 +55,9 @@ class FilterResult extends Component {
                     <div className="card-body">
                         <MDBDataTable
                             scrollX
-                            scrollY
                             striped
                             bordered
                             hover
-                            maxHeight='66vh'
                             entries={20}
                             data={this.state.crimeData}
                         />

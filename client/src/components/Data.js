@@ -3,7 +3,7 @@ import "./Data.css";
 import { MDBDataTable } from 'mdbreact';
 import { incident_datatable_feeds} from "./CommonLibrary.js"
 import { isThisWeek } from 'date-fns';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class Data extends Component {
 
@@ -21,6 +21,11 @@ class Data extends Component {
     populateData = function (data) {
         /* Need to preprocess query result before */
         var datatable_feeds = incident_datatable_feeds(data)
+        for(var i = 0; i < datatable_feeds['rows'].length; i++) {
+            var incidentNumber = datatable_feeds['rows'][i]['Incident Number']
+            var link = "./full-report/"+incidentNumber
+            datatable_feeds['rows'][i]['Incident Number'] = <Link to={link}>{incidentNumber}</Link>
+        }
         this.setState({
             no_history: false,
             wrong_query: false,
