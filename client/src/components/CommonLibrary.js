@@ -12,7 +12,7 @@ var incident_keys = [
 var incident_columns = new Array(incident_keys.length)
 for(var i=0;i<incident_keys.length;i++)
 {
-    incident_columns[i] = {label: incident_keys[i], field: incident_keys[i], width: 100}
+    incident_columns[i] = {label: incident_keys[i], field: incident_keys[i], width: 100, sort: 'asc'}
 }
 
 module.exports.incident_datatable_feeds = function(data)

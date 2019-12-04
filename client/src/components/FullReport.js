@@ -31,7 +31,7 @@ class fullReport extends Component {
                     })
                 })
                 .catch(err => console.error(err))
-            if(this.state.case['Location Code'].includes('APD'))
+            if(this.state.case['Location Code'] && this.state.case['Location Code'].includes('APD'))
             {
                 fetch('/narrative_APD/'+incidentNumber)
                     .then(results => {
