@@ -7,8 +7,11 @@ module.exports.showall = function() {
         SELECT distinct top 1000 [OCA Number] as [Incident Number]\
             , CONVERT(varchar, [Report Date], 23) as [Report Date]\
             , convert(varchar, [From Time], 8) as [Time]\
-            , CASE  WHEN [SRSOffense] is not null THEN [Inc_Desc_PCase]\
-                    WHEN [SRSOffense] is null THEN [NIBRS_Category]\
+            , CASE  WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is not null AND LEN([Incident Offenses-GTPD+APD].[SRSOffense]) = 3 THEN [NIBRS_Category]\
+                    WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is not null AND LEN([Incident Offenses-GTPD+APD].[SRSOffense]) != 3 THEN [Inc_Desc_PCase]\
+                    WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is not null THEN [NIBRS_Category]\
+                    WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) = 3 THEN [NIBRS_Category]\
+                    WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) != 3 THEN [Inc_Desc_PCase]\
               END as [Description]\
             , [Street]\
             , [Location Landmark] as [Location Name]\
@@ -19,8 +22,11 @@ module.exports.showall = function() {
               END as [Department]\n\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
             LEFT JOIN [CrimeAnalytics].[dbo].[Codes-Offense]\
-                ON ( ([Incident Offenses-GTPD+APD].[SRSOffense] is not null AND [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[UCR_CODE1])\
-                    OR ([Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] = [Codes-Offense].[NIBRS_Offense_code]))\
+                ON ( ([Incident Offenses-GTPD+APD].[SRSOffense] is not null AND LEN([Incident Offenses-GTPD+APD].[SRSOffense]) = 3 AND [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[NIBRS_Offense_code] AND [Codes-Offense].[NIBRS_Category] is not null)\
+                    OR ([Incident Offenses-GTPD+APD].[SRSOffense] is not null AND LEN([Incident Offenses-GTPD+APD].[SRSOffense]) != 3 AND [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[UCR_CODE1])\
+                    OR ([Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is not null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] = [Codes-Offense].[NIBRS_Offense_code] AND [Codes-Offense].[NIBRS_Category] is not null)\
+                    OR ([Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) = 3 AND [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Offense_code] AND [Codes-Offense].[NIBRS_Category] is not null)\
+                    OR ([Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) != 3 AND [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[UCR_CODE1]))\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
                 ON ( [tblIncidentOffender].[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number] )\n\
         WHERE LEN([OCA Number]) = 8\n\
