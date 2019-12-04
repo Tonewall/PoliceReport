@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import "./Data.css";
 import { MDBDataTable } from 'mdbreact';
 import { incident_datatable_feeds} from "./CommonLibrary.js"
+import { isThisWeek } from 'date-fns';
 // import { Link } from 'react-router-dom';
 
 class Data extends Component {
@@ -12,10 +13,11 @@ class Data extends Component {
             crimeData: {
                 coulumns: [],
                 rows: []
-            },
+            }
         }
     }
 
+    
     populateData = function (data) {
         /* Need to preprocess query result before */
         var datatable_feeds = incident_datatable_feeds(data)
@@ -26,8 +28,10 @@ class Data extends Component {
                 columns: datatable_feeds['columns'],
                 rows: datatable_feeds['rows']
             }
-        });
+        },
+        function(){console.log(this.state.crimeData)});
     }
+    
 
     componentDidMount() {
         this.getData();
@@ -43,6 +47,7 @@ class Data extends Component {
     }
 
     render() {
+        const style={paddingRight:"0"}
         return (
             <div className="main">
                 <div className="card">
@@ -55,6 +60,7 @@ class Data extends Component {
                             hover
                             maxHeight='66vh'
                             entries={20}
+                            style={style}
                             data={this.state.crimeData}
                         />
                     </div>
