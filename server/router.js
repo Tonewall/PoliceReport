@@ -55,6 +55,7 @@ function add_router(app) {
 
     /* Direct querying for debugging purpose */
     app.post('/direct-query', function (req, res) {
+        console.log(req.body['query'])
         db_query(req.body['query'], (err, result) => {
             if (!err) res.send(JSON.stringify(result));
             else res.status(400).send([err]);
@@ -70,7 +71,14 @@ function add_router(app) {
     });
 
     app.post('/filter', function (req, res) {
-        console.log(req.body)
+        queryString = query_factory.filter('[tblIncident].[ReportingOfficerID]=\'jr233\'');
+        db_query(queryString, (err, result) => {
+            if (!err) res.send(result);
+            else {
+                console.log(err)
+                res.status(400).send(err);
+            }
+        });
     });
 
     app.get('/crimeTypes', function (req, res) {

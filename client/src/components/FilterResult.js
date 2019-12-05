@@ -39,7 +39,19 @@ class FilterResult extends Component {
     }
 
     getData() {
-        fetch('/showall')
+        fetch('/filter',
+                {
+                    headers:{'Content-Type' : 'application/json'},
+                    method: 'post',
+                    body: JSON.stringify(this.state)
+                }
+            )
+            .then(function(response) {
+                if(!response.ok) {
+                    throw Error(response.statusText);
+                }
+                return response
+            })
             .then(results => {
                 results.json().then(data => {
                 this.populateData(data)

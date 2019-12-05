@@ -3,6 +3,7 @@ import './GtpdFilter.css';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
+import {Redirect} from 'react-router-dom'
 
 //options for the dropdown selects
 const buildingOptions = [];
@@ -132,6 +133,7 @@ const dateOptions = [
 
 class gtpdFilter extends Component {
     state = {
+        redirected: false,
         startDate: new Date(),
         endDate: new Date(),
         streetName: null,
@@ -430,13 +432,7 @@ class gtpdFilter extends Component {
 
     handleSubmit = () => {
         console.log(this.state)
-        fetch('/filter',
-                {
-                    headers:{'Content-Type' : 'application/json'},
-                    method: 'post',
-                    body: JSON.stringify(this.state)
-                }
-            )
+        this.setState({redirected: true})
     }
     
     render() {
@@ -453,6 +449,7 @@ class gtpdFilter extends Component {
 
         return(
         <div className="main filterMain">
+            {this.state.redirected ? <Redirect to={{pathname: '/Filter-Result', state: this.state}}/> : null}
             <div className="card filterCard">
                 <h2 className="card-header">Filter</h2>
                 <div className="card-body">
