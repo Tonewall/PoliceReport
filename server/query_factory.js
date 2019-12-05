@@ -226,10 +226,17 @@ module.exports.get_property = function(incident_number) {
 module.exports.crimeTypes = 
 "SELECT DISTINCT [UCR_Code1],[Inc_Desc_PCase],[NIBRS_Category] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
 
-module.exports.getBothCount = 
-"SELECT [Report Date]\
- FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
-  WHERE YEAR([Report Date]) = 2019"
+module.exports.getBothCount = function(year) {
+    return sprintf(
+        "SELECT [Report Date]\
+        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
+        WHERE YEAR([Report Date]) =\'%d'"
+        ,year
+    )
+}
+module.exports.getYears = "SELECT DISTINCT YEAR([Report Date]) as [YEAR]\
+        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
+        ORDER BY YEAR([Report Date]) DESC"
 
 /* Address Ranking Query configured
 

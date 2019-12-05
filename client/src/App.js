@@ -26,7 +26,7 @@ class App extends Component {
                         {/* For server debugging */}
                         <Route exact path="/direct-query" component={DirectQuery} />
                         <Route exact path="/GTPD-Filter" component={GtpdFilter} />
-                        <Route exact path="/Statistics-Date" component={DateStatistics} />
+                        <Route exact path="/Statistics-Date/:year" component={DateStatistics} />
 
                 </Router>
             </div>
