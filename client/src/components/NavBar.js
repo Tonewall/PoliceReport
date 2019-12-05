@@ -44,12 +44,10 @@ export default class NavBar extends Component {
                             <a className="dropdown-item" href="/Statistics-GTPD-Locations">By Location</a>
                             <a className="dropdown-item" href="/Statistics-GTPD-Shifts">By Shift</a>
                             <a className="dropdown-item" href="/Statistics-GTPD-Officer">By Officer</a>
-                            <a className="dropdown-item" href="/Statistics-GTPD-Time">By Time</a>
-                            <a className="dropdown-item" href="/Statistics-GTPD-Date">By Date</a>
                             <div className="dropdown-divider"></div>
-                            <a className="dropdown-item disabled" href="/">APD</a>
-                            <a className="dropdown-item" href="/Statistics-APD-Time">By Time</a>
-                            <a className="dropdown-item" href="/Statistics-APD-Date">By Date</a>
+                            <a className="dropdown-item disabled" href="/">All</a>
+                            <a className="dropdown-item" href="/Statistics-Time">By Time</a>
+                            <a className="dropdown-item" href="/Statistics-Date">By Date</a>
                         </div>
                     </li>
                     {/* <li className="nav-item">
