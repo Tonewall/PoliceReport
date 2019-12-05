@@ -70,7 +70,7 @@ function add_router(app) {
     });
 
     app.post('/filter', function (req, res) {
-        /* get filter criteria as a body */
+        console.log(req.body)
     });
 
     app.get('/crimeTypes', function (req, res) {

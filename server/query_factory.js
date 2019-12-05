@@ -13,7 +13,7 @@ module.exports.showall = function() {
                     WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) = 3 THEN [NIBRS_Category]\
                     WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) != 3 THEN [Inc_Desc_PCase]\
               END as [Description]\
-            , [Street]\
+            , CONCAT([St Num], \' \', [Street]) as [Street]\
             , [Location Landmark] as [Location Name]\
             , CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) AS [Offender Name]\
             , [Officer Name]\

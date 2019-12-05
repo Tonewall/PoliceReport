@@ -423,8 +423,15 @@ class gtpdFilter extends Component {
             .catch(err => console.error(err))
     }
 
-    handleSubmit(){
+    handleSubmit = () => {
         console.log(this.state)
+        fetch('/filter',
+                {
+                    headers:{'Content-Type' : 'application/json'},
+                    method: 'post',
+                    body: JSON.stringify(this.state)
+                }
+            )
     }
     
     render() {

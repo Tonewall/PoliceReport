@@ -53,7 +53,7 @@ class Data extends Component {
     render() {
         return (
             <div className="main">
-                <div className="card" style={{marginBottom:30}}>
+                <div className="card" style={{marginBottom:30, fontSize: 13}}>
                     <div className="card-body">
                         <MDBDataTable
                             scrollX
