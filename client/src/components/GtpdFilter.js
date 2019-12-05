@@ -134,6 +134,7 @@ class gtpdFilter extends Component {
     state = {
         startDate: new Date(),
         endDate: new Date(),
+        streetName: null,
         selectedBuilding: null,
         selectedAPDBuilding: null,
         selectedCrimeType: null,
@@ -367,6 +368,10 @@ class gtpdFilter extends Component {
     componentDidMount() {
         this.getLocations();
         this.getCrimeTypes();
+    };
+
+    handleChange = event => {
+        this.setState({[event.target.name]: event.target.value});
     }
 
     //populating locations
@@ -470,7 +475,7 @@ class gtpdFilter extends Component {
                                         <div className="form-group row">
                                             <label htmlFor="inputStreet" className="col-12 col-form-label">Street Name</label>
                                             <div className="col-12">
-                                            <input type="text" className="form-control" id="inputStreet" placeholder="Street"/>
+                                            <input type="text" name="streetName"className="form-control" id="inputStreet" placeholder="Street" onChange={this.handleChange}/>
                                             </div>
                                         </div>
                                         {this.changeDepartment(selectedDepartment)}
