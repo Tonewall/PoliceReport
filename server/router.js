@@ -79,6 +79,12 @@ function add_router(app) {
             else res.status(400).send(err);
         });
     });
+    app.get('/getBothCount', function (req, res) {
+        db_query(query_factory.getBothCount, (err, result) => {
+            if (!err) res.send(result);
+            else res.status(400).send(err);
+        });
+    });
 
     
     /*
