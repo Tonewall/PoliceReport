@@ -5,49 +5,48 @@ import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 
 //options for the dropdown selects
-const buildingOptions = [
-    {value: '10th and Home Family Housing', label: '10th and Home Family Housing', type: 'Housing'},
-    {value: 'Alpha Gamma Delta', label: 'Alpha Gamma Delta', type: 'Greek'},
-    {value: 'Alpha Sigma Phi', label: 'Alpha Sigma Phi', type: 'Greek'},
-    {value: 'Alpha Xi Delta', label: 'Alpha Xi Delta', type: 'Greek'},
-    {value: 'Baker Building', label: 'Baker Building', type: 'Research'},
-    {value: 'Beringause Building', label: 'Beringause Building', type: 'Administration'},
-    {value: 'Broadband Institute Residential Laboratory', label: 'Broadband Institute Residential Laboratory', type: 'Academic'},
-    {value: 'Brock Football Practice Facility', label: 'Brock Football Practice Facility', type: 'Athletic'},
-    {value: 'Campus Safety Facility', label: 'Campus Safety Facility', type: 'Administration'},
-    {value: 'CATEA', label: 'CATEA', type: 'Academic'},
-    {value: 'Centennial Research Building', label: 'Centennial Research Building', type: 'Research'},
-    {value: 'Center Street Apartments', label: 'Center Street Apartments', type: 'Housing'},
-    {value: 'Chandler Stadium', label: 'Chandler Stadium', type: 'Athletic'},
-    {value: 'Dalney Parking Deck', label: 'Dalney Parking Deck', type: 'Parking'},
-    {value: 'Engineered Biosystems Building (EBB)', label: 'Engineered Biosystems Building (EBB)', type: 'Research'},
-    {value: 'Facilities Operations Garage/Warehouse', label: 'CFacilities Operations Garage/WarehouseRC', type: 'Administration'},
-    {value: 'Facilities, 955 Fowler', label: 'Facilities, 955 Fowler', type: 'Administration'},
-    {value: 'Ford ES&T (Environmental Science & Technology)', label: 'Ford ES&T (Environmental Science & Technology)', type: 'Academic'},
-    {value: 'Georgia Public Broadcasting - GTRI', label: 'Georgia Public Broadcasting - GTRI', type: 'Academic'},
-    {value: 'Georgia Tech Water Sports', label: 'Georgia Tech Water Sports', type: 'Athletic'},
-    {value: 'Golf Practice Facility', label: 'Golf Practice Facility', type: 'Athletic'},
-    {value: 'Graduate Living Center', label: 'Graduate Living Center', type: 'Housing'},
-    {value: 'Griffin Track', label: 'Griffin Track', type: 'Athletic'},
-    {value: 'GTRI Conference Center & Parking Deck', label: 'GTRI Conference Center & Parking Deck', type: 'Research'},
-];
-var newBuildingOptions = [];
-const crimeTypeOptions = [
-    {value: 'aggravatedAssault', label: 'Aggravated Assault'},
-    {value: 'arson', label: 'Arson'},
-    {value: 'autoTheft', label: 'Auto Theft'},
-    {value: 'burglary', label: 'Burglary'},
-    {value: 'drugsNarcotics', label: 'Drugs/Narcotics'},
-    {value: 'larceny', label: 'Larceny'},
-    {value: 'loitering', label: 'Loitering'},
-    {value: 'publicDisturbance', label: 'Public Disturbance'},
-    {value: 'robbery', label: 'Robbery'},
-    {value: 'rape', label: 'Rape'},
-    {value: 'trafficRelated', label: 'Traffic Related'},
-    {value: 'trespassing', label: 'Trespassing'},
-    {value: 'underageDrinking', label: 'Underage Drinking'},
-    {value: 'other', label: 'Other'},
-
+const buildingOptions = [];
+var newBuildingOptions = buildingOptions;
+const APDBuildingOptions = [];
+var newAPDBuildingOptions = APDBuildingOptions;
+const crimeTypeOptions = [];
+var newCrimeTypeOptions = crimeTypeOptions;
+const crimeCategoryOptions = [
+    {value: 'Any', label: 'Any'},
+    {value: 'All Other Offenses', label: 'All Other Offenses'},
+    {value: 'Animal Cruelty', label: 'Animal Cruelty'},
+    {value: 'Arson', label: 'Arson'},
+    {value: 'Assault Offenses', label: 'Assault Offenses'},
+    {value: 'Bad Checks', label: 'Bad Checks'},
+    {value: 'Bribery', label: 'Bribery'},
+    {value: 'Burglary/Breaking & Entering', label: 'Burglary/Breaking & Entering'},
+    {value: 'Counterfeiting/Forgery', label: 'Counterfeiting/Forgery'},
+    {value: 'Curfew/Loitering/Vagrancy', label: 'Curfew/Loitering/Vagrancy'},
+    {value: 'Destruction/Damage/Vandalism', label: 'Destruction/Damage/Vandalism'},
+    {value: 'Disorderly Conduct', label: 'Disorderly Conduct'},
+    {value: 'Driving Under Influence', label: 'Driving Under Influence'},
+    {value: 'Drug/Narcotic Offenses', label: 'Drug/Narcotic Offenses'},
+    {value: 'Drunkenness', label: 'Drunkenness'},
+    {value: 'Embezzlement', label: 'Embezzlement'},
+    {value: 'Extortion/Blackmail', label: 'Extortion/Blackmail'},
+    {value: 'Family Offenses, Nonviolent', label: 'Family Offenses, Nonviolent'},
+    {value: 'Fondling', label: 'Fondling'},
+    {value: 'Fraud Offenses', label: 'Fraud Offenses'},
+    {value: 'Gambling Offenses', label: 'Gambling Offenses'},
+    {value: 'Homicide Offenses', label: 'Homicide Offenses'},
+    {value: 'Kidnapping/Abduction', label: 'Kidnapping/Abduction'},
+    {value: 'Larceny/Theft Offenses', label: 'Larceny/Theft Offenses'},
+    {value: 'Liquor Law Violations', label: 'Liquor Law Violations'},
+    {value: 'Motor Vehicle Theft', label: 'Motor Vehicle Theft'},
+    {value: 'Peeping Tom', label: 'Peeping Tom'},
+    {value: 'Pornography/Obscene Material', label: 'Pornography/Obscene Material'},
+    {value: 'Prostitution Offenses', label: 'Prostitution Offenses'},
+    {value: 'Robbery', label: 'Robbery'},
+    {value: 'Sex Offenses, Forcible', label: 'Sex Offenses, Forcible'},
+    {value: 'Sex Offenses, Nonforcible', label: 'Sex Offenses, Nonforcible'},
+    {value: 'Stolen Property Offenses', label: 'Stolen Property Offenses'},
+    {value: 'Trespass of Real Property', label: 'Trespass of Real Property'},
+    {value: 'Weapons Law Violations', label: 'Weapons Law Violations'},
 ];
 const shiftOptions = [
     {value: 'aShift', label: 'A'},
@@ -74,30 +73,50 @@ const arrestOptions = [
     {value: 'warnings', label: 'CT Warnings'}
 ]
 const departmentOptions = [
+    {value: 'bothDepartment', label: 'Both Departments'},
     {value: 'gtpDepartment', label: 'Georgia Tech Police Department'},
     {value: 'apDepartment', label: 'Atlanta Police Department'},
-    {value: 'bothDepartment', label: 'Both Departments'},
 ];
 const gtLocationTypeOptions = [
     {value: 'Any', label: 'Any'},
-    {value: 'Housing', label: 'Housing'},
-    {value: 'Greek', label: 'Greek'},
-    {value: 'Research', label: 'Research'},
-    {value: 'Administration', label: 'Administration'},
     {value: 'Academic', label: 'Academic'},
+    {value: 'Administration', label: 'Administration'},
     {value: 'Athletic', label: 'Athletic'},
+    {value: 'Greek', label: 'Greek'},
+    {value: 'Green Space', label: 'Green Space'},
+    {value: 'Housing', label: 'Housing'},
+    {value: 'Inactive', label: 'Inactive'},
+    {value: 'Mixed Use', label: 'Mixed Use'},
     {value: 'Parking', label: 'Parking'},
     {value: 'Religious', label: 'Religious'},
-    {value: 'Mixed Use', label: 'Mixed Use'},
-    {value: 'Green Space', label: 'Green Space'},
-    
+    {value: 'Research', label: 'Research'},
+    {value: 'Restaurant', label: 'Restaurant'},
+    {value: 'Retail', label: 'Retail'},
+    {value: 'Vacant', label: 'Vacant'},
 ];
 const apdLocationTypeOptions = [
-    {value: 'apd', label: 'APD 1'},
-    {value: 'apd', label: 'APD 2'},
-    {value: 'apd', label: 'APD 3'},
-    {value: 'apd', label: 'APD 4'},
-];
+    {value: 'Any', label: 'Any'},
+    {value: 'APD-Apts', label: 'APD-Apts'},
+    {value: 'APD-Bank', label: 'APD-Bank'},
+    {value: 'APD-Bar', label: 'APD-Bar'},
+    {value: 'APD-Bar/Club', label: 'APD-Bar/Club'},
+    {value: 'Church', label: 'Church'},
+    {value: 'APD-Condos', label: 'APD-Condos'},
+    {value: 'APD-Food', label: 'APD-Food'},
+    {value: 'APD-Gas/Conv', label: 'APD-Gas/Conv'},
+    {value: 'APD-Hotel', label: 'APD-Hotel'},
+    {value: 'APD-Mixed Use', label: 'APD-Mixed Use'},
+    {value: 'APD-Offices', label: 'APD-Offices'},
+    {value: 'APD-Other', label: 'APD-Other'},
+    {value: 'APD-Parking', label: 'APD-Parking'},
+    {value: 'APD-Rail', label: 'APD-Rail'},
+    {value: 'APD-Retail', label: 'APD-Retail'},
+    {value: 'APD-School', label: 'APD-School'},
+    {value: 'APD-Shelter', label: 'APD-Shelter'},
+    {value: 'APD-Store', label: 'APD-Store'},
+    {value: 'APD-Theatre', label: 'APD-Theatre'},
+]
+
 const outcomeOptions = [
     {value: 'felony', label: 'Felony'},
     {value: 'misdemeanor', label: 'Misdemeanor'},
@@ -116,42 +135,29 @@ class gtpdFilter extends Component {
         startDate: new Date(),
         endDate: new Date(),
         selectedBuilding: null,
+        selectedAPDBuilding: null,
         selectedCrimeType: null,
+        selectedCrimeCategory: null,
         selectedShift: null,
         selectedArrest: null,
         selectedDepartment: {value: 'bothDepartment', label: 'Both Departments'},
         selectedGTLocationType: {value: 'Any', label: 'Any'},
         selectedOutcome: null,
         selectedDate: null,
-        selectedAPDLocationType: null,
+        selectedAPDLocationType: {value: 'Any', label: 'Any'},
     };
-
-    handleStartChange = date => {
-        this.setState({
-          startDate: date
-        });
-    };
-    handleEndChange = date => {
-        this.setState({
-          endDate: date
-        });
-    };
-    
-
 
     //for the dropdown selects
-    setBuilding = selectedBuilding => {
-        this.setState({selectedBuilding});
-    };
-    setCrimeType = selectedCrimeType => {
-        this.setState({selectedCrimeType});
-    };
-    setShift = selectedShift => {
-        this.setState({selectedShift});
-    }
-    setArrest = selectedArrest => {
-        this.setState({selectedArrest});
-    }
+    setBuilding = selectedBuilding => { this.setState({selectedBuilding}); };
+    setAPDBuilding = selectedAPDBuilding => { this.setState({selectedAPDBuilding}); };
+    setCrimeType = selectedCrimeType => { this.setState({selectedCrimeType}); };
+    setCrimeCategory = selectedCrimeCategory => { this.setState({selectedCrimeCategory}); };
+    setShift = selectedShift => { this.setState({selectedShift}); }
+    setArrest = selectedArrest => { this.setState({selectedArrest}); }
+    setDepartment = selectedDepartment => { this.setState({selectedDepartment}); }
+    setOutcome = selectedOutcome => { this.setState({selectedOutcome}); }
+    
+    //Changing the location filters based on the department chosen
     changeDepartment(department) {
         if(department == null) {
             return;  
@@ -164,14 +170,13 @@ class gtpdFilter extends Component {
                     </label>
                     <div>
                         <Select 
-                        value={this.selectedGTLocationType} 
+                        value={this.state.selectedGTLocationType} 
                         onChange={this.setGTLocationType} 
                         options={gtLocationTypeOptions} 
-                        placeholder={"Any"}
                         />
                     </div>
                     <label className="col-12 col-form-label">
-                        Buildings
+                        Georgia Tech Buildings
                     </label>
                     <div>
                         <Select 
@@ -198,6 +203,18 @@ class gtpdFilter extends Component {
                         placeholder={"Any"}
                         />
                     </div>
+                    <label className="col-12 col-form-label">
+                        APD Buildings
+                    </label>
+                    <div>
+                        <Select 
+                        value={this.selectedAPDBuilding} 
+                        onChange={this.setAPDBuilding} 
+                        options={newAPDBuildingOptions} 
+                        isMulti={true}
+                        placeholder={"Any"}
+                        />
+                    </div>
                 </div>
             )
         } else if (department.value === "bothDepartment") {
@@ -208,10 +225,9 @@ class gtpdFilter extends Component {
                     </label>
                     <div>
                         <Select 
-                        value={this.selectedGTLocationType} 
+                        value={this.state.selectedGTLocationType} 
                         onChange={this.setGTLocationType} 
                         options={gtLocationTypeOptions} 
-                        placeholder={"Any"}
                         />
                     </div>
                     <label className="col-12 col-form-label">
@@ -219,7 +235,7 @@ class gtpdFilter extends Component {
                     </label>
                     <div>
                         <Select 
-                        value={this.selectedBuilding} 
+                        value={this.state.selectedBuilding} 
                         onChange={this.setBuilding} 
                         options={newBuildingOptions} 
                         isMulti={true}
@@ -231,9 +247,21 @@ class gtpdFilter extends Component {
                     </label>
                     <div>
                         <Select 
-                        value={this.selectedAPDLocationType} 
+                        value={this.state.selectedAPDLocationType} 
                         onChange={this.setAPDLocationType} 
                         options={apdLocationTypeOptions} 
+                        placeholder={"Any"}
+                        />
+                    </div>
+                    <label className="col-12 col-form-label">
+                        APD Buildings
+                    </label>
+                    <div>
+                        <Select 
+                        value={this.selectedAPDBuilding} 
+                        onChange={this.setAPDBuilding} 
+                        options={newAPDBuildingOptions} 
+                        isMulti={true}
                         placeholder={"Any"}
                         />
                     </div>
@@ -241,10 +269,7 @@ class gtpdFilter extends Component {
             )
         }
     }
-    setDepartment = selectedDepartment => {
-        this.setState({selectedDepartment});
-    }
-    
+    //changing the building options based on the locationtype
     setGTLocationType = selectedGTLocationType => {
         this.setState({selectedGTLocationType});
         //populating the newbuildingoptions with the desired buildings
@@ -252,7 +277,7 @@ class gtpdFilter extends Component {
         newBuildingOptions = [];
         if(selectedGTLocationType.value !== "Any") {
             for(var i = 0; i < buildingOptions.length; i++) {
-                if(buildingOptions[i].type === selectedGTLocationType.value) {
+                if(buildingOptions[i]['Loc Type'] === selectedGTLocationType.value) {
                     newBuildingOptions[j] = buildingOptions[i];
                     j++;
                 }
@@ -261,12 +286,42 @@ class gtpdFilter extends Component {
             newBuildingOptions = buildingOptions;
         }
     }
-    setAPDLocationType = selectedAPDLocationType => {
+    setAPDLocationType = selectedAPDLocationType => { 
         this.setState({selectedAPDLocationType});
+        //populating the newAPDbuildingoptions with the desired buildings
+        var j = 0;
+        newAPDBuildingOptions = [];
+        if(selectedAPDLocationType.value !== "Any") {
+            for(var i = 0; i < APDBuildingOptions.length; i++) {
+                if(APDBuildingOptions[i]['Loc Type'] === selectedAPDLocationType.value) {
+                    newAPDBuildingOptions[j] = APDBuildingOptions[i];
+                    j++;
+                }
+            }
+        } else {
+            newAPDBuildingOptions = APDBuildingOptions;
+        }
     }
-    setOutcome = selectedOutcome => {
-        this.setState({selectedOutcome});
+
+    setCrimeCategory = selectedCrimeCategory => {
+        this.setState({selectedCrimeCategory});
+        //populating the newbuildingoptions with the desired buildings
+        var j = 0;
+        newCrimeTypeOptions = [];
+        if(selectedCrimeCategory.value !== "Any") {
+            for(var i = 0; i < crimeTypeOptions.length; i++) {
+                if(crimeTypeOptions[i]['NIBRS_Category'] === selectedCrimeCategory.value) {
+                    newCrimeTypeOptions[j] = crimeTypeOptions[i];
+                    j++;
+                }
+            }
+        } else {
+            newCrimeTypeOptions = crimeTypeOptions;
+        }
     }
+
+
+    //changing the date based on the date range chosen
     setDate = selectedDate => {
         this.setState({selectedDate});
         //for the dropdown date ranges
@@ -298,9 +353,81 @@ class gtpdFilter extends Component {
             });
         }
     }
+    handleStartChange = date => {
+        this.setState({
+          startDate: date
+        });
+    };
+    handleEndChange = date => {
+        this.setState({
+          endDate: date
+        });
+    };
+
+    componentDidMount() {
+        this.getLocations();
+        this.getCrimeTypes();
+    }
+
+    //populating locations
+    populateLocations(data) {
+        var gtCount = 0;
+        var apdCount = 0;
+        for(var i = 0; i < data.length; i++) {
+            if(data[i]["Loc Code"] === "APD") {
+                APDBuildingOptions[apdCount] = data[i];
+                APDBuildingOptions[apdCount].value =  data[i]['Building Name'];
+                APDBuildingOptions[apdCount].label =  data[i]['Building Name'];
+                apdCount++;
+            } else {
+                buildingOptions[gtCount] = data[i];
+                buildingOptions[gtCount].value = data[i]['Building Name'];
+                buildingOptions[gtCount].label = data[i]['Building Name'];
+                gtCount++;
+            }
+        }
+        buildingOptions.sort((a, b) => (a.value > b.value) ? 1 : -1);
+        APDBuildingOptions.sort((a, b) => (a.value > b.value) ? 1 : -1);
+    }
+    populateCrimes(data) {
+        for(var i = 0; i < data.length; i++) {
+            if(data[i]["NIBRS_Category"] === null) {
+                crimeTypeOptions[i] = data[i];
+                crimeTypeOptions[i].value =  data[i]['Inc_Desc_PCase'];
+                crimeTypeOptions[i].label =  data[i]['Inc_Desc_PCase'];
+                crimeTypeOptions[i]['NIBRS_Category'] =  "All Other Offenses";
+            } else {
+                crimeTypeOptions[i] = data[i];
+                crimeTypeOptions[i].value = data[i]['Inc_Desc_PCase'];
+                crimeTypeOptions[i].label = data[i]['Inc_Desc_PCase'];
+            }
+        }
+        crimeTypeOptions.sort((a, b) => (a.value > b.value) ? 1 : -1);
+    }
+    getLocations() {
+        fetch('/locations')
+            .then(results => {
+                results.json().then(data=> {
+                    this.populateLocations(data)
+                })
+            })
+            .catch(err => console.error(err))
+    }
+    getCrimeTypes() {
+        fetch('/crimeTypes')
+            .then(results => {
+                results.json().then(data=> {
+                    this.populateCrimes(data)
+                })
+            })
+            .catch(err => console.error(err))
+    }
+
+    handleSubmit(){
+        console.log(this.state)
+    }
     
     render() {
-        //check in one line
         const {
             selectedCrimeType, 
             selectedShift, 
@@ -308,6 +435,7 @@ class gtpdFilter extends Component {
             selectedDepartment, 
             selectedOutcome, 
             selectedDate, 
+            selectedCrimeCategory,
         } = this.state;
 
 
@@ -316,7 +444,7 @@ class gtpdFilter extends Component {
             <div className="card filterCard">
                 <h2 className="card-header">Filter</h2>
                 <div className="card-body">
-                    <form>
+                    <form onSubmit={this.handleSubmit}>
                         <div className="row">
                             <div className="col-lg-4 col-6">
                                 <div className="card filterTypeCards locationsCard">
@@ -330,7 +458,6 @@ class gtpdFilter extends Component {
                                             value={selectedDepartment} 
                                             onChange={this.setDepartment} 
                                             options={departmentOptions} 
-                                            placeholder={"Both Departments"}
                                             />
                                         </div>
                                         <div className="form-group row">
@@ -350,13 +477,24 @@ class gtpdFilter extends Component {
                                     <h4 className="card-header">Crime</h4>
                                     <div className="card-body">
                                         <label className="col-12 col-form-label">
+                                            Category
+                                        </label>
+                                        <div>
+                                            <Select 
+                                            value={selectedCrimeCategory} 
+                                            onChange={this.setCrimeCategory} 
+                                            options={crimeCategoryOptions} 
+                                            placeholder={"Any"}
+                                            />
+                                        </div>
+                                        <label className="col-12 col-form-label">
                                             Type
                                         </label>
                                         <div>
                                             <Select 
                                             value={selectedCrimeType} 
                                             onChange={this.setCrimeType} 
-                                            options={crimeTypeOptions} 
+                                            options={newCrimeTypeOptions} 
                                             isMulti={true}
                                             placeholder={"Any"}
                                             />

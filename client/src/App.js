@@ -5,6 +5,8 @@ import DataView from './components/Data';
 import NavBar from './components/NavBar';
 import FullReport from './components/FullReport';
 import GtpdFilter from './components/GtpdFilter';
+import IncidentNumber from './components/IncidentNumber'
+import FilterResult from './components/FilterResult'
 import 'bootstrap/dist/css/bootstrap.css';
 
 /* For server debugging */
@@ -17,7 +19,9 @@ class App extends Component {
                 <Router>
                         <NavBar />
                         <Route exact path="/" component={DataView} />
-                        <Route exact path="/full-report" component={FullReport} />
+                        <Route exact path="/full-report/:incidentNumber" component={FullReport} />
+                        <Route exact path="/GTPD-Incident-Search" component={IncidentNumber} />
+                        <Route exact path="/Filter-Result" component={FilterResult} />
                         {/* For server debugging */}
                         <Route exact path="/direct-query" component={DirectQuery} />
                         <Route exact path="/GTPD-Filter" component={GtpdFilter} />

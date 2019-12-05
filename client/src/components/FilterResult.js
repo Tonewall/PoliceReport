@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import "./Data.css";
 import { MDBDataTable } from 'mdbreact';
-import { incident_datatable_feeds} from "./CommonLibrary.js"
-import { isThisWeek } from 'date-fns';
+import { incident_datatable_feeds } from './CommonLibrary.js'
 import { Link } from 'react-router-dom';
 
-class Data extends Component {
+class FilterResult extends Component {
 
     constructor(props) {
         super(props);
@@ -13,11 +12,10 @@ class Data extends Component {
             crimeData: {
                 coulumns: [],
                 rows: []
-            }
+            },
         }
     }
 
-    
     populateData = function (data) {
         /* Need to preprocess query result before */
         var datatable_feeds = incident_datatable_feeds(data)
@@ -33,9 +31,8 @@ class Data extends Component {
                 columns: datatable_feeds['columns'],
                 rows: datatable_feeds['rows']
             }
-        })
+        });
     }
-    
 
     componentDidMount() {
         this.getData();
@@ -50,10 +47,11 @@ class Data extends Component {
             .catch(err => console.error(err))
     }
 
+
     render() {
         return (
             <div className="main">
-                <div className="card" style={{marginBottom:30}}>
+                <div className="card">
                     <div className="card-body">
                         <MDBDataTable
                             scrollX
@@ -70,4 +68,4 @@ class Data extends Component {
     }
 }
 
-export default Data;
+export default FilterResult;

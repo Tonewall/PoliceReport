@@ -26,10 +26,10 @@ export default class NavBar extends Component {
                             Records
                         </a>
                         <div className="dropdown-menu" style={{backgroundColor:bgColors.White}} aria-labelledby="navbarDropdown">
-                            <a className="dropdown-item" href="/GTPD">All Data</a>
+                            <a className="dropdown-item" href="/">All Data</a>
                             <div className="dropdown-divider"></div>
                             <a className="dropdown-item" href="/GTPD-Filter">Filter</a>
-                            <a className="dropdown-item" href="/GTPD-OCA-Search">Search by Incident Number</a>
+                            <a className="dropdown-item" href="/GTPD-Incident-Search">Search by Incident Number</a>
                             <a className="dropdown-item" href="/GTPD-Repeat-Offenders">Repeat Offenders</a>
                             <a className="dropdown-item" href="/GTPD-Buildings">Buildings Information</a>
                             <a className="dropdown-item" href="/Officers">Officers</a>
