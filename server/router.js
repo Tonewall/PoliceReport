@@ -3,6 +3,8 @@ const sql = require("mssql");
 var config = require('./db_config')
 const read = require('read')
 const { exec } = require('child_process')
+const sprintf = require('sprintf-js').sprintf;
+
 
 // Contains methods for generating common query.
 const query_factory = require("./query_factory");
@@ -72,8 +74,11 @@ function add_router(app) {
 
     app.post('/filter', function (req, res) {
         console.log(req.body)
-        criteria_script = '[tblIncident].[ReportingOfficerID]=\'jr233\'';
-        queryString = query_factory.filter(criteria_script);
+        criteria_script = ''
+        if(req.body.streetName != null)
+            criteria_script += sprintf('([Incident Offenses-GTPD+APD].[Street Name] like \'%%%s%%\')', req.body.streetName)
+        console.log(criteria_script)
+        queryString = query_factory.filter(criteria_script.length==0 ? null : criteria_script);
         db_query(queryString, (err, result) => {
             if (!err) res.send(result);
             else {
