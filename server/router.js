@@ -71,7 +71,9 @@ function add_router(app) {
     });
 
     app.post('/filter', function (req, res) {
-        queryString = query_factory.filter('[tblIncident].[ReportingOfficerID]=\'jr233\'');
+        console.log(req.body)
+        criteria_script = '[tblIncident].[ReportingOfficerID]=\'jr233\'';
+        queryString = query_factory.filter(criteria_script);
         db_query(queryString, (err, result) => {
             if (!err) res.send(result);
             else {

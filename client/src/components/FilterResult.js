@@ -43,7 +43,7 @@ class FilterResult extends Component {
                 {
                     headers:{'Content-Type' : 'application/json'},
                     method: 'post',
-                    body: JSON.stringify(this.state)
+                    body: JSON.stringify(this.props.location.state)
                 }
             )
             .then(function(response) {
