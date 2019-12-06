@@ -53,18 +53,21 @@ class DateStatistics extends Component {
     }
 
     createBothMonths(data) {
+        var monthArray=[];
         this.setState({ bothData: data });
-        this.setState({bothCrimeMonthRecord: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]})
-        //increments Crime count for each month
-        for(var i = 0; i < this.state.bothData.length; i++) {
-            var date = new Date(this.state.bothData[i]['Report Date']);
-            var month = date.getMonth();
-            var count = this.state.bothCrimeMonthRecord[month];
-            count++;
-            var prevRecord = [...this.state.bothCrimeMonthRecord];
-                prevRecord[month] = count;
-                this.setState({bothCrimeMonthRecord: prevRecord});
+        for(var i = 0; i < data.length; i++) {
+            monthArray[i] = data[i]['COUNT'];
         }
+        this.setState({bothCrimeMonthRecord: monthArray})
+        //increments Crime count for each month
+        // for(var i = 0; i < this.state.bothData.length; i++) {
+        //     var month = this.state.bothData[i]['Month']-1;
+        //     var count = this.state.bothCrimeMonthRecord[month];
+        //     count++;
+        //     var prevRecord = [...this.state.bothCrimeMonthRecord];
+        //         prevRecord[month] = count;
+        //         this.setState({bothCrimeMonthRecord: prevRecord});
+        // }
         this.createbothChart();
     }
 

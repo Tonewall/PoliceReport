@@ -225,12 +225,14 @@ module.exports.get_property = function(incident_number) {
 
 module.exports.crimeTypes = 
 "SELECT DISTINCT [UCR_Code1],[Inc_Desc_PCase],[NIBRS_Category] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
-
+ 
 module.exports.getBothCount = function(year) {
     return sprintf(
-        "SELECT [Report Date]\
+        "SELECT MONTH([Report Date]) as [Month], COUNT(*) as [COUNT]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
-        WHERE YEAR([Report Date]) =\'%d'"
+        WHERE YEAR([Report Date]) =\'%d'\n\
+        GROUP BY MONTH([Report Date])\
+        ORDER BY MONTH([Report Date])"
         ,year
     )
 }
