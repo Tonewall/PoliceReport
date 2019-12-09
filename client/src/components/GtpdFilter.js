@@ -19,6 +19,11 @@ class gtpdFilter extends Component {
             selectedArrest: null,
             selectedOutcome: null,
             officerID: null,
+            selectedAPDBuilding: null,
+            selectedAPDLocationType: null,
+            selectedBuilding: null,
+            selectedDepartment: null,
+            selectedGTLocationType: null,
         };
         this.dateHandler = this.dateHandler.bind(this)
         this.locationHandler = this.locationHandler.bind(this)
@@ -73,34 +78,34 @@ class gtpdFilter extends Component {
 
     render() {
         return(
-        <div className="main filterMain">
-            <div className="card filterCard">
-                <h2 className="card-header">Filter</h2>
-                <div className="card-body">
-                    <form onSubmit={this.handleSubmit}>
-                        <div className="row">
-                            <div className="col-lg-4 col-6">
-                                <Location locationHandler={this.locationHandler}/>                                
-                            </div>
-                            <div className="col-lg-4 col-6">
-                                <Crime crimeHandler={this.crimeHandler}/>
-                                <Personnel personnelHandler={this.personnelHandler}/>
-                            </div>
-                            <div className="col-lg-4 col-6">
-                                <Date dateHandler={this.dateHandler}/>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="searchButton">
-                                    <button type="submit" className="btn btn-primary">Search</button>
+            <div className="main filterMain">
+                <div className="card filterCard">
+                    <h2 className="card-header">Filter</h2>
+                    <div className="card-body">
+                        <form onSubmit={this.handleSubmit}>
+                            <div className="row">
+                                <div className="col-lg-4 col-6">
+                                    <Location locationHandler={this.locationHandler}/>                                
+                                </div>
+                                <div className="col-lg-4 col-6">
+                                    <Crime crimeHandler={this.crimeHandler}/>
+                                    <Personnel personnelHandler={this.personnelHandler}/>
+                                </div>
+                                <div className="col-lg-4 col-6">
+                                    <Date dateHandler={this.dateHandler}/>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                            <div className="row">
+                                <div className="col-12">
+                                    <div className="searchButton">
+                                        <button type="submit" className="btn btn-primary">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
         );
     }
 }

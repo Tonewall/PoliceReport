@@ -7,8 +7,6 @@ import Personnel from "../FilterComponents/Personnel"
 import Select from "react-select";
 
 const typeOptions = [
-    {value: "Date", label: "Date"},
-    {value: "Time", label: "Time"},
     {value: "Location", label: "Location"},
     {value: "Shift", label: "Shift"}
 ]
@@ -24,7 +22,7 @@ class gtpdFilter extends Component {
             selectedArrest: null,
             selectedOutcome: null,
             officerID: null,
-            selectedType: {value: "Date", label: "Date"},
+            selectedType: {value: "Location", label: "Location"},
             selectedAPDBuilding: null,
             selectedAPDLocationType: null,
             selectedBuilding: null,
@@ -83,7 +81,7 @@ class gtpdFilter extends Component {
         return(
             <div className="main filterMain">
                 <div className="card filterCard">
-                    <h2 className="card-header">Date/Time Statistics Filter</h2>
+                    <h2 className="card-header">Location/Shift Statistics Filter</h2>
                     <div className="card-body">
                         <form onSubmit={this.handleSubmit}>
                             <div className="row">
@@ -101,7 +99,7 @@ class gtpdFilter extends Component {
                                         <div className="card-body">
                                             <div className="col-12 dateFilters">
                                                 <label className="col-12 col-form-label">
-                                                    Type
+                                                    Date/Time
                                                 </label>
                                                 <div>
                                                     <Select 

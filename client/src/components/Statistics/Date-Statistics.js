@@ -83,7 +83,7 @@ class DateStatistics extends Component {
                  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                  datasets: [
                      {
-                        label: 'All Crime',
+                        label: 'Incidents',
                         backgroundColor: 'rgba(97, 144, 255,0.5)',
                         borderColor: 'rgba(97, 144, 255,1)',
                         borderWidth: 2,
