@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import "./Data.css";
 import { MDBDataTable } from 'mdbreact';
 import { incident_datatable_feeds} from "./CommonLibrary.js"
-import { isThisWeek } from 'date-fns';
 import { Link } from 'react-router-dom';
 
 class Data extends Component {

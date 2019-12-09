@@ -1,17 +1,15 @@
 import React, { Component } from "react";
-import './GtpdFilter.css';
-import Date from "./FilterComponents/Date"
-import Location from "./FilterComponents/Location"
-import Crime from "./FilterComponents/Crime"
-import Personnel from "./FilterComponents/Personnel"
-
+import '../GtpdFilter.css';
+import Year from "../FilterComponents/Year"
+import Crime from "../FilterComponents/Crime"
+import Location from "../FilterComponents/Location"
+import Personnel from "../FilterComponents/Personnel"
 
 class gtpdFilter extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            startDate: null,
-            endDate: null,
+            selectedYear: null,
             streetName: null,
             selectedCrimeType: null,
             selectedCrimeCategory: null,
@@ -20,16 +18,15 @@ class gtpdFilter extends Component {
             selectedOutcome: null,
             officerID: null,
         };
-        this.dateHandler = this.dateHandler.bind(this)
+        this.yearHandler = this.yearHandler.bind(this)
         this.locationHandler = this.locationHandler.bind(this)
         this.crimeHandler = this.crimeHandler.bind(this)
         this.personnelHandler = this.personnelHandler.bind(this)
     }
 
-    dateHandler = (date) => {
+    yearHandler = (year) => {
         this.setState({
-            endDate: date.endDate, 
-            startDate: date.startDate
+            selectedYear: year
         })
     }
 
@@ -62,20 +59,13 @@ class gtpdFilter extends Component {
 
     handleSubmit = () => {
         console.log(this.state)
-        fetch('/filter',
-                {
-                    headers:{'Content-Type' : 'application/json'},
-                    method: 'post',
-                    body: JSON.stringify(this.state)
-                }
-            )
     }
 
     render() {
         return(
         <div className="main filterMain">
             <div className="card filterCard">
-                <h2 className="card-header">Filter</h2>
+                <h2 className="card-header">Stats Filter</h2>
                 <div className="card-body">
                     <form onSubmit={this.handleSubmit}>
                         <div className="row">
@@ -84,10 +74,10 @@ class gtpdFilter extends Component {
                             </div>
                             <div className="col-lg-4 col-6">
                                 <Crime crimeHandler={this.crimeHandler}/>
-                                <Personnel personnelHandler={this.personnelHandler}/>
                             </div>
                             <div className="col-lg-4 col-6">
-                                <Date dateHandler={this.dateHandler}/>
+                                <Year yearHandler={this.yearHandler}/>
+                                <Personnel personnelHandler={this.personnelHandler}/>
                             </div>
                         </div>
                         <div className="row">

@@ -7,6 +7,8 @@ import FullReport from './components/FullReport';
 import GtpdFilter from './components/GtpdFilter';
 import IncidentNumber from './components/IncidentNumber'
 import FilterResult from './components/FilterResult'
+import DateStatistics from './components/Statistics/Date-Statistics'
+import DateTimeFilter from './components/Statistics/DateTimeFilter'
 import 'bootstrap/dist/css/bootstrap.css';
 
 /* For server debugging */
@@ -25,6 +27,8 @@ class App extends Component {
                         {/* For server debugging */}
                         <Route exact path="/direct-query" component={DirectQuery} />
                         <Route exact path="/GTPD-Filter" component={GtpdFilter} />
+                        <Route exact path="/Statistics-Date/:year" component={DateStatistics} />
+                        <Route exact path="/Date-Time-Filter/" component={DateTimeFilter} />
 
                 </Router>
             </div>
