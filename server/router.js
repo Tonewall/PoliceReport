@@ -79,6 +79,12 @@ function add_router(app) {
             else res.status(400).send(err);
         });
     });
+    app.get('/crimeCategories', function (req, res) {
+        db_query(query_factory.crimeCategories, (err, result) => {
+            if (!err) res.send(result);
+            else res.status(400).send(err);
+        });
+    });
     app.get('/getBothCount/:year', function (req, res) {
         query = query_factory.getBothCount(req.params.year)
         db_query(query, (err, result) => {

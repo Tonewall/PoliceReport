@@ -225,6 +225,8 @@ module.exports.get_property = function(incident_number) {
 
 module.exports.crimeTypes = 
 "SELECT DISTINCT [UCR_Code1],[Inc_Desc_PCase],[NIBRS_Category] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
+module.exports.crimeCategories = 
+"SELECT DISTINCT [NIBRS_Category] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
  
 module.exports.getBothCount = function(year) {
     return sprintf(
