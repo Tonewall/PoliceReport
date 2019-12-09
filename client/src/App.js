@@ -8,6 +8,7 @@ import GtpdFilter from './components/GtpdFilter';
 import IncidentNumber from './components/IncidentNumber'
 import FilterResult from './components/FilterResult'
 import DateStatistics from './components/Statistics/Date-Statistics'
+import TimeStatistics from './components/Statistics/Time-Statistics'
 import DateTimeFilter from './components/Statistics/DateTimeFilter'
 import LocationShiftFilter from './components/Statistics/LocationShiftFilter'
 import 'bootstrap/dist/css/bootstrap.css';
@@ -29,6 +30,7 @@ class App extends Component {
                         <Route exact path="/direct-query" component={DirectQuery} />
                         <Route exact path="/GTPD-Filter" component={GtpdFilter} />
                         <Route exact path="/Statistics-Date/:year" component={DateStatistics} />
+                        <Route exact path="/Statistics-Time/:year" component={TimeStatistics} />
                         <Route exact path="/Date-Time-Filter/" component={DateTimeFilter} />
                         <Route exact path="/Location-Shift-Filter/" component={LocationShiftFilter} />
 

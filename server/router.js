@@ -97,6 +97,18 @@ function add_router(app) {
             else res.status(400).send(err);
         });
     });
+    app.get('/getTimeCount/:year', function (req, res) {
+        query = query_factory.getTimeCount(req.params.year)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result[0] != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
     app.get('/getYears', function (req, res) {
         db_query(query_factory.getYears, (err, result) => {
             if (!err) res.send(result);

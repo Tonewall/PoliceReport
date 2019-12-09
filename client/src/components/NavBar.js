@@ -35,8 +35,8 @@ export default class NavBar extends Component {
                             <a className="dropdown-item" href="/Officers">Officers</a>
                         </div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Date-Time-Filter">Statistics</a>
+                    <li className="nav-item">
+                        <a className="nav-link" href="/Date-Time-Filter">Statistics</a>
                     </li>
                     {/* <li className="nav-item dropdown">
                         <a className="nav-link dropdown-toggle" href="/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

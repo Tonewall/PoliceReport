@@ -238,6 +238,16 @@ module.exports.getBothCount = function(year) {
         ,year
     )
 }
+module.exports.getTimeCount = function(year) {
+    return sprintf(
+        "SELECT DATEPART(HOUR, [From Time]) as [Hour], COUNT(*) AS [Count]\
+        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
+        WHERE YEAR([Report Date]) =\'%d'\n\
+		GROUP BY DATEPART(HOUR, [From Time])\
+		ORDER BY DATEPART(HOUR, [From Time])"
+        ,year
+    )
+}
 module.exports.getYears = "SELECT DISTINCT YEAR([Report Date]) as [YEAR]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
         ORDER BY YEAR([Report Date]) DESC"
