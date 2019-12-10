@@ -85,8 +85,9 @@ function add_router(app) {
             else res.status(400).send(err);
         });
     });
-    app.get('/getBothCount/:year', function (req, res) {
-        query = query_factory.getBothCount(req.params.year)
+    app.post('/getBothCount', function (req, res) {
+        query = query_factory.getBothCount(req.body)
+        console.log(query)
         db_query(query, (err, result) => {
             if (!err) {
                 if (result[0] != null)

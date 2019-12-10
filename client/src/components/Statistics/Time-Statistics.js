@@ -25,7 +25,8 @@ class TimeStatistics extends Component {
                 var date = new Date();
                 year = date.getFullYear();
             }
-            this.setState({year})
+            this.props.data.selectedYear = {value: year, label: year};
+            this.setState({year});
             this.getTimeCount(year);
         }
 

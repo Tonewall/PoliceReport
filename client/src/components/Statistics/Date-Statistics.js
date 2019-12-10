@@ -24,18 +24,31 @@ class DateStatistics extends Component {
                 var date = new Date();
                 year = date.getFullYear();
             }
-            this.setState({year})
-            this.getBothCount(year);
+            this.props.data.selectedYear = {value: year, label: year};
+            this.setState({year});
+            this.getBothCount();
         }
        
     }
 
-    getBothCount(year) {
-        fetch('/getBothCount/'+year)
+    getBothCount() {
+        fetch('/getBothCount',
+                {
+                    headers:{'Content-Type' : 'application/json'},
+                    method: 'post',
+                    body: JSON.stringify(this.props.data)
+                }
+            )
+            .then(function(response) {
+                if(!response.ok) {
+                    throw Error(response.statusText);
+                }
+                return response
+            })
             .then(results => {
                 results.json().then(data => {
-                    this.createBothMonths(data)
-                })})
+                this.createBothMonths(data)
+            })})
             .catch(err => console.error(err))
     }
 
@@ -43,7 +56,8 @@ class DateStatistics extends Component {
         var monthArray=[];
         this.setState({ bothData: data });
         for(var i = 0; i < data.length; i++) {
-            monthArray[i] = data[i]['COUNT'];
+            var month = data[i]['Month']-1
+            monthArray[month] = data[i]['COUNT'];
         }
         this.setState({bothCrimeMonthRecord: monthArray})
         this.createbothChart();

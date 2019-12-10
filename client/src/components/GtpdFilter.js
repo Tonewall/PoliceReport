@@ -18,7 +18,7 @@ class gtpdFilter extends Component {
             selectedShift: null,
             selectedArrest: null,
             selectedOutcome: null,
-            officerID: null,
+            officerName: null,
             selectedAPDBuilding: null,
             selectedAPDLocationType: null,
             selectedBuilding: null,
@@ -60,7 +60,7 @@ class gtpdFilter extends Component {
 
     personnelHandler = (personnel) => {
         this.setState({
-            officerID: personnel.officerID, 
+            officerName: personnel.officerName, 
             selectedShift: personnel.selectedShift, 
         })
     }

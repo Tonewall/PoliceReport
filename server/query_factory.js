@@ -224,18 +224,62 @@ module.exports.get_property = function(incident_number) {
 }
 
 module.exports.crimeTypes = 
-"SELECT DISTINCT [UCR_Code1],[Inc_Desc_PCase],[NIBRS_Category] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
+"SELECT DISTINCT [UCR_Code1],[Inc_Desc_PCase],[NIBRS_Category],[NIBRS_Offense_code] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
 module.exports.crimeCategories = 
 "SELECT DISTINCT [NIBRS_Category] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
+// "SELECT DISTINCT [NIBRS_Category], [NIBRS_Offense_code] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
  
-module.exports.getBothCount = function(year) {
+module.exports.getBothCount = function(body) {
+    console.log(body)
+    officerName = (body.officerName ? body.officerName : '')
+    address = (body.streetName ? body.streetName : '')
+    department = "LIKE '%%'"
+    if(body.selectedDepartment) {
+        if(body.selectedDepartment.value === 'gtpDepartment') {
+            department = "NOT LIKE'APD'"
+        } else if(body.selectedDepartment.value === 'apDepartment') {
+            department = "LIKE'APD'"
+        } 
+    }
+
+    if(body.selectedShift) {
+        unit = "AND ([Unit] LIKE '" + body.selectedShift[0].label + "'"
+        for(var i = 1; i < body.selectedShift.length; i++) {
+            unit += " OR [Unit] LIKE '" + body.selectedShift[i].label + "'"
+        }
+        unit += ")" 
+    } else {
+        unit = ''
+    }
+
+    
+    if(body.selectedCrimeType) {
+        crime = "AND ([SRSOffense] LIKE '" + body.selectedCrimeType[0]['UCR_Code1'] + "'"
+        for(var i = 1; i < body.selectedCrimeType.length; i++) {
+            crime += " OR [SRSOffense] LIKE '" + body.selectedCrimeType[i]['UCR_Code1'] + "'"
+        }
+        crime += ")"
+    } else if (body.selectedCrimeCategory) {
+        // console.log(body.selectedCrimeCategory)
+        // crime = "AND [Offense] LIKE '" + body.selectedCrimeCategory['NIBRS_Offense_code'] + "'"
+        crime = ''
+    } else {
+        crime = ''
+    }
+
+    
     return sprintf(
         "SELECT MONTH([Report Date]) as [Month], COUNT(*) as [COUNT]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
         WHERE YEAR([Report Date]) =\'%d'\n\
+        AND [Officer Name] LIKE \'%%%s%%'\n\
+        AND [Address] LIKE \'%%%s%%'\n\
+        AND [Location Code] \%s\n\
+        \%s\n\
+        \%s\n\
         GROUP BY MONTH([Report Date])\
         ORDER BY MONTH([Report Date])"
-        ,year
+        ,body.selectedYear.value, officerName, address, department, unit, crime
     )
 }
 module.exports.getTimeCount = function(year) {
