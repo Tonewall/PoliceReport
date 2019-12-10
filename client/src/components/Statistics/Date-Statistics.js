@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import Chart from "chart.js";
 import "./Statistics.css";
-import Select from "react-select";
 
-
-const yearOptions = [];
 
 
 class DateStatistics extends Component {
@@ -20,12 +17,6 @@ class DateStatistics extends Component {
         }
         this.createBothMonths = this.createBothMonths.bind(this);
     };
-    setYear = selectedYear => {
-        var year = selectedYear.value;
-        window.location.replace('/Statistics-Date/'+year)
-        // this.setState({selectedYear});
-        // this.getBothCount(year)
-    };
     componentDidMount() {
         if(this.props.data) {
             var year = this.props.data.selectedYear;
@@ -33,19 +24,7 @@ class DateStatistics extends Component {
                 var date = new Date();
                 year = date.getFullYear();
             }
-            // var date = new Date()
-            // var year = date.getUTCFullYear();
             this.getBothCount(year);
-            this.setState({selectedYear: {value: year, label: year}})
-            
-            fetch('/getYears')
-                .then(results=> {
-                    results.json().then(data => {
-                        this.populateYears(data)
-                    })
-                })
-                .catch(err => console.error(err))
-    
         }
        
     }
@@ -66,15 +45,6 @@ class DateStatistics extends Component {
             monthArray[i] = data[i]['COUNT'];
         }
         this.setState({bothCrimeMonthRecord: monthArray})
-        //increments Crime count for each month
-        // for(var i = 0; i < this.state.bothData.length; i++) {
-        //     var month = this.state.bothData[i]['Month']-1;
-        //     var count = this.state.bothCrimeMonthRecord[month];
-        //     count++;
-        //     var prevRecord = [...this.state.bothCrimeMonthRecord];
-        //         prevRecord[month] = count;
-        //         this.setState({bothCrimeMonthRecord: prevRecord});
-        // }
         this.createbothChart();
     }
 
@@ -112,15 +82,6 @@ class DateStatistics extends Component {
          });
     }
 
-    populateYears(data) {
-        var count = 0;
-        for(var i = 0; i < data.length; i++) {
-            if(data[i]['YEAR'] >= 2009) {
-                yearOptions[count] = {value: data[i]['YEAR'], label: data[i]['YEAR']};
-                count++;
-            }
-        }
-    }
 
 
     render() {
@@ -129,18 +90,6 @@ class DateStatistics extends Component {
             <div className="regularChartMain">
                 <div className="row">
                     <div className=" col-lg-12">
-                        <div className="card yearCard shadow p-3 mb-5 bg-white rounded">
-                            <label className="col-12 col-form-label">
-                                Select Year
-                            </label>
-                            <div>
-                                <Select 
-                                value={selectedYear} 
-                                onChange={this.setYear} 
-                                options={yearOptions} 
-                                />
-                            </div>
-                        </div>
                         <div className="card dataCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
                             <h5 className="card-title">Incidents by Months for {selectedYear && selectedYear.value}</h5>

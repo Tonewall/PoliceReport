@@ -85,7 +85,7 @@ class gtpdFilter extends Component {
         const { selectedType } = this.state;
         return(
             <div className="main filterMain">
-                {this.state.redirected ? <Redirect to={{pathname: '/Statistics-Redirect', state: this.state}}/> : null}
+                {this.state.redirected ? <Redirect to={{pathname: '/Statistics', state: this.state}}/> : null}
                 <div className="card filterCard">
                     <h2 className="card-header">Date/Time Statistics Filter</h2>
                     <div className="card-body">

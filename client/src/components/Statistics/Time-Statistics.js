@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import Chart from "chart.js";
 import "./Statistics.css";
-import Select from "react-select";
 
-
-const yearOptions = [];
 
 
 class TimeStatistics extends Component {
@@ -20,10 +17,7 @@ class TimeStatistics extends Component {
         }
         this.createBothTime = this.createBothTime.bind(this);
     };
-    setYear = selectedYear => {
-        var year = selectedYear.value;
-        window.location.replace('/Statistics-Time/'+year)
-    };
+
     componentDidMount() {
         if(this.props.data) {
             var year = this.props.data.selectedYear;
@@ -32,15 +26,6 @@ class TimeStatistics extends Component {
                 year = date.getFullYear();
             }
             this.getTimeCount(year);
-            this.setState({selectedYear: {value: year, label: year}})
-            
-            fetch('/getYears')
-                .then(results=> {
-                    results.json().then(data => {
-                        this.populateYears(data)
-                    })
-                })
-                .catch(err => console.error(err))
         }
 
     }
@@ -99,16 +84,6 @@ class TimeStatistics extends Component {
          });
     }
 
-    populateYears(data) {
-        var count = 0;
-        for(var i = 0; i < data.length; i++) {
-            if(data[i]['YEAR'] >= 2009) {
-                yearOptions[count] = {value: data[i]['YEAR'], label: data[i]['YEAR']};
-                count++;
-            }
-        }
-    }
-
 
     render() {
         const {selectedYear} = this.state;
@@ -116,18 +91,6 @@ class TimeStatistics extends Component {
             <div className="regularChartMain">
                 <div className="row">
                     <div className=" col-lg-12">
-                        <div className="card yearCard shadow p-3 mb-5 bg-white rounded">
-                            <label className="col-12 col-form-label">
-                                Select Year
-                            </label>
-                            <div>
-                                <Select 
-                                value={selectedYear} 
-                                onChange={this.setYear} 
-                                options={yearOptions} 
-                                />
-                            </div>
-                        </div>
                         <div className="card dataCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
                             <h5 className="card-title">Incidents by Hours for {selectedYear && selectedYear.value}</h5>
