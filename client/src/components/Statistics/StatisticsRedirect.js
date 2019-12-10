@@ -11,7 +11,10 @@ export default class StatisticsRedirect extends Component {
     
   }
   componentDidMount() {
+    if(this.props.location.state) {
       this.setState({data: this.props.location.state})
+    }
+      
   }
 
   render () {
@@ -27,7 +30,6 @@ export default class StatisticsRedirect extends Component {
       <div className='main'>
           <div className='menu'>
               {statComponent}
-              Test
           </div>
       </div>
     )

@@ -13,7 +13,7 @@ class TimeStatistics extends Component {
             bothData: [],
             bothDayData: [],
             bothCrimeTimeRecord: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            selectedYear: null,
+            year: null,
         }
         this.createBothTime = this.createBothTime.bind(this);
     };
@@ -25,6 +25,7 @@ class TimeStatistics extends Component {
                 var date = new Date();
                 year = date.getFullYear();
             }
+            this.setState({year})
             this.getTimeCount(year);
         }
 
@@ -86,14 +87,13 @@ class TimeStatistics extends Component {
 
 
     render() {
-        const {selectedYear} = this.state;
         return (
             <div className="regularChartMain">
                 <div className="row">
                     <div className=" col-lg-12">
                         <div className="card dataCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
-                            <h5 className="card-title">Incidents by Hours for {selectedYear && selectedYear.value}</h5>
+                            <h5 className="card-title">Incidents by Hours for {this.state.year}</h5>
                                 <canvas
                                     id="myChart"
                                     ref={this.bothChart}
