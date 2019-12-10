@@ -27,20 +27,27 @@ class DateStatistics extends Component {
         // this.getBothCount(year)
     };
     componentDidMount() {
-        var {year} = this.props.match.params;
-        // var date = new Date()
-        // var year = date.getUTCFullYear();
-        this.getBothCount(year);
-        this.setState({selectedYear: {value: year, label: year}})
-        
-        fetch('/getYears')
-            .then(results=> {
-                results.json().then(data => {
-                    this.populateYears(data)
+        if(this.props.data) {
+            var year = this.props.data.selectedYear;
+            if (year === null) {
+                var date = new Date();
+                year = date.getFullYear();
+            }
+            // var date = new Date()
+            // var year = date.getUTCFullYear();
+            this.getBothCount(year);
+            this.setState({selectedYear: {value: year, label: year}})
+            
+            fetch('/getYears')
+                .then(results=> {
+                    results.json().then(data => {
+                        this.populateYears(data)
+                    })
                 })
-            })
-            .catch(err => console.error(err))
-
+                .catch(err => console.error(err))
+    
+        }
+       
     }
 
     getBothCount(year) {

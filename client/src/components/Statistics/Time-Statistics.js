@@ -25,17 +25,23 @@ class TimeStatistics extends Component {
         window.location.replace('/Statistics-Time/'+year)
     };
     componentDidMount() {
-        var {year} = this.props.match.params;
-        this.getTimeCount(year);
-        this.setState({selectedYear: {value: year, label: year}})
-        
-        fetch('/getYears')
-            .then(results=> {
-                results.json().then(data => {
-                    this.populateYears(data)
+        if(this.props.data) {
+            var year = this.props.data.selectedYear;
+            if (year === null) {
+                var date = new Date();
+                year = date.getFullYear();
+            }
+            this.getTimeCount(year);
+            this.setState({selectedYear: {value: year, label: year}})
+            
+            fetch('/getYears')
+                .then(results=> {
+                    results.json().then(data => {
+                        this.populateYears(data)
+                    })
                 })
-            })
-            .catch(err => console.error(err))
+                .catch(err => console.error(err))
+        }
 
     }
 

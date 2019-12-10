@@ -5,6 +5,7 @@ import Crime from "../FilterComponents/Crime"
 import Location from "../FilterComponents/Location"
 import Personnel from "../FilterComponents/Personnel"
 import Select from "react-select";
+import {Redirect} from 'react-router-dom'
 
 const typeOptions = [
     {value: "Date", label: "Date"},
@@ -16,6 +17,7 @@ class gtpdFilter extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            redirected: false,
             selectedYear: null,
             streetName: null,
             selectedCrimeType: null,
@@ -76,12 +78,14 @@ class gtpdFilter extends Component {
 
     handleSubmit = () => {
         console.log(this.state)
+        this.setState({redirected: true})
     }
 
     render() {
         const { selectedType } = this.state;
         return(
             <div className="main filterMain">
+                {this.state.redirected ? <Redirect to={{pathname: '/Statistics-Redirect', state: this.state}}/> : null}
                 <div className="card filterCard">
                     <h2 className="card-header">Date/Time Statistics Filter</h2>
                     <div className="card-body">

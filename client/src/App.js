@@ -11,6 +11,7 @@ import DateStatistics from './components/Statistics/Date-Statistics'
 import TimeStatistics from './components/Statistics/Time-Statistics'
 import DateTimeFilter from './components/Statistics/DateTimeFilter'
 import LocationShiftFilter from './components/Statistics/LocationShiftFilter'
+import StatisticsRedirect from './components/Statistics/StatisticsRedirect'
 import 'bootstrap/dist/css/bootstrap.css';
 
 /* For server debugging */
@@ -31,6 +32,7 @@ class App extends Component {
                         <Route exact path="/GTPD-Filter" component={GtpdFilter} />
                         <Route exact path="/Statistics-Date/:year" component={DateStatistics} />
                         <Route exact path="/Statistics-Time/:year" component={TimeStatistics} />
+                        <Route exact path="/Statistics-Redirect/" component={StatisticsRedirect} />
                         <Route exact path="/Date-Time-Filter/" component={DateTimeFilter} />
                         <Route exact path="/Location-Shift-Filter/" component={LocationShiftFilter} />
 
