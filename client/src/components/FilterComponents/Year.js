@@ -17,21 +17,15 @@ class year extends Component {
     };
 
     componentDidMount() {
-        fetch('/getYears')
-            .then(results=> {
-                results.json().then(data => {
-                    this.populateYears(data)
-                })
-            })
-            .catch(err => console.error(err))
+        this.populateYears()
     }
     populateYears(data) {
+        var date = new Date();
+        var currentYear = date.getFullYear();
         var count = 0;
-        for(var i = 0; i < data.length; i++) {
-            if(data[i]['YEAR'] >= 2009) {
-                yearOptions[count] = {value: data[i]['YEAR'], label: data[i]['YEAR']};
-                count++;
-            }
+        for(var i = currentYear; i >= 2009; i--) {
+            yearOptions[count] = {value: i, label: i};
+            count++;
         }
     }
 

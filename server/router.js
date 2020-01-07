@@ -98,8 +98,9 @@ function add_router(app) {
             else res.status(400).send(err);
         });
     });
-    app.get('/getTimeCount/:year', function (req, res) {
-        query = query_factory.getTimeCount(req.params.year)
+    app.post('/getTimeCount', function (req, res) {
+        query = query_factory.getTimeCount(req.body)
+        console.log(query)
         db_query(query, (err, result) => {
             if (!err) {
                 if (result[0] != null)

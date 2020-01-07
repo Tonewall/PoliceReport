@@ -11,7 +11,7 @@ const typeOptions = [
     {value: "Date", label: "Date"},
     {value: "Time", label: "Time"},
     {value: "Location", label: "Location"},
-    {value: "Shift", label: "Shift"}
+    // {value: "Shift", label: "Shift"}
 ]
 class gtpdFilter extends Component {
     constructor(props) {
@@ -86,7 +86,7 @@ class gtpdFilter extends Component {
             <div className="main filterMain">
                 {this.state.redirected ? <Redirect to={{pathname: '/Statistics', state: this.state}}/> : null}
                 <div className="card filterCard">
-                    <h2 className="card-header">Date/Time Statistics Filter</h2>
+                    <h2 className="card-header">Statistics Filter</h2>
                     <div className="card-body">
                         <form onSubmit={this.handleSubmit}>
                             <div className="row">

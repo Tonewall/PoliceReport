@@ -32,12 +32,25 @@ class TimeStatistics extends Component {
 
     }
 
-    getTimeCount(year) {
-        fetch('/getTimeCount/'+year)
+    getTimeCount() {
+        console.log("here")
+        fetch('/getTimeCount',
+                {
+                    headers:{'Content-Type' : 'application/json'},
+                    method: 'post',
+                    body: JSON.stringify(this.props.data)
+                }
+            )
+            .then(function(response) {
+                if(!response.ok) {
+                    throw Error(response.statusText);
+                }
+                return response
+            })
             .then(results => {
                 results.json().then(data => {
-                    this.createBothTime(data)
-                })})
+                this.createBothTime(data)
+            })})
             .catch(err => console.error(err))
     }
 

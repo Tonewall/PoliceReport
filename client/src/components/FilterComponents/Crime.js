@@ -92,7 +92,8 @@ class crime extends Component {
                 crimeCategoryOptions[i+1].label =  "All Other Offenses";
             } else {
                 crimeCategoryOptions[i+1] = data[i];
-                crimeCategoryOptions[i+1].value = data[i]['NIBRS_Offense_code'];
+                // crimeCategoryOptions[i+1].value = data[i]['NIBRS_Offense_code'];
+                crimeCategoryOptions[i+1].value = data[i]['NIBRS_Category'];
                 crimeCategoryOptions[i+1].label = data[i]['NIBRS_Category'];
             }
         }
