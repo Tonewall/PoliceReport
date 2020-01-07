@@ -118,6 +118,20 @@ function add_router(app) {
         });
     });
 
+    app.post('/getLocationRanking', function (req, res) {
+        query = query_factory.getLocationRanking(req.body)
+        console.log(query)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result[0] != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+
     
     /*
         Integrates basic_info with offense_desc, narratives, offender_info, arrest_info, property_info

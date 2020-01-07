@@ -8,7 +8,8 @@ import GtpdFilter from './components/GtpdFilter';
 import IncidentNumber from './components/IncidentNumber'
 import FilterResult from './components/FilterResult'
 import DateTimeFilter from './components/Statistics/DateTimeFilter'
-import LocationShiftFilter from './components/Statistics/LocationShiftFilter'
+import LocationStatsFilter from './components/Statistics/LocationStatsFilter'
+import LocationStatistics from './components/Statistics/LocationStatistics'
 import StatisticsRedirect from './components/Statistics/StatisticsRedirect'
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -30,7 +31,8 @@ class App extends Component {
                         <Route exact path="/GTPD-Filter" component={GtpdFilter} />
                         <Route exact path="/Statistics/" component={StatisticsRedirect} />
                         <Route exact path="/Date-Time-Filter/" component={DateTimeFilter} />
-                        <Route exact path="/Location-Shift-Filter/" component={LocationShiftFilter} />
+                        <Route exact path="/Location-Stats-Filter/" component={LocationStatsFilter} />
+                        <Route exact path="/Location-Statistics/" component={LocationStatistics} />
 
                 </Router>
             </div>
