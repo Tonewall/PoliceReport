@@ -70,6 +70,7 @@ class LocationStatistics extends Component {
     }
 
     getLocationRanking() {
+        console.log(this.props.location.state.startDate.toLocaleDateString())
         fetch('/getLocationRanking',
                 {
                     headers:{'Content-Type' : 'application/json'},
@@ -116,7 +117,7 @@ class LocationStatistics extends Component {
         return (
             <div className="regularChartMain">
                <div className="card locationStatsCard">
-                    <h2 className="card-header">Campus Locations with Part I Crimes</h2>
+                    <h2 className="card-header">Campus Locations with Part I Crimes ({this.props.location.state.startDate!=null && this.props.location.state.startDate.toLocaleDateString()} - {this.props.location.state.endDate!=null && this.props.location.state.endDate.toLocaleDateString()})</h2>
                     <div className="card-body">
                         <MDBDataTable
                             scrollX
