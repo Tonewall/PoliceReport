@@ -54,23 +54,19 @@ class LocationStatistics extends Component {
                         sort: 'asc'
                     },
                 ],
-                rows: [
-
-                ]
+                rows: []
             }
         }
     }
 
     componentDidMount() {
         if(this.props.location.state) {
-            console.log(this.props.location.state)
             this.getLocationRanking();
         }
        
     }
 
     getLocationRanking() {
-        console.log(this.props.location.state.startDate.toLocaleDateString())
         fetch('/getLocationRanking',
                 {
                     headers:{'Content-Type' : 'application/json'},
@@ -92,7 +88,6 @@ class LocationStatistics extends Component {
     }
 
     populate(data) {
-        // console.log(data)
         var row = [];
         for (var i = 0; i < data.length; i++) {
             row[i] = {
