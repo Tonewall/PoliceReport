@@ -87,7 +87,6 @@ function add_router(app) {
     });
     app.post('/getBothCount', function (req, res) {
         query = query_factory.getBothCount(req.body)
-        console.log(query)
         db_query(query, (err, result) => {
             if (!err) {
                 if (result[0] != null)
@@ -100,7 +99,6 @@ function add_router(app) {
     });
     app.post('/getTimeCount', function (req, res) {
         query = query_factory.getTimeCount(req.body)
-        console.log(query)
         db_query(query, (err, result) => {
             if (!err) {
                 if (result[0] != null)
@@ -120,7 +118,6 @@ function add_router(app) {
 
     app.post('/getLocationRanking', function (req, res) {
         query = query_factory.getLocationRanking(req.body)
-        console.log(query)
         db_query(query, (err, result) => {
             if (!err) {
                 if (result[0] != null)

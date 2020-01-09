@@ -286,7 +286,7 @@ module.exports.getBothCount = function(body) {
 
     
     return sprintf(
-        "SELECT MONTH([Report Date]) as [Month], COUNT(*)/2 as [COUNT]\
+        "SELECT MONTH([Report Date]) as [Month], COUNT(*) as [COUNT]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
         FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[UCR_CODE1]\
         WHERE YEAR([Report Date]) =\'%d'\n\
@@ -354,7 +354,7 @@ module.exports.getTimeCount = function(body) {
         crime = ''
     }
     return sprintf(
-        "SELECT DATEPART(HOUR, [From Time]) as [Hour], COUNT(*)/2 AS [Count]\
+        "SELECT DATEPART(HOUR, [From Time]) as [Hour], COUNT(*) AS [Count]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
         FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[UCR_CODE1]\
         WHERE YEAR([Report Date]) =\'%d'\n\
@@ -372,15 +372,16 @@ module.exports.getTimeCount = function(body) {
 module.exports.getLocationRanking = function(body) {
     return sprintf(
         "SELECT [Building Name],\
-        COUNT(*)/2 as [PART I],\
-        sum(case when [NIBRS_Category] = 'Robbery' then 1 else 0 end)/2 AS [Robbery],\
-        sum(case when [NIBRS_Category] = 'Larceny/Theft Offenses' then 1 else 0 end)/2 AS [Larceny/Theft Offenses],\
-        sum(case when [NIBRS_Category] = 'Assault Offenses' then 1 else 0 end)/2 AS [Assault Offenses],\
-        sum(case when [NIBRS_Category] = 'Burglary/Breaking & Entering' then 1 else 0 end)/2 AS [Burglary/Breaking & Entering],\
-        sum(case when [NIBRS_Category] = 'Motor Vehicle Theft' then 1 else 0 end)/2 AS [Motor Vehicle Theft]\
+        COUNT(*) as [PART I],\
+        sum(case when [NIBRS_Category] = 'Robbery' then 1 else 0 end) AS [Robbery],\
+        sum(case when [NIBRS_Category] = 'Larceny/Theft Offenses' then 1 else 0 end) AS [Larceny/Theft Offenses],\
+        sum(case when [NIBRS_Category] = 'Assault Offenses' then 1 else 0 end) AS [Assault Offenses],\
+        sum(case when [NIBRS_Category] = 'Burglary/Breaking & Entering' then 1 else 0 end) AS [Burglary/Breaking & Entering],\
+        sum(case when [NIBRS_Category] = 'Motor Vehicle Theft' then 1 else 0 end) AS [Motor Vehicle Theft]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
         JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Codes-Offense].[UCR_CODE1] = [Incident Offenses-GTPD+APD].[SRSOffense]\
-        JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON [Codes_Addresses_Unique].[Address] = [Incident Offenses-GTPD+APD].[Address]\
+        JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON ([Codes_Addresses_Unique].[St #] = [Incident Offenses-GTPD+APD].[St Num]\
+            AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name])\
         WHERE [Report Date] >= '%s'\n\
         AND [Report Date] <= '%s'\n\
         AND [NIBRS_Category] in ('Robbery', 'Larceny/Theft Offenses', 'Assault Offenses', 'Burglary/Breaking & Entering', 'Motor Vehicle Theft')\
