@@ -5,19 +5,15 @@ import Crime from "../FilterComponents/Crime"
 import Location from "../FilterComponents/Location"
 import Personnel from "../FilterComponents/Personnel"
 import Select from "react-select";
-import {Redirect} from 'react-router-dom'
 
 const typeOptions = [
-    {value: "Date", label: "Date"},
-    {value: "Time", label: "Time"},
     {value: "Location", label: "Location"},
-    // {value: "Shift", label: "Shift"}
+    {value: "Shift", label: "Shift"}
 ]
 class gtpdFilter extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            redirected: false,
             selectedYear: null,
             streetName: null,
             selectedCrimeType: null,
@@ -25,8 +21,8 @@ class gtpdFilter extends Component {
             selectedShift: null,
             selectedArrest: null,
             selectedOutcome: null,
-            officerName: null,
-            selectedType: {value: "Date", label: "Date"},
+            officerID: null,
+            selectedType: {value: "Location", label: "Location"},
             selectedAPDBuilding: null,
             selectedAPDLocationType: null,
             selectedBuilding: null,
@@ -71,22 +67,21 @@ class gtpdFilter extends Component {
 
     personnelHandler = (personnel) => {
         this.setState({
-            officerName: personnel.officerName, 
+            officerID: personnel.officerID, 
             selectedShift: personnel.selectedShift, 
         })
     }
 
     handleSubmit = () => {
-        this.setState({redirected: true})
+        console.log(this.state)
     }
 
     render() {
         const { selectedType } = this.state;
         return(
             <div className="main filterMain">
-                {this.state.redirected ? <Redirect to={{pathname: '/Statistics', state: this.state}}/> : null}
                 <div className="card filterCard">
-                    <h2 className="card-header">Statistics Filter</h2>
+                    <h2 className="card-header">Location/Shift Statistics Filter</h2>
                     <div className="card-body">
                         <form onSubmit={this.handleSubmit}>
                             <div className="row">
@@ -104,7 +99,7 @@ class gtpdFilter extends Component {
                                         <div className="card-body">
                                             <div className="col-12 dateFilters">
                                                 <label className="col-12 col-form-label">
-                                                    Type
+                                                    Date/Time
                                                 </label>
                                                 <div>
                                                     <Select 

@@ -85,8 +85,20 @@ function add_router(app) {
             else res.status(400).send(err);
         });
     });
-    app.get('/getBothCount/:year', function (req, res) {
-        query = query_factory.getBothCount(req.params.year)
+    app.post('/getBothCount', function (req, res) {
+        query = query_factory.getBothCount(req.body)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result[0] != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+    app.post('/getTimeCount', function (req, res) {
+        query = query_factory.getTimeCount(req.body)
         db_query(query, (err, result) => {
             if (!err) {
                 if (result[0] != null)
@@ -100,6 +112,19 @@ function add_router(app) {
     app.get('/getYears', function (req, res) {
         db_query(query_factory.getYears, (err, result) => {
             if (!err) res.send(result);
+            else res.status(400).send(err);
+        });
+    });
+
+    app.post('/getLocationRanking', function (req, res) {
+        query = query_factory.getLocationRanking(req.body)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result[0] != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
             else res.status(400).send(err);
         });
     });

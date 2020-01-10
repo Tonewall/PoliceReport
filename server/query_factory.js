@@ -224,20 +224,174 @@ module.exports.get_property = function(incident_number) {
 }
 
 module.exports.crimeTypes = 
-"SELECT DISTINCT [UCR_Code1],[Inc_Desc_PCase],[NIBRS_Category] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
+"SELECT DISTINCT [UCR_Code1],[Inc_Desc_PCase],[NIBRS_Category],[NIBRS_Offense_code] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
 module.exports.crimeCategories = 
 "SELECT DISTINCT [NIBRS_Category] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
+// "SELECT DISTINCT [NIBRS_Category], [NIBRS_Offense_code] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
  
-module.exports.getBothCount = function(year) {
+module.exports.getBothCount = function(body) {
+
+    //OFFICER NAME
+    officerName = (body.officerName ? body.officerName : '')
+
+    //ADDRESS
+    address = (body.streetName ? body.streetName : '')
+
+    //DEPARTMENT
+    department = "LIKE '%%'"
+    if(body.selectedDepartment) {
+        if(body.selectedDepartment.value === 'gtpDepartment') {
+            department = "NOT LIKE'APD'"
+        } else if(body.selectedDepartment.value === 'apDepartment') {
+            department = "LIKE'APD'"
+        } 
+    }
+
+    // //LOCATION
+    // if(body.selectedDepartment && body.selectedDepartment.value != "bothDepartment") {
+    //     //department chosen
+    //     if(body.selectedDepartment.value === 'gtpDepartment') {
+
+    //     } else if(body.selectedDepartment.value === 'apDepartment') {
+
+    //     } 
+    // } else {
+    //     //no department chosen
+
+    // }
+
+    //SHIFTS AND TEAMS
+    if(body.selectedShift) {
+        unit = "AND ([Unit] LIKE '" + body.selectedShift[0].label + "'"
+        for(var i = 1; i < body.selectedShift.length; i++) {
+            unit += " OR [Unit] LIKE '" + body.selectedShift[i].label + "'"
+        }
+        unit += ")" 
+    } else {
+        unit = ''
+    }
+
+    //CRIMES AND CATEGORIES
+    if(body.selectedCrimeType) {
+        crime = "AND ([SRSOffense] LIKE '" + body.selectedCrimeType[0]['UCR_Code1'] + "'"
+        for(var i = 1; i < body.selectedCrimeType.length; i++) {
+            crime += " OR [SRSOffense] LIKE '" + body.selectedCrimeType[i]['UCR_Code1'] + "'"
+        }
+        crime += ")"
+    } else if (body.selectedCrimeCategory) {
+        crime = "AND [NIBRS_Category] LIKE '" + body.selectedCrimeCategory.value + "'"
+    } else {
+        crime = ''
+    }
+
+    
     return sprintf(
         "SELECT MONTH([Report Date]) as [Month], COUNT(*) as [COUNT]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
+        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[UCR_CODE1]\
         WHERE YEAR([Report Date]) =\'%d'\n\
+        AND [Officer Name] LIKE \'%%%s%%'\n\
+        AND [Address] LIKE \'%%%s%%'\n\
+        AND [Location Code] \%s\n\
+        \%s\n\
+        \%s\n\
         GROUP BY MONTH([Report Date])\
         ORDER BY MONTH([Report Date])"
-        ,year
+        ,body.selectedYear.value, officerName, address, department, unit, crime
     )
 }
+module.exports.getTimeCount = function(body) {
+    //OFFICER NAME
+    officerName = (body.officerName ? body.officerName : '')
+
+    //ADDRESS
+    address = (body.streetName ? body.streetName : '')
+
+    //DEPARTMENT
+    department = "LIKE '%%'"
+    if(body.selectedDepartment) {
+        if(body.selectedDepartment.value === 'gtpDepartment') {
+            department = "NOT LIKE'APD'"
+        } else if(body.selectedDepartment.value === 'apDepartment') {
+            department = "LIKE'APD'"
+        } 
+    }
+
+    // //LOCATION
+    // if(body.selectedDepartment && body.selectedDepartment.value != "bothDepartment") {
+    //     //department chosen
+    //     if(body.selectedDepartment.value === 'gtpDepartment') {
+
+    //     } else if(body.selectedDepartment.value === 'apDepartment') {
+
+    //     } 
+    // } else {
+    //     //no department chosen
+
+    // }
+
+    //SHIFTS AND TEAMS
+    if(body.selectedShift) {
+        unit = "AND ([Unit] LIKE '" + body.selectedShift[0].label + "'"
+        for(var i = 1; i < body.selectedShift.length; i++) {
+            unit += " OR [Unit] LIKE '" + body.selectedShift[i].label + "'"
+        }
+        unit += ")" 
+    } else {
+        unit = ''
+    }
+
+    //CRIMES AND CATEGORIES
+    if(body.selectedCrimeType) {
+        crime = "AND ([SRSOffense] LIKE '" + body.selectedCrimeType[0]['UCR_Code1'] + "'"
+        for(var i = 1; i < body.selectedCrimeType.length; i++) {
+            crime += " OR [SRSOffense] LIKE '" + body.selectedCrimeType[i]['UCR_Code1'] + "'"
+        }
+        crime += ")"
+    } else if (body.selectedCrimeCategory) {
+        crime = "AND [NIBRS_Category] LIKE '" + body.selectedCrimeCategory.value + "'"
+    } else {
+        crime = ''
+    }
+    return sprintf(
+        "SELECT DATEPART(HOUR, [From Time]) as [Hour], COUNT(*) AS [Count]\
+        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
+        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[UCR_CODE1]\
+        WHERE YEAR([Report Date]) =\'%d'\n\
+        AND [Officer Name] LIKE \'%%%s%%'\n\
+        AND [Address] LIKE \'%%%s%%'\n\
+        AND [Location Code] \%s\n\
+        \%s\n\
+        \%s\n\
+		GROUP BY DATEPART(HOUR, [From Time])\
+		ORDER BY DATEPART(HOUR, [From Time])"
+        ,body.selectedYear.value, officerName, address, department, unit, crime
+    )
+}
+
+module.exports.getLocationRanking = function(body) {
+    return sprintf(
+        "SELECT [Building Name],\
+        COUNT(*) as [PART I],\
+        sum(case when [NIBRS_Category] = 'Robbery' then 1 else 0 end) AS [Robbery],\
+        sum(case when [NIBRS_Category] = 'Larceny/Theft Offenses' then 1 else 0 end) AS [Larceny/Theft Offenses],\
+        sum(case when [NIBRS_Category] = 'Assault Offenses' then 1 else 0 end) AS [Assault Offenses],\
+        sum(case when [NIBRS_Category] = 'Burglary/Breaking & Entering' then 1 else 0 end) AS [Burglary/Breaking & Entering],\
+        sum(case when [NIBRS_Category] = 'Motor Vehicle Theft' then 1 else 0 end) AS [Motor Vehicle Theft]\
+        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
+        JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Codes-Offense].[UCR_CODE1] = [Incident Offenses-GTPD+APD].[SRSOffense]\
+        JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON ([Codes_Addresses_Unique].[St #] = [Incident Offenses-GTPD+APD].[St Num]\
+            AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name])\
+        WHERE [Report Date] >= '%s'\n\
+        AND [Report Date] <= '%s'\n\
+        AND [NIBRS_Category] in ('Robbery', 'Larceny/Theft Offenses', 'Assault Offenses', 'Burglary/Breaking & Entering', 'Motor Vehicle Theft')\
+        AND [Loc Code] NOT LIKE 'APD'\
+        GROUP BY [Building Name]\
+        ORDER BY COUNT(*) DESC"
+        ,body.startDate, body.endDate
+    )
+}
+
 module.exports.getYears = "SELECT DISTINCT YEAR([Report Date]) as [YEAR]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
         ORDER BY YEAR([Report Date]) DESC"

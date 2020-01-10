@@ -27,7 +27,7 @@ const shiftOptions = [
 class personnel extends Component {
     state = {
         selectedShift: null,
-        officerID: null,
+        officerName: null,
     };
 
     setShift = selectedShift => { this.setState({selectedShift},
@@ -63,9 +63,9 @@ class personnel extends Component {
                         />
                     </div>
                     <div className="form-group row">
-                        <label htmlFor="inputStreet" className="col-12 col-form-label">Officer ID</label>
+                        <label htmlFor="inputStreet" className="col-12 col-form-label">Officer Name</label>
                         <div className="col-12">
-                        <input type="text" name="officerID" onChange={this.handleChange} className="form-control" id="inputID" placeholder="Any"/>
+                        <input type="text" name="officerName" onChange={this.handleChange} className="form-control" id="inputID" placeholder="Any"/>
                         </div>
                     </div>
                 </div>

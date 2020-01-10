@@ -78,11 +78,11 @@ class crime extends Component {
                 crimeTypeOptions[i]['NIBRS_Category'] =  "All Other Offenses";
             } else {
                 crimeTypeOptions[i] = data[i];
-                crimeTypeOptions[i].value = data[i]['Inc_Desc_PCase'];
+                crimeTypeOptions[i].value = data[i]['UCR_CODE1'];
                 crimeTypeOptions[i].label = data[i]['Inc_Desc_PCase'];
             }
         }
-        crimeTypeOptions.sort((a, b) => (a.value > b.value) ? 1 : -1);
+        crimeTypeOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
     }
     populateCategories(data) {
         for(var i = 0; i < data.length; i++) {
@@ -92,11 +92,12 @@ class crime extends Component {
                 crimeCategoryOptions[i+1].label =  "All Other Offenses";
             } else {
                 crimeCategoryOptions[i+1] = data[i];
+                // crimeCategoryOptions[i+1].value = data[i]['NIBRS_Offense_code'];
                 crimeCategoryOptions[i+1].value = data[i]['NIBRS_Category'];
                 crimeCategoryOptions[i+1].label = data[i]['NIBRS_Category'];
             }
         }
-        crimeCategoryOptions.sort((a, b) => (a.value > b.value) ? 1 : -1);
+        crimeCategoryOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
         crimeCategoryOptions[0] = {value: "Any", label: "Any"}
     }
     componentDidMount() {
