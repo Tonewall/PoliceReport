@@ -6,6 +6,9 @@
     width: 80%;
     margin: auto;
 }
+.locationCard {
+    width: 350px;
+}
 a {
     margin:auto;
 }
