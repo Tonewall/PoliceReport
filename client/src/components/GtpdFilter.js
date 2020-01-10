@@ -78,7 +78,6 @@ class gtpdFilter extends Component {
                 <div className="card filterCard">
                     <h2 className="card-header">Filter</h2>
                     <div className="card-body">
-                        <form onSubmit={this.handleSubmit}>
                             <div className="row">
                                 <div className="col-lg-4 col-6">
                                     <Location locationHandler={this.locationHandler}/>
@@ -94,11 +93,10 @@ class gtpdFilter extends Component {
                             <div className="row">
                                 <div className="col-12">
                                     <div className="searchButton">
-                                        <button type="submit" className="btn btn-primary">Search</button>
+                                        <button onClick={this.handleSubmit} className="btn btn-primary">Search</button>
                                     </div>
                                 </div>
                             </div>
-                        </form>
                     </div>
                 </div>
             </div>

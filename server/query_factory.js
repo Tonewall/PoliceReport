@@ -382,7 +382,7 @@ module.exports.getLocationRanking = function(body) {
         sum(case when [NIBRS_Category] = 'Motor Vehicle Theft' then 1 else 0 end) AS [Motor Vehicle Theft]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
         JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Codes-Offense].[UCR_CODE1] = [Incident Offenses-GTPD+APD].[SRSOffense]\
-        JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON ([Codes_Addresses_Unique].[St #] = [Incident Offenses-GTPD+APD].[St Num]\
+        JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON (CAST([Codes_Addresses_Unique].[St #] as nvarchar(255)) = [Incident Offenses-GTPD+APD].[St Num]\
             AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name])\
         WHERE [Report Date] >= '%s'\n\
         AND [Report Date] <= '%s'\n\
