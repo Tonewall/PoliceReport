@@ -2,9 +2,10 @@ const sprintf = require('sprintf-js').sprintf;
 
 // TODO: add more methods for common query generation
 
-module.exports.showall = function() {
+module.exports.showall = function(additional_join_statement=null, criteria=null, num_incidents=1000) {
     return sprintf('\
-        SELECT distinct top 1000 [OCA Number] as [Incident Number]\
+        SELECT distinct top (%d) [OCA Number] as [Incident Number]\n', num_incidents) +
+        '\
             , CONVERT(varchar, [Report Date], 23) as [Report Date]\
             , convert(varchar, [From Time], 8) as [Time]\
             , CASE  WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is not null AND LEN([Incident Offenses-GTPD+APD].[SRSOffense]) = 3 THEN [NIBRS_Category]\
@@ -28,9 +29,10 @@ module.exports.showall = function() {
                     OR ([Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) = 3 AND [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Offense_code] AND [Codes-Offense].[NIBRS_Category] is not null)\
                     OR ([Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) != 3 AND [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[UCR_CODE1]))\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
-                ON ( [tblIncidentOffender].[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number] )\n\
-        WHERE LEN([OCA Number]) = 8\n\
-        ORDER BY [OCA Number] DESC', 1000);
+                ON ( [tblIncidentOffender].[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number] )\n'+
+            (additional_join_statement==null ? '' : additional_join_statement) + '\n'+
+        (criteria==null ? '' : ('WHERE ' + criteria + '\n'))+
+        'ORDER BY [Report Date] DESC, [Time] DESC';
 }
 
 module.exports.locations = 
@@ -395,6 +397,19 @@ module.exports.getLocationRanking = function(body) {
 module.exports.getYears = "SELECT DISTINCT YEAR([Report Date]) as [YEAR]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
         ORDER BY YEAR([Report Date]) DESC"
+
+
+/* Queries for filters */
+module.exports.filter = function(criteria) {
+    var join_statement = '\
+        LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncident]\
+            ON [Incident Offenses-GTPD+APD].[OCA Number]=[tblIncident].[IncidentNumber]\n\
+        LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
+            ON [Incident Offenses-GTPD+APD].[OCA Number]=[tblIncidentOffense].[IncidentNumber]\n'
+    return this.showall(additional_join_statement = join_statement, criteria = criteria)
+}
+
+
 
 /* Address Ranking Query configured
 

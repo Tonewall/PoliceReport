@@ -4,12 +4,13 @@ import Date from "./FilterComponents/Date"
 import Location from "./FilterComponents/Location"
 import Crime from "./FilterComponents/Crime"
 import Personnel from "./FilterComponents/Personnel"
-
+import {Redirect} from 'react-router-dom'
 
 class gtpdFilter extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            redirected: false,
             startDate: null,
             endDate: null,
             streetName: null,
@@ -67,25 +68,20 @@ class gtpdFilter extends Component {
 
     handleSubmit = () => {
         console.log(this.state)
-        fetch('/filter',
-                {
-                    headers:{'Content-Type' : 'application/json'},
-                    method: 'post',
-                    body: JSON.stringify(this.state)
-                }
-            )
+        this.setState({redirected: true})
     }
 
     render() {
         return(
             <div className="main filterMain">
+                {this.state.redirected ? <Redirect to={{pathname: '/Filter-Result', state: this.state}}/> : null}
                 <div className="card filterCard">
                     <h2 className="card-header">Filter</h2>
                     <div className="card-body">
                         <form onSubmit={this.handleSubmit}>
                             <div className="row">
                                 <div className="col-lg-4 col-6">
-                                    <Location locationHandler={this.locationHandler}/>                                
+                                    <Location locationHandler={this.locationHandler}/>
                                 </div>
                                 <div className="col-lg-4 col-6">
                                     <Crime crimeHandler={this.crimeHandler}/>
