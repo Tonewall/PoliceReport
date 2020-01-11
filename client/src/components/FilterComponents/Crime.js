@@ -20,10 +20,15 @@ const outcomeOptions = [
 class crime extends Component {
     state = {
         selectedCrimeType: null,
-        selectedCrimeCategory: null,
+        selectedCrimeCategory: {value: 'Any', label: 'Any'},
         selectedArrest: null,
         selectedOutcome: null,
     };
+
+    constructor(props) {
+        super(props)
+        props.crimeHandler(this.state)
+    }
 
     setCrimeType = selectedCrimeType => { 
         this.setState({selectedCrimeType},

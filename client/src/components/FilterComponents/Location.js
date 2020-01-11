@@ -61,6 +61,12 @@ class location extends Component {
         selectedGTLocationType: {value: 'Any', label: 'Any'},
         selectedAPDLocationType: {value: 'Any', label: 'Any'},
     };
+
+    constructor(props) {
+        super(props)
+        props.locationHandler(this.state)
+    }
+
     setDepartment = selectedDepartment => { this.setState({selectedDepartment},
         function() {
             this.props.locationHandler(this.state)

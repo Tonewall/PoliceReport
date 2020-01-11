@@ -73,16 +73,102 @@ function add_router(app) {
     });
 
     app.post('/filter', function (req, res) {
-        console.log(req.body)
         criteria_script = ''
-        if(req.body.streetName != null)
-            criteria_script += sprintf('([Incident Offenses-GTPD+APD].[Street Name] like \'%%%s%%\')', req.body.streetName)
-        console.log(criteria_script)
-        queryString = query_factory.filter(criteria_script.length==0 ? null : criteria_script);
+        additional_join_statement = ''
+
+        codes_address_unique_join = false
+
+        
+        /* Location Filter
+            - Priority: Street Name -> Buildings -> Loc Type
+         */
+        if(req.body.streetName != null) // Street Name
+        {
+            criteria_script += '('
+            criteria_script += sprintf('[Incident Offenses-GTPD+APD].[Street Name] like \'%%%s%%\'', req.body.streetName)
+            criteria_script += (req.body.selectedDepartment.value == 'bothDepartment') ? '' :
+                    (req.body.selectedDepartment.value == 'gtpDepartment') ? ' AND LEN([OCA Number]) = 8' :
+                                                                             ' AND LEN([OCA Number]) = 9'
+            criteria_script += ')'
+        }
+        
+        // This maybe inefficient, but can reuse code
+        else
+        {
+            gtpd_criteria_script = ''
+            apd_criteria_script = ''
+
+            // Make GTPD part
+            if(req.body.selectedBuilding != null && req.body.selectedBuilding.length > 0)   // GTPD-Building
+            {
+                building_list_script = ''
+                req.body.selectedBuilding.forEach((item)=>{ building_list_script += ('\'' + item['Building Name'] + '\'' + ',') })
+                building_list_script = building_list_script.substring(0, building_list_script.length-1)
+                gtpd_criteria_script = '([Location Landmark] in (' + building_list_script + ') AND LEN([OCA Number]) = 8)'
+            }
+            else if(req.body.selectedGTLocationType.value == 'Any') // GTPD-Any loc type : all GTPD buildings
+            {
+                gtpd_criteria_script = '(LEN([OCA Number]) = 8)'
+            }
+            else    // GTPD-Loc Type(Specific)
+            {
+                codes_address_unique_join = true
+                gtpd_criteria_script = '([Loc Type] = \'' + req.body.selectedGTLocationType.value + '\' AND LEN([OCA Number]) = 8)'
+            }
+
+            // Make APD part
+            if(req.body.selectedAPDBuilding != null && req.body.selectedAPDBuilding.length > 0)   // APD-Building
+            {
+                building_list_script = ''
+                req.body.selectedAPDBuilding.forEach((item)=>{ building_list_script += ('\'' + item['Building Name'] + '\'' + ',') })
+                building_list_script = building_list_script.substring(0, building_list_script.length-1)
+                apd_criteria_script = '([Location Landmark] in (' + building_list_script + ') AND LEN([OCA Number]) = 9)'
+            }
+            else if(req.body.selectedAPDLocationType.value == 'Any') // APD-Any loc type : all APD buildings
+            {
+                apd_criteria_script = '(LEN([OCA Number]) = 9)'
+            }
+            else    // APD-Loc Type(Specific)
+            {
+                codes_address_unique_join = true
+                apd_criteria_script = '([Loc Type] = \'' + req.body.selectedAPDLocationType.value + '\' AND LEN([OCA Number]) = 9)'
+            }
+
+            // Integrate into one according to the department state
+            if(req.body.selectedDepartment.value == 'bothDepartment')   // Both departments
+            {
+                criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + '(' + gtpd_criteria_script + ' OR ' + apd_criteria_script + ')'
+            }
+            else if(req.body.selectedDepartment.value == 'gtpDepartment')   // GTPD department
+            {
+                criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + gtpd_criteria_script
+            }
+            else    // APD department
+            {
+                criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + apd_criteria_script
+            }
+        }
+
+        /* Crime Filter */
+        // TODO!
+
+        /* Personnel Filter */
+        // TODO!
+
+        /* Date Filter */
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') 
+                + '(' + '[Report Date] >= \'' + req.body.startDate + '\' AND [Report Date] <= \'' + req.body.endDate + '\')'
+
+        if(codes_address_unique_join)
+            additional_join_statement += 
+                'LEFT JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON (CAST([Codes_Addresses_Unique].[St #] as nvarchar(255)) = [Incident Offenses-GTPD+APD].[St Num]\
+                    AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name]) '
+
+        queryString = query_factory.filter(additional_join_statement.length==0 ? null : additional_join_statement, criteria_script.length==0 ? null : criteria_script);
+        
         db_query(queryString, (err, result) => {
             if (!err) res.send(result);
             else {
-                console.log(err)
                 res.status(400).send(err);
             }
         });

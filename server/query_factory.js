@@ -3,6 +3,12 @@ const sprintf = require('sprintf-js').sprintf;
 // TODO: add more methods for common query generation
 
 module.exports.showall = function(additional_join_statement=null, criteria=null, num_incidents=1000) {
+    /* Supports caller defined additional joins and conditionals
+        - default join: [Codes-Offense], [tblIncidentOffender]
+        - format
+            - additional join statement: LEFT JOIN [~~] on ()
+            - criteria: ( len([OCA Number]) = 8 )
+     */
     return sprintf('\
         SELECT distinct top (%d) [OCA Number] as [Incident Number]\n', num_incidents) +
         '\
@@ -14,12 +20,12 @@ module.exports.showall = function(additional_join_statement=null, criteria=null,
                     WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) = 3 THEN [NIBRS_Category]\
                     WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) != 3 THEN [Inc_Desc_PCase]\
               END as [Description]\
-            , CONCAT([St Num], \' \', [Street]) as [Street]\
+            , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Street]\
             , [Location Landmark] as [Location Name]\
             , CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) AS [Offender Name]\
             , [Officer Name]\
-            , CASE WHEN [GT] = 1 THEN \'GTPD\'\
-                   WHEN [GT] = 0 THEN \'APD\'\
+            , CASE WHEN LEN([OCA Number]) = 8 THEN \'GTPD\'\
+                   WHEN LEN([OCA Number]) != 8 THEN \'APD\'\
               END as [Department]\n\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
             LEFT JOIN [CrimeAnalytics].[dbo].[Codes-Offense]\
@@ -87,7 +93,7 @@ module.exports.get_incident_basic = function(incident_number) {
             , [1013]\
             , [RO]\n\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD] left join [CrimeAnalytics].[dbo].[Times] on ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
-        WHERE ([OCA Number]=\'%d\')\
+        WHERE ([OCA Number]=\'%\s\')\
     ', incident_number)
 }
 
@@ -96,7 +102,7 @@ module.exports.get_MO = function(incident_number) {
         SELECT [SequenceNumber]\
             , [MO]\n\
         FROM [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\
-        WHERE ([IncidentNumber]=\'%d\')\n\
+        WHERE ([IncidentNumber]=\'%s\')\n\
         ORDER BY [SequenceNumber] ASC\
         ', incident_number)
 }
@@ -111,7 +117,7 @@ module.exports.get_offense_description = function(incident_number) {
             , [Statute]\
             , [OffenseType]     /* Felony or Misdemeanor */\n\
         FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
-        WHERE ([IncidentNumber]=\'%d\')\n\
+        WHERE ([IncidentNumber]=\'%s\')\n\
         ORDER BY [SequenceNumber] ASC\
     ', incident_number)
 }
@@ -120,7 +126,7 @@ module.exports.get_narrative_APD = function(incident_number) {
     return sprintf('\
         SELECT *\n\
         FROM [CrimeAnalytics].[dbo].[APD Narratives]\n\
-        WHERE ([offense_id]=\'%d\')\n\
+        WHERE ([offense_id]=\'%s\')\n\
     ', incident_number)
 }
 
@@ -128,7 +134,7 @@ module.exports.get_narrative = function(incident_number) {
     return sprintf('\
         SELECT [Narrative]\n\
         FROM [SS_GARecords_Incident].[dbo].[tblIncident]\n\
-        WHERE ([IncidentNumber]=\'%d\')\n\
+        WHERE ([IncidentNumber]=\'%s\')\n\
     ', incident_number)
 }
 
@@ -139,7 +145,7 @@ module.exports.get_supplements = function(incident_number) {
             , [OfficerName]\
             , [Narrative] as Text\n\
         FROM [SS_GARecords_Incident].[dbo].[tblIncidentSupplement]\n\
-        WHERE ([IncidentNumber]=\'%d\' and [Narrative] is not null)\n\
+        WHERE ([IncidentNumber]=\'%s\' and [Narrative] is not null)\n\
         ORDER BY [SequenceNumber] ASC\
     ', incident_number)
 }
@@ -166,7 +172,7 @@ module.exports.get_offender_info = function(incident_number) {
             , [Occupation]\
             , [Employer]\n\
         FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\n\
-        WHERE ([IncidentNumber]=\'%d\')\n\
+        WHERE ([IncidentNumber]=\'%s\')\n\
         ORDER BY [SequenceNumber] ASC\
     ', incident_number)
 }
@@ -196,7 +202,7 @@ module.exports.get_arrest_info = function(incident_number) {
             , [Occupation]\
             , [Employer]\n\
         FROM [SS_GARecords_Incident].[dbo].[tblIncidentArrest]\n\
-        WHERE ([IncidentNumber]=\'%d\')\n\
+        WHERE ([IncidentNumber]=\'%s\')\n\
         ORDER BY [SequenceNumber] ASC\
     ', incident_number)
 }
@@ -220,7 +226,7 @@ module.exports.get_property = function(incident_number) {
             , [ObtainedCity]\
         FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty] left join [CrimeAnalytics].[dbo].[Codes-NIBRS DE 15 Property Description] \
                 on ([tblIncidentProperty].[TypeCode] = [Codes-NIBRS DE 15 Property Description].[Property Code])\n\
-        WHERE ([IncidentNumber]=\'%d\')\n\
+        WHERE ([IncidentNumber]=\'%s\')\n\
         ORDER BY [SequenceNumber] ASC\
     ', incident_number)
 }
@@ -400,13 +406,8 @@ module.exports.getYears = "SELECT DISTINCT YEAR([Report Date]) as [YEAR]\
 
 
 /* Queries for filters */
-module.exports.filter = function(criteria) {
-    var join_statement = '\
-        LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncident]\
-            ON [Incident Offenses-GTPD+APD].[OCA Number]=[tblIncident].[IncidentNumber]\n\
-        LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
-            ON [Incident Offenses-GTPD+APD].[OCA Number]=[tblIncidentOffense].[IncidentNumber]\n'
-    return this.showall(additional_join_statement = join_statement, criteria = criteria)
+module.exports.filter = function(additional_join_statement_, criteria_) {
+    return this.showall(additional_join_statement = additional_join_statement_, criteria = criteria_)
 }
 
 
