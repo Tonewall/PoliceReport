@@ -41,6 +41,7 @@ module.exports.showall = function(additional_join_statement=null, criteria=null,
         'ORDER BY [Report Date] DESC, [Time] DESC';
 }
 
+
 module.exports.locations = 
     "SELECT [Building Name],[Loc Type],[St #],[Street-MSAG],[Loc Code] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
 
@@ -234,8 +235,32 @@ module.exports.get_property = function(incident_number) {
 module.exports.crimeTypes = 
 "SELECT DISTINCT [UCR_Code1],[Inc_Desc_PCase],[NIBRS_Category],[NIBRS_Offense_code] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
 module.exports.crimeCategories = 
-"SELECT DISTINCT [NIBRS_Category] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
-// "SELECT DISTINCT [NIBRS_Category], [NIBRS_Offense_code] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
+"SELECT DISTINCT [NIBRS_Category], (CASE WHEN [NIBRS_Category] is not null THEN [CrimeAnalytics].[dbo].[aggregate_by_comma]( [NIBRS_Category] )\
+										 WHEN [NIBRS_Category] is null THEN [CrimeAnalytics].[dbo].[aggregate_by_comma_null]() END)\
+								  AS NIBRS_Offense_code\
+    FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
+ 
+ /* Function definitions in sql (just for reference)
+        CREATE FUNCTION dbo.aggregate_by_comma ( @c NVARCHAR(55) )
+        RETURNS VARCHAR(MAX) AS BEGIN
+        DECLARE @p VARCHAR(MAX) ;
+            SET @p = '' ;
+            SELECT @p = @p + (CASE WHEN [NIBRS_Offense_code] is not null THEN [NIBRS_Offense_code] ELSE '' END) + ','
+            FROM [CrimeAnalytics].[dbo].[Codes-Offense]
+            WHERE [NIBRS_Category] = @c ;
+        RETURN @p
+        END
+
+        CREATE FUNCTION dbo.aggregate_by_comma_null ()
+        RETURNS VARCHAR(MAX) AS BEGIN
+        DECLARE @p VARCHAR(MAX) ;
+            SET @p = '' ;
+            SELECT @p = @p + (CASE WHEN [NIBRS_Offense_code] is not null THEN [NIBRS_Offense_code] ELSE '' END) + ','
+            FROM [CrimeAnalytics].[dbo].[Codes-Offense]
+            WHERE [NIBRS_Category] is null ;
+        RETURN @p
+        END
+*/
  
 module.exports.getBothCount = function(body) {
 
@@ -406,8 +431,149 @@ module.exports.getYears = "SELECT DISTINCT YEAR([Report Date]) as [YEAR]\
 
 
 /* Queries for filters */
-module.exports.filter = function(additional_join_statement_, criteria_) {
-    return this.showall(additional_join_statement = additional_join_statement_, criteria = criteria_)
+module.exports.filter = function(criteria) {
+
+    console.log(criteria)
+
+    criteria_script = ''
+    additional_join_statement = ''
+
+    codes_address_unique_join = false
+
+    
+    /* Location Filter
+        - Priority: Street Name -> Buildings -> Loc Type
+     */
+    if(criteria.streetName != null) // Street Name
+    {
+        criteria_script += '('
+        criteria_script += sprintf('[Incident Offenses-GTPD+APD].[Street Name] like \'%%%s%%\'', criteria.streetName)
+        criteria_script += (criteria.selectedDepartment.value == 'bothDepartment') ? '' :
+                (criteria.selectedDepartment.value == 'gtpDepartment') ? ' AND LEN([OCA Number]) = 8' :
+                                                                         ' AND LEN([OCA Number]) = 9'
+        criteria_script += ')'
+    }
+    
+    // This maybe inefficient, but can reuse code
+    else
+    {
+        gtpd_criteria_script = ''
+        apd_criteria_script = ''
+
+        // Make GTPD part
+        if(criteria.selectedBuilding != null && criteria.selectedBuilding.length > 0)   // GTPD-Building
+        {
+            building_list_script = ''
+            criteria.selectedBuilding.forEach((item)=>{ building_list_script += ('\'' + item['Building Name'] + '\'' + ',') })
+            building_list_script = building_list_script.substring(0, building_list_script.length-1)
+            gtpd_criteria_script = '([Location Landmark] in (' + building_list_script + ') AND LEN([OCA Number]) = 8)'
+        }
+        else if(criteria.selectedGTLocationType.value == 'Any') // GTPD-Any loc type : all GTPD buildings
+        {
+            gtpd_criteria_script = '(LEN([OCA Number]) = 8)'
+        }
+        else    // GTPD-Loc Type(Specific)
+        {
+            codes_address_unique_join = true
+            gtpd_criteria_script = '([Loc Type] = \'' + criteria.selectedGTLocationType.value + '\' AND LEN([OCA Number]) = 8)'
+        }
+
+        // Make APD part
+        if(criteria.selectedAPDBuilding != null && criteria.selectedAPDBuilding.length > 0)   // APD-Building
+        {
+            building_list_script = ''
+            criteria.selectedAPDBuilding.forEach((item)=>{ building_list_script += ('\'' + item['Building Name'] + '\'' + ',') })
+            building_list_script = building_list_script.substring(0, building_list_script.length-1)
+            apd_criteria_script = '([Location Landmark] in (' + building_list_script + ') AND LEN([OCA Number]) = 9)'
+        }
+        else if(criteria.selectedAPDLocationType.value == 'Any') // APD-Any loc type : all APD buildings
+        {
+            apd_criteria_script = '(LEN([OCA Number]) = 9)'
+        }
+        else    // APD-Loc Type(Specific)
+        {
+            codes_address_unique_join = true
+            apd_criteria_script = '([Loc Type] = \'' + criteria.selectedAPDLocationType.value + '\' AND LEN([OCA Number]) = 9)'
+        }
+
+        // Integrate into one according to the department state
+        if(criteria.selectedDepartment.value == 'bothDepartment')   // Both departments
+        {
+            criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + '(' + gtpd_criteria_script + ' OR ' + apd_criteria_script + ')'
+        }
+        else if(criteria.selectedDepartment.value == 'gtpDepartment')   // GTPD department
+        {
+            criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + gtpd_criteria_script
+        }
+        else    // APD department
+        {
+            criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + apd_criteria_script
+        }
+    }
+
+
+    /* Crime Filter */
+    if(criteria.selectedCrimeType)  // Crime type
+    {
+        crime_type_list_script = ''
+        criteria.selectedCrimeType.forEach((item)=>{ crime_type_list_script += ('\'' + item.label + '\'' + ',') })
+        crime_type_list_script = crime_type_list_script.substring(0, crime_type_list_script.length-1)
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ')+ '([Codes-Offense].[Inc_Desc_PCase] in (' + crime_type_list_script + ') )'    }
+    else    // Crime Category
+    {
+        if(criteria.selectedCrimeCategory.label != 'Any')   // Non-'Any' category
+        {
+            if(criteria.selectedCrimeCategory.label == 'All Other Offenses')    // 'All Other Offenses' category
+            {
+                criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ')
+                        + '([Codes-Offense].[NIBRS_Category] is null OR [Codes-Offense].[NIBRS_Category] = \'' + criteria.selectedCrimeCategory.label + '\' )'
+            }
+            else
+            {
+                criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + '([Codes-Offense].[NIBRS_Category] = \'' + criteria.selectedCrimeCategory.label + '\' )'
+            }
+        }
+    }
+
+    if(criteria.selectedArrest) // Arrests/CT Warnings
+    {
+        
+    }
+    if(criteria.selectedOutcome)    // Felony/Misdemeanor
+    {
+
+    }
+
+    /* Personnel Filter 
+        - Priority: Officer Name -> Teams/Shifts
+     */
+    if(criteria.officerName)    // Officer Name
+    {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + '([Incident Offenses-GTPD+APD].[Officer Name] like \'%'
+                            + criteria.officerName + '%\') '
+    }
+    else    // Teams/Shifts
+    {
+        if(criteria.selectedShift)  // Not 'Any'
+        {
+            shift_list_script = ''
+            criteria.selectedShift.forEach((item)=>{ shift_list_script += ('\'' + item.label + '\'' + ',') })
+            shift_list_script = shift_list_script.substring(0, shift_list_script.length-1)
+            criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ')+ '([Unit] in (' + shift_list_script + ') )'
+        }
+    }
+
+    /* Date Filter */
+    criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') 
+            + '(' + '[Report Date] >= \'' + criteria.startDate + '\' AND [Report Date] <= \'' + criteria.endDate + '\')'
+
+    if(codes_address_unique_join)
+        additional_join_statement += 
+            'LEFT JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON (CAST([Codes_Addresses_Unique].[St #] as nvarchar(255)) = [Incident Offenses-GTPD+APD].[St Num]\
+                AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name]) '
+
+    return this.showall(additional_join_statement = additional_join_statement.length==0 ? null : additional_join_statement, 
+                        criteria = criteria_script.length==0 ? null : criteria_script)
 }
 
 
