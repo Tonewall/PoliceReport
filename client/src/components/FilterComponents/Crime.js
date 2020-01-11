@@ -73,6 +73,7 @@ class crime extends Component {
         } else {
             newCrimeTypeOptions = crimeTypeOptions;
         }
+        this.setState({newCrimeTypeOptions: newCrimeTypeOptions})
     }
     populateCrimes(data) {
         for(var i = 0; i < data.length; i++) {
@@ -152,7 +153,7 @@ class crime extends Component {
                         <Select 
                         value={selectedCrimeType} 
                         onChange={this.setCrimeType} 
-                        options={newCrimeTypeOptions} 
+                        options={this.state.newCrimeTypeOptions} 
                         isMulti={true}
                         placeholder={"Any"}
                         />
