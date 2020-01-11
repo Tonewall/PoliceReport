@@ -74,6 +74,8 @@ class crime extends Component {
             newCrimeTypeOptions = crimeTypeOptions;
         }
         this.setState({newCrimeTypeOptions: newCrimeTypeOptions})
+        console.log("DONE")
+        console.log(selectedCrimeCategory)
     }
     populateCrimes(data) {
         for(var i = 0; i < data.length; i++) {
@@ -109,15 +111,17 @@ class crime extends Component {
     componentDidMount() {
         fetch('/crimeCategories')
             .then(results => {
-                results.json().then(data=> {
+                results.json().then(data => {
                     this.populateCategories(data)
-                })
-            })
-            .catch(err => console.error(err))
-        fetch('/crimeTypes')
-            .then(results => {
-                results.json().then(data=> {
-                    this.populateCrimes(data)
+
+                    fetch('/crimeTypes')
+                        .then(results => {
+                            results.json().then(data => {
+                                this.populateCrimes(data)
+                                this.setCrimeCategory({value: 'Any', label: 'Any'})
+                            })
+                        })
+                        .catch(err => console.error(err))
                 })
             })
             .catch(err => console.error(err))
