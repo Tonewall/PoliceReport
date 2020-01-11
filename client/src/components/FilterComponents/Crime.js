@@ -73,9 +73,7 @@ class crime extends Component {
         } else {
             newCrimeTypeOptions = crimeTypeOptions;
         }
-        this.setState({newCrimeTypeOptions: newCrimeTypeOptions})
-        console.log("DONE")
-        console.log(selectedCrimeCategory)
+        this.forceUpdate()
     }
     populateCrimes(data) {
         for(var i = 0; i < data.length; i++) {
@@ -91,37 +89,45 @@ class crime extends Component {
             }
         }
         crimeTypeOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
+        this.forceUpdate()  // If this function runs slow and could not be completed before render call, Select options may not be populated. so force update at the end.
     }
     populateCategories(data) {
+        crimeCategoryOptions = []
+        let null_category_codes = []
         for(var i = 0; i < data.length; i++) {
-            if(data[i]["NIBRS_Category"] === null) {
-                crimeCategoryOptions[i+1] = data[i];
-                crimeCategoryOptions[i+1].value =  "All Other Offenses";
-                crimeCategoryOptions[i+1].label =  "All Other Offenses";
+            if(data[i]["NIBRS_Category"] === null) {    // All codes referring to this will be put into 'All other offenses' category
+                var code_set = data[i]['NIBRS_Offense_code']==null ? new Set(['']) : new Set(data[i]['NIBRS_Offense_code'].split(','))
+                code_set.delete('')
+                null_category_codes = Array.from(code_set)
             } else {
-                crimeCategoryOptions[i+1] = data[i];
-                // crimeCategoryOptions[i+1].value = data[i]['NIBRS_Offense_code'];
-                crimeCategoryOptions[i+1].value = data[i]['NIBRS_Category'];
-                crimeCategoryOptions[i+1].label = data[i]['NIBRS_Category'];
+                crimeCategoryOptions[i] = data[i];
+                var code_set = data[i]['NIBRS_Offense_code']==null ? new Set(['']) : new Set(data[i]['NIBRS_Offense_code'].split(','))
+                code_set.delete('')
+                crimeCategoryOptions[i]['NIBRS_Offense_code'] = Array.from(code_set)
+                crimeCategoryOptions[i].value = data[i]['NIBRS_Category'];
+                crimeCategoryOptions[i].label = data[i]['NIBRS_Category'];
             }
         }
+
+        // put null_category_codes into 'All other offenses' category.
+        crimeCategoryOptions.forEach((item) => {if (item.label=='All Other Offenses') item['NIBRS_Offense_code'] = item['NIBRS_Offense_code'].concat(null_category_codes)})
+
         crimeCategoryOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
-        crimeCategoryOptions[0] = {value: "Any", label: "Any"}
+        crimeCategoryOptions.unshift({value: "Any", label: "Any"})
+        this.forceUpdate()  // If this function runs slow and could not be completed before render call, Select options may not be populated. so force update at the end.
     }
     componentDidMount() {
         fetch('/crimeCategories')
             .then(results => {
-                results.json().then(data => {
+                results.json().then(data=> {
                     this.populateCategories(data)
-
-                    fetch('/crimeTypes')
-                        .then(results => {
-                            results.json().then(data => {
-                                this.populateCrimes(data)
-                                this.setCrimeCategory({value: 'Any', label: 'Any'})
-                            })
-                        })
-                        .catch(err => console.error(err))
+                })
+            })
+            .catch(err => console.error(err))
+        fetch('/crimeTypes')
+            .then(results => {
+                results.json().then(data=> {
+                    this.populateCrimes(data)
                 })
             })
             .catch(err => console.error(err))
@@ -157,7 +163,7 @@ class crime extends Component {
                         <Select 
                         value={selectedCrimeType} 
                         onChange={this.setCrimeType} 
-                        options={this.state.newCrimeTypeOptions} 
+                        options={newCrimeTypeOptions} 
                         isMulti={true}
                         placeholder={"Any"}
                         />
