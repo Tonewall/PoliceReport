@@ -32,17 +32,18 @@ export default class DirectQuery extends Component {
                     <button className="query_button" onClick={this.run_query}>Run query!</button>
                 </div>
                 {/*<div className="query_result" >{this.state.query_result}</div>*/}
-                <div className= "query_result">
-                    <MDBDataTable
-                        scrollX
-                        scrollY
-                        striped
-                        bordered
-                        hover
-                        maxHeight="40vh"
-                        entries={20}
-                        data={this.state.query_result}
-                    />
+                
+                <div className="card" style={{marginBottom:30, fontSize: 13}}>
+                    <div className= "query_result card-body">
+                        <MDBDataTable
+                                scrollX
+                                striped
+                                bordered
+                                hover
+                                entries={20}
+                                data={this.state.query_result}
+                            />
+                    </div>
                 </div>
             </div>
         );
@@ -65,7 +66,7 @@ export default class DirectQuery extends Component {
 
     run_query = () => {
         var req_body = JSON.stringify({query:this.state.user_query})
-        fetch('/direct-query',
+        fetch('/filter',
                 {
                     headers:{'Content-Type' : 'application/json'},
                     method: 'post',

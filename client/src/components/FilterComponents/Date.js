@@ -14,10 +14,18 @@ const dateOptions = [
 
 class date extends Component {
     state = {
-        startDate: new Date(),
-        endDate: new Date(),
+        endDate: null,
+        startDate: null,
         selectedDate: null,
     };
+
+    constructor(props) {
+        super(props)
+        this.state.endDate = new Date()
+        this.state.startDate = new Date()
+        this.state.startDate.setFullYear(this.state.startDate.getFullYear()-1)  // default period: one year
+        props.dateHandler(this.state)
+    }
 
     //changing the date based on the date range chosen
     setDate = selectedDate => {

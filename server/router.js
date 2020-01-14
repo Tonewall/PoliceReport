@@ -3,6 +3,8 @@ const sql = require("mssql");
 var config = require('./db_config')
 const read = require('read')
 const { exec } = require('child_process')
+const sprintf = require('sprintf-js').sprintf;
+
 
 // Contains methods for generating common query.
 const query_factory = require("./query_factory");
@@ -55,6 +57,7 @@ function add_router(app) {
 
     /* Direct querying for debugging purpose */
     app.post('/direct-query', function (req, res) {
+        console.log(req.body['query'])
         db_query(req.body['query'], (err, result) => {
             if (!err) res.send(JSON.stringify(result));
             else res.status(400).send([err]);
@@ -70,7 +73,15 @@ function add_router(app) {
     });
 
     app.post('/filter', function (req, res) {
-        console.log(req.body)
+        queryString = query_factory.filter(req.body)
+
+        db_query(queryString, (err, result) => {
+            if (!err) res.send(result);
+            else {
+                console.log(err)
+                res.status(400).send(err);
+            }
+        });
     });
 
     app.get('/crimeTypes', function (req, res) {
@@ -80,9 +91,14 @@ function add_router(app) {
         });
     });
     app.get('/crimeCategories', function (req, res) {
+        console.log(query_factory.crimeCategories)
         db_query(query_factory.crimeCategories, (err, result) => {
             if (!err) res.send(result);
-            else res.status(400).send(err);
+            else 
+            {
+                console.log(err)
+                res.status(400).send(err);
+            }
         });
     });
     app.post('/getBothCount', function (req, res) {

@@ -20,10 +20,15 @@ const outcomeOptions = [
 class crime extends Component {
     state = {
         selectedCrimeType: null,
-        selectedCrimeCategory: null,
+        selectedCrimeCategory: {value: 'Any', label: 'Any'},
         selectedArrest: null,
         selectedOutcome: null,
     };
+
+    constructor(props) {
+        super(props)
+        props.crimeHandler(this.state)
+    }
 
     setCrimeType = selectedCrimeType => { 
         this.setState({selectedCrimeType},
@@ -55,7 +60,6 @@ class crime extends Component {
         function() {
             this.props.crimeHandler(this.state)
         });
-        //populating the newbuildingoptions with the desired buildings
         var j = 0;
         newCrimeTypeOptions = [];
         if(selectedCrimeCategory.value !== "Any") {
@@ -68,6 +72,7 @@ class crime extends Component {
         } else {
             newCrimeTypeOptions = crimeTypeOptions;
         }
+        this.forceUpdate()
     }
     populateCrimes(data) {
         for(var i = 0; i < data.length; i++) {
@@ -83,22 +88,31 @@ class crime extends Component {
             }
         }
         crimeTypeOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
+        this.forceUpdate()  // If this function runs slow and could not be completed before render call, Select options may not be populated. so force update at the end.
     }
     populateCategories(data) {
+        crimeCategoryOptions = []
+        let null_category_codes = []
         for(var i = 0; i < data.length; i++) {
-            if(data[i]["NIBRS_Category"] === null) {
-                crimeCategoryOptions[i+1] = data[i];
-                crimeCategoryOptions[i+1].value =  "All Other Offenses";
-                crimeCategoryOptions[i+1].label =  "All Other Offenses";
+            var code_set = data[i]['NIBRS_Offense_code']==null ? new Set(['']) : new Set(data[i]['NIBRS_Offense_code'].split(','))
+            if(data[i]["NIBRS_Category"] === null) {    // All codes referring to this will be put into 'All other offenses' category
+                code_set.delete('')
+                null_category_codes = Array.from(code_set)
             } else {
-                crimeCategoryOptions[i+1] = data[i];
-                // crimeCategoryOptions[i+1].value = data[i]['NIBRS_Offense_code'];
-                crimeCategoryOptions[i+1].value = data[i]['NIBRS_Category'];
-                crimeCategoryOptions[i+1].label = data[i]['NIBRS_Category'];
+                crimeCategoryOptions[i] = data[i];
+                code_set.delete('')
+                crimeCategoryOptions[i]['NIBRS_Offense_code'] = Array.from(code_set)
+                crimeCategoryOptions[i].value = data[i]['NIBRS_Category'];
+                crimeCategoryOptions[i].label = data[i]['NIBRS_Category'];
             }
         }
+
+        // put null_category_codes into 'All other offenses' category.
+        crimeCategoryOptions.forEach((item) => {if (item.label==='All Other Offenses') item['NIBRS_Offense_code'] = item['NIBRS_Offense_code'].concat(null_category_codes)})
+
         crimeCategoryOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
-        crimeCategoryOptions[0] = {value: "Any", label: "Any"}
+        crimeCategoryOptions.unshift({value: "Any", label: "Any"})
+        this.forceUpdate()  // If this function runs slow and could not be completed before render call, Select options may not be populated. so force update at the end.
     }
     componentDidMount() {
         fetch('/crimeCategories')
