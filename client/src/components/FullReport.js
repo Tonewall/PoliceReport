@@ -31,7 +31,7 @@ class fullReport extends Component {
                     })
                 })
                 .catch(err => console.error(err))
-            if(incidentNumber.toString().length==9)
+            if(incidentNumber.toString().length===9)
             {
                 fetch('/narrative_APD/'+incidentNumber)
                     .then(results => {

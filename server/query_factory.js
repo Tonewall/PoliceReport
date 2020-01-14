@@ -311,7 +311,7 @@ module.exports.getBothCount = function(body) {
             crime += " OR [SRSOffense] LIKE '" + body.selectedCrimeType[i]['UCR_Code1'] + "'"
         }
         crime += ")"
-    } else if (body.selectedCrimeCategory) {
+    } else if (body.selectedCrimeCategory && body.selectedCrimeCategory.value !== "Any") {
         crime = "AND [NIBRS_Category] LIKE '" + body.selectedCrimeCategory.value + "'"
     } else {
         crime = ''

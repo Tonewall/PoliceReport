@@ -95,13 +95,12 @@ class crime extends Component {
         crimeCategoryOptions = []
         let null_category_codes = []
         for(var i = 0; i < data.length; i++) {
+            var code_set = data[i]['NIBRS_Offense_code']==null ? new Set(['']) : new Set(data[i]['NIBRS_Offense_code'].split(','))
             if(data[i]["NIBRS_Category"] === null) {    // All codes referring to this will be put into 'All other offenses' category
-                var code_set = data[i]['NIBRS_Offense_code']==null ? new Set(['']) : new Set(data[i]['NIBRS_Offense_code'].split(','))
                 code_set.delete('')
                 null_category_codes = Array.from(code_set)
             } else {
                 crimeCategoryOptions[i] = data[i];
-                var code_set = data[i]['NIBRS_Offense_code']==null ? new Set(['']) : new Set(data[i]['NIBRS_Offense_code'].split(','))
                 code_set.delete('')
                 crimeCategoryOptions[i]['NIBRS_Offense_code'] = Array.from(code_set)
                 crimeCategoryOptions[i].value = data[i]['NIBRS_Category'];
@@ -110,7 +109,7 @@ class crime extends Component {
         }
 
         // put null_category_codes into 'All other offenses' category.
-        crimeCategoryOptions.forEach((item) => {if (item.label=='All Other Offenses') item['NIBRS_Offense_code'] = item['NIBRS_Offense_code'].concat(null_category_codes)})
+        crimeCategoryOptions.forEach((item) => {if (item.label==='All Other Offenses') item['NIBRS_Offense_code'] = item['NIBRS_Offense_code'].concat(null_category_codes)})
 
         crimeCategoryOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
         crimeCategoryOptions.unshift({value: "Any", label: "Any"})
