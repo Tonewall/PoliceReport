@@ -10,8 +10,6 @@ import {Redirect} from 'react-router-dom'
 const typeOptions = [
     {value: "Date", label: "Date"},
     {value: "Time", label: "Time"},
-    {value: "Location", label: "Location"},
-    // {value: "Shift", label: "Shift"}
 ]
 class gtpdFilter extends Component {
     constructor(props) {
