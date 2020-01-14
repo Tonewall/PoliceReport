@@ -60,7 +60,6 @@ class crime extends Component {
         function() {
             this.props.crimeHandler(this.state)
         });
-        //populating the newbuildingoptions with the desired buildings
         var j = 0;
         newCrimeTypeOptions = [];
         if(selectedCrimeCategory.value !== "Any") {
