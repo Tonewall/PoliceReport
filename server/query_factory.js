@@ -2,7 +2,7 @@ const sprintf = require('sprintf-js').sprintf;
 
 // TODO: add more methods for common query generation
 
-module.exports.showall = function(additional_join_statement=null, criteria=null, num_incidents=1000) {
+module.exports.showall = function(additional_join_statement=null, criteria=null) {
     /* Supports caller defined additional joins and conditionals
         - default join: [Codes-Offense], [tblIncidentOffender]
         - format
@@ -10,7 +10,7 @@ module.exports.showall = function(additional_join_statement=null, criteria=null,
             - criteria: ( len([OCA Number]) = 8 )
      */
     return sprintf('\
-        SELECT distinct top (%d) [OCA Number] as [Incident Number]\n', num_incidents) +
+        SELECT distinct top (%d) [OCA Number] as [Incident Number]\n', 1000) +
         '\
             , CONVERT(varchar, [Report Date], 23) as [Report Date]\
             , convert(varchar, [From Time], 8) as [Time]\
@@ -434,7 +434,11 @@ module.exports.getYears = "SELECT DISTINCT YEAR([Report Date]) as [YEAR]\
 module.exports.filter = function(criteria) {
 
     console.log(criteria)
-
+    if(criteria.custom.value) {
+        select_script = ''
+    } else {
+        select_script = ''
+    }
     criteria_script = ''
     additional_join_statement = ''
 

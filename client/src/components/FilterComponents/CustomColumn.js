@@ -7,21 +7,21 @@ const customOptions = [
     {value: true, label: 'Custom'},
 ];
 const columns = [
-    {value: 'reportDate', label: 'Report Date'},
-    {value: 'time', label: 'Time'},
     {value: 'crimeType', label: 'Crime Type'},
-    {value: 'street', label: 'Street'},
-    {value: 'locationLandmark', label: 'Location Landmark'},
-    {value: 'locationCode', label: 'Location Code'},
-    {value: 'offenderName', label: 'Offender Name'},
-    {value: 'gtid', label: 'GTID'},
-    {value: 'department', label: 'Department'},
-    {value: 'patrolZone', label: 'Patrol Zone'},
-    {value: 'officerName', label: 'Officer Name'},
-    {value: 'officerId', label: 'Officer ID'},
-    {value: 'unit', label: 'Unit'},
     {value: 'clearingOfficerName', label: 'Clearing Officer Name'},
     {value: 'clearingOfficerId', label: 'Clearing Officer ID'},
+    {value: 'department', label: 'Department'},
+    {value: 'gtid', label: 'GTID'},
+    {value: 'locationCode', label: 'Location Code'},
+    {value: 'locationLandmark', label: 'Location Landmark'},
+    {value: 'offenderName', label: 'Offender Name'},
+    {value: 'officerName', label: 'Officer Name'},
+    {value: 'officerId', label: 'Officer ID'},
+    {value: 'patrolZone', label: 'Patrol Zone'},
+    {value: 'reportDate', label: 'Report Date'},
+    {value: 'street', label: 'Street'},
+    {value: 'time', label: 'Time'},
+    {value: 'unit', label: 'Unit'},
 ];
 
 
