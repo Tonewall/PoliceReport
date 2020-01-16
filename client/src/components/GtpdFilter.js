@@ -26,8 +26,8 @@ class gtpdFilter extends Component {
             selectedBuilding: null,
             selectedDepartment: null,
             selectedGTLocationType: null,
-            selectedCustomColumns: null,
-            selectedCustom: null,
+            selectedColumns: null,
+            custom: null,
         };
         this.dateHandler = this.dateHandler.bind(this)
         this.locationHandler = this.locationHandler.bind(this)

@@ -433,7 +433,6 @@ module.exports.getYears = "SELECT DISTINCT YEAR([Report Date]) as [YEAR]\
 /* Queries for filters */
 module.exports.filter = function(criteria) {
 
-    console.log(criteria)
     if(criteria.custom.value) {
         select_script = ''
     } else {

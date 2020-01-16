@@ -17,8 +17,10 @@ class FilterResult extends Component {
     }
 
     populateData = function (data) {
+        //custom columns
+        var columns = this.props.location.state.selectedColumns
         /* Need to preprocess query result before */
-        var datatable_feeds = incident_datatable_feeds(data)
+        var datatable_feeds = incident_datatable_feeds(data, columns)
         for(var i = 0; i < datatable_feeds['rows'].length; i++) {
             var incidentNumber = datatable_feeds['rows'][i]['Incident Number']
             var link = "./full-report/"+incidentNumber
