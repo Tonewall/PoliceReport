@@ -16,9 +16,9 @@ module.exports.incident_datatable_feeds = function(data, columns) {
             incident_columns[i] = {label: incident_keys[i], field: incident_keys[i], width: 100, sort: 'asc'}
         }
     } else if(columns.length > 0) {
-        var incident_columns = [{label: 'Incident Number', field: 'Incident Number', width: 100, sort: 'asc'}]
+        incident_columns = [{label: 'Incident Number', field: 'Incident Number', width: 100, sort: 'asc'}]
         incident_keys = ['Incident Number']
-        for(var i = 0; i < columns.length; i++) {
+        for(i = 0; i < columns.length; i++) {
             incident_columns[i+1] = {label: columns[i].value, field: columns[i].value, width: 100, sort: 'asc'}
             incident_keys[i+1] = columns[i].value
         }
