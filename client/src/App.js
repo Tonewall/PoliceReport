@@ -11,6 +11,7 @@ import DateTimeFilter from './components/Statistics/DateTimeFilter'
 import LocationStatsFilter from './components/Statistics/LocationStatsFilter'
 import LocationStatistics from './components/Statistics/LocationStatistics'
 import StatisticsRedirect from './components/Statistics/StatisticsRedirect'
+import BuildingInformation from './components/BuildingInformation'
 import 'bootstrap/dist/css/bootstrap.css';
 
 /* For server debugging */
@@ -33,6 +34,7 @@ class App extends Component {
                         <Route exact path="/Date-Time-Filter/" component={DateTimeFilter} />
                         <Route exact path="/Location-Stats-Filter/" component={LocationStatsFilter} />
                         <Route exact path="/Location-Statistics/" component={LocationStatistics} />
+                        <Route exact path="/Building-Information" component={BuildingInformation} />
 
                 </Router>
             </div>
