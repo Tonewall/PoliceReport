@@ -24,6 +24,9 @@ module.exports.showall = function(additional_join_statement=null, criteria=null)
             , [Location Landmark] as [Location Name]\
             , CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) AS [Offender Name]\
             , [Officer Name]\
+            , [Patrol Zone]\
+            , [Location Code]\
+            , [Unit]\
             , CASE WHEN LEN([OCA Number]) = 8 THEN \'GTPD\'\
                    WHEN LEN([OCA Number]) != 8 THEN \'APD\'\
               END as [Department]\n\
