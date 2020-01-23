@@ -31,7 +31,7 @@ export default class NavBar extends Component {
                             <a className="dropdown-item" href="/GTPD-Filter">Filter</a>
                             <a className="dropdown-item" href="/GTPD-Incident-Search">Search by Incident Number</a>
                             <a className="dropdown-item" href="/GTPD-Repeat-Offenders">Repeat Offenders</a>
-                            <a className="dropdown-item" href="/GTPD-Buildings">Buildings Information</a>
+                            <a className="dropdown-item" href="/Building-Information">Buildings Information</a>
                             <a className="dropdown-item" href="/Officers">Officers</a>
                         </div>
                     </li>

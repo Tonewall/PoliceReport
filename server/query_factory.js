@@ -430,6 +430,18 @@ module.exports.getYears = "SELECT DISTINCT YEAR([Report Date]) as [YEAR]\
         ORDER BY YEAR([Report Date]) DESC"
 
 
+module.exports.getBuildings = "SELECT [Address]\
+    ,[Building Name]\
+    ,[Max Bldg #] as [Bldg #]\
+    ,[Loc Code] as [Location Code]\
+    ,[Loc Type] as [Location Type]\
+    ,[Patrol Zone]\
+    ,[Maintenance Zone] as [Area]\
+    FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]\
+    WHERE [Loc Code] not like '%APD%'\
+    ORDER BY [Building Name]"
+
+
 /* Queries for filters */
 module.exports.filter = function(criteria) {
 
