@@ -504,7 +504,6 @@ module.exports.filter = function(criteria) {
     /* Crime Filter */
     if(criteria.selectedCrimeType)  // Crime type
     {
-        console.log(criteria.selectedCrimeType)
         crime_type_list_script = ''
         criteria.selectedCrimeType.forEach((item)=>{ crime_type_list_script += ('\'' + item['NIBRS_Code_Extended'] + '\'' + ',') })
         crime_type_list_script = crime_type_list_script.substring(0, crime_type_list_script.length-1)

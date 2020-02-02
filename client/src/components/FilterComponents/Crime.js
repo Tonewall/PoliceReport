@@ -78,7 +78,6 @@ class crime extends Component {
     }
     populateCategories(data) {
         crimeCategoryOptions = []
-        let null_category_codes = []
         for(var i = 0; i < data.length; i++) {
             var code_set = data[i]['Aggregated_NIBRS_Code_Extended']==null ? new Set(['']) : new Set(data[i]['Aggregated_NIBRS_Code_Extended'].split(','))
             crimeCategoryOptions[i] = data[i];
