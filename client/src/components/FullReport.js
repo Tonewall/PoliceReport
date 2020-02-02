@@ -60,7 +60,7 @@ class fullReport extends Component {
             }
             else
             {
-                fetch('/narrative/'+incidentNumber)
+                fetch('/narrative_GTPD/'+incidentNumber)
                     .then(results => {
                         if(!results.ok) {
                             results.text().then(txt=>console.log(txt))

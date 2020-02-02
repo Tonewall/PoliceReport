@@ -4,7 +4,7 @@ const sprintf = require('sprintf-js').sprintf;
 
 module.exports.showall = function(additional_join_statement=null, criteria=null, num_incidents=1000) {
     /* Supports caller defined additional joins and conditionals
-        - default join: [Codes-Offense], [tblIncidentOffender]
+        - default join: [Codes-Offense], [tblIncidentOffender]-->TODO: This only accounts for offenders in GTPD RMS
         - format
             - additional join statement: LEFT JOIN [~~] on ()
             - criteria: ( len([OCA Number]) = 8 )
@@ -14,12 +14,7 @@ module.exports.showall = function(additional_join_statement=null, criteria=null,
         '\
             , CONVERT(varchar, [Report Date], 23) as [Report Date]\
             , convert(varchar, [From Time], 8) as [Time]\
-            , CASE  WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is not null AND LEN([Incident Offenses-GTPD+APD].[SRSOffense]) = 3 THEN [NIBRS_Category]\
-                    WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is not null AND LEN([Incident Offenses-GTPD+APD].[SRSOffense]) != 3 THEN [Inc_Desc_PCase]\
-                    WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is not null THEN [NIBRS_Category]\
-                    WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) = 3 THEN [NIBRS_Category]\
-                    WHEN [Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) != 3 THEN [Inc_Desc_PCase]\
-              END as [Description]\
+            , [Description]\
             , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Street]\
             , [Location Landmark] as [Location Name]\
             , CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) AS [Offender Name]\
@@ -29,11 +24,7 @@ module.exports.showall = function(additional_join_statement=null, criteria=null,
               END as [Department]\n\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
             LEFT JOIN [CrimeAnalytics].[dbo].[Codes-Offense]\
-                ON ( ([Incident Offenses-GTPD+APD].[SRSOffense] is not null AND LEN([Incident Offenses-GTPD+APD].[SRSOffense]) = 3 AND [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[NIBRS_Offense_code] AND [Codes-Offense].[NIBRS_Category] is not null)\
-                    OR ([Incident Offenses-GTPD+APD].[SRSOffense] is not null AND LEN([Incident Offenses-GTPD+APD].[SRSOffense]) != 3 AND [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[UCR_CODE1])\
-                    OR ([Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is not null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] = [Codes-Offense].[NIBRS_Offense_code] AND [Codes-Offense].[NIBRS_Category] is not null)\
-                    OR ([Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) = 3 AND [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Offense_code] AND [Codes-Offense].[NIBRS_Category] is not null)\
-                    OR ([Incident Offenses-GTPD+APD].[SRSOffense] is null AND [Incident Offenses-GTPD+APD].[NIBRSOffense] is null AND LEN([Incident Offenses-GTPD+APD].[Offense]) != 3 AND [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[UCR_CODE1]))\n\
+                ON ([Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
                 ON ( [tblIncidentOffender].[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number] )\n'+
             (additional_join_statement==null ? '' : additional_join_statement) + '\n'+
@@ -131,7 +122,7 @@ module.exports.get_narrative_APD = function(incident_number) {
     ', incident_number)
 }
 
-module.exports.get_narrative = function(incident_number) {
+module.exports.get_narrative_GTPD = function(incident_number) {
     return sprintf('\
         SELECT [Narrative]\n\
         FROM [SS_GARecords_Incident].[dbo].[tblIncident]\n\
@@ -233,11 +224,9 @@ module.exports.get_property = function(incident_number) {
 }
 
 module.exports.crimeTypes = 
-"SELECT DISTINCT [UCR_Code1],[Inc_Desc_PCase],[NIBRS_Category],[NIBRS_Offense_code] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
+"SELECT DISTINCT [NIBRS_Code],[Description],[NIBRS_Category],[NIBRS_Code_Extended] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
 module.exports.crimeCategories = 
-"SELECT DISTINCT [NIBRS_Category], (CASE WHEN [NIBRS_Category] is not null THEN [CrimeAnalytics].[dbo].[aggregate_by_comma]( [NIBRS_Category] )\
-										 WHEN [NIBRS_Category] is null THEN [CrimeAnalytics].[dbo].[aggregate_by_comma_null]() END)\
-								  AS NIBRS_Offense_code\
+"SELECT DISTINCT [NIBRS_Category], [CrimeAnalytics].[dbo].[aggregate_by_comma]( [NIBRS_Category] ) AS [Aggregated_NIBRS_Code_Extended]\
     FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
  
  /* Function definitions in sql (just for reference)
@@ -245,19 +234,9 @@ module.exports.crimeCategories =
         RETURNS VARCHAR(MAX) AS BEGIN
         DECLARE @p VARCHAR(MAX) ;
             SET @p = '' ;
-            SELECT @p = @p + (CASE WHEN [NIBRS_Offense_code] is not null THEN [NIBRS_Offense_code] ELSE '' END) + ','
+            SELECT @p = @p + (CASE WHEN [NIBRS_Offense_Extended] is not null THEN [NIBRS_Offense_Extended] ELSE '' END) + ','
             FROM [CrimeAnalytics].[dbo].[Codes-Offense]
             WHERE [NIBRS_Category] = @c ;
-        RETURN @p
-        END
-
-        CREATE FUNCTION dbo.aggregate_by_comma_null ()
-        RETURNS VARCHAR(MAX) AS BEGIN
-        DECLARE @p VARCHAR(MAX) ;
-            SET @p = '' ;
-            SELECT @p = @p + (CASE WHEN [NIBRS_Offense_code] is not null THEN [NIBRS_Offense_code] ELSE '' END) + ','
-            FROM [CrimeAnalytics].[dbo].[Codes-Offense]
-            WHERE [NIBRS_Category] is null ;
         RETURN @p
         END
 */
@@ -306,9 +285,9 @@ module.exports.getBothCount = function(body) {
 
     //CRIMES AND CATEGORIES
     if(body.selectedCrimeType) {
-        crime = "AND ([SRSOffense] LIKE '" + body.selectedCrimeType[0]['UCR_Code1'] + "'"
+        crime = "AND ([Offense] LIKE '" + body.selectedCrimeType[0]['NIBRS_Code_Extended'] + "'"
         for(var i = 1; i < body.selectedCrimeType.length; i++) {
-            crime += " OR [SRSOffense] LIKE '" + body.selectedCrimeType[i]['UCR_Code1'] + "'"
+            crime += " OR [Offense] LIKE '" + body.selectedCrimeType[i]['NIBRS_Code_Extended'] + "'"
         }
         crime += ")"
     } else if (body.selectedCrimeCategory && body.selectedCrimeCategory.value !== "Any") {
@@ -321,7 +300,7 @@ module.exports.getBothCount = function(body) {
     return sprintf(
         "SELECT MONTH([Report Date]) as [Month], COUNT(*) as [COUNT]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
-        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[UCR_CODE1]\
+        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended]\
         WHERE YEAR([Report Date]) =\'%d'\n\
         AND [Officer Name] LIKE \'%%%s%%'\n\
         AND [Address] LIKE \'%%%s%%'\n\
@@ -376,9 +355,9 @@ module.exports.getTimeCount = function(body) {
 
     //CRIMES AND CATEGORIES
     if(body.selectedCrimeType) {
-        crime = "AND ([SRSOffense] LIKE '" + body.selectedCrimeType[0]['UCR_Code1'] + "'"
+        crime = "AND ([Offense] LIKE '" + body.selectedCrimeType[0]['NIBRS_Code_Extended'] + "'"
         for(var i = 1; i < body.selectedCrimeType.length; i++) {
-            crime += " OR [SRSOffense] LIKE '" + body.selectedCrimeType[i]['UCR_Code1'] + "'"
+            crime += " OR [Offense] LIKE '" + body.selectedCrimeType[i]['NIBRS_Code_Extended'] + "'"
         }
         crime += ")"
     } else if (body.selectedCrimeCategory && body.selectedCrimeCategory.value !== "Any") {
@@ -389,7 +368,7 @@ module.exports.getTimeCount = function(body) {
     return sprintf(
         "SELECT DATEPART(HOUR, [From Time]) as [Hour], COUNT(*) AS [Count]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
-        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[SRSOffense] = [Codes-Offense].[UCR_CODE1]\
+        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended]\
         WHERE YEAR([Report Date]) =\'%d'\n\
         AND [Officer Name] LIKE \'%%%s%%'\n\
         AND [Address] LIKE \'%%%s%%'\n\
@@ -412,7 +391,7 @@ module.exports.getLocationRanking = function(body) {
         sum(case when [NIBRS_Category] = 'Burglary/Breaking & Entering' then 1 else 0 end) AS [Burglary/Breaking & Entering],\
         sum(case when [NIBRS_Category] = 'Motor Vehicle Theft' then 1 else 0 end) AS [Motor Vehicle Theft]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
-        JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Codes-Offense].[UCR_CODE1] = [Incident Offenses-GTPD+APD].[SRSOffense]\
+        JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Codes-Offense].[NIBRS_Code_Extended] = [Incident Offenses-GTPD+APD].[Offense]\
         JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON (CAST([Codes_Addresses_Unique].[St #] as nvarchar(255)) = [Incident Offenses-GTPD+APD].[St Num]\
             AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name])\
         WHERE [Report Date] >= '%s'\n\
@@ -444,8 +423,6 @@ module.exports.getBuildings = "SELECT [Address]\
 
 /* Queries for filters */
 module.exports.filter = function(criteria) {
-
-    console.log(criteria)
 
     criteria_script = ''
     additional_join_statement = ''
@@ -527,10 +504,11 @@ module.exports.filter = function(criteria) {
     /* Crime Filter */
     if(criteria.selectedCrimeType)  // Crime type
     {
+        console.log(criteria.selectedCrimeType)
         crime_type_list_script = ''
-        criteria.selectedCrimeType.forEach((item)=>{ crime_type_list_script += ('\'' + item.label + '\'' + ',') })
+        criteria.selectedCrimeType.forEach((item)=>{ crime_type_list_script += ('\'' + item['NIBRS_Code_Extended'] + '\'' + ',') })
         crime_type_list_script = crime_type_list_script.substring(0, crime_type_list_script.length-1)
-        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ')+ '([Codes-Offense].[Inc_Desc_PCase] in (' + crime_type_list_script + ') )'    }
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ')+ '([Codes-Offense].[NIBRS_Code_Extended] in (' + crime_type_list_script + ') )'}
     else    // Crime Category
     {
         if(criteria.selectedCrimeCategory.label != 'Any')   // Non-'Any' category
@@ -587,32 +565,3 @@ module.exports.filter = function(criteria) {
     return this.showall(additional_join_statement = additional_join_statement.length==0 ? null : additional_join_statement, 
                         criteria = criteria_script.length==0 ? null : criteria_script)
 }
-
-
-
-/* Address Ranking Query configured
-
-DECLARE @START_DATE Date = '10-10-2010';
-DECLARE @END_DATE Date = '10-10-2019';
-
-        , [SequenceNumber]\n\
-        , [Offense Code]\n\
-        , [AttemptComplete]\n\
-        , [OffenseDescription]\n\
-        , [Counts]\n\
-        FROM [CrimeAnalytics].[dbo].[tblIncidentOffense]\n\
-
-
-SELECT [Incident Offenses-GTPD+APD].[St Num], [Incident Offenses-GTPD+APD].Street, [Codes-Addresses-Unique].[Building Name], [Codes-Addresses-Unique].[Loc Type], Count([Incident Offenses-GTPD+APD].[OCA Number]) AS [CountOfOCA Number], Min([Incident Offenses-GTPD+APD].[Report Date]) AS [MinOfReport Date], Max([Incident Offenses-GTPD+APD].[Report Date]) AS [MaxOfReport Date]
-
-FROM ([Incident Offenses-GTPD+APD] LEFT JOIN [Codes-Addresses-Unique] ON ([Incident Offenses-GTPD+APD].[St Num] = [Codes-Addresses-Unique].Number) AND ([Incident Offenses-GTPD+APD].Street = [Codes-Addresses-Unique].Street)) LEFT JOIN [Codes-Offense] ON [Incident Offenses-GTPD+APD].SRSOffense = [Codes-Offense].UCR_CODE1
-
-
-WHERE ((([Incident Offenses-GTPD+APD].[Case Disposition]) Not In ('U','03','NC')) AND (([Codes-Offense].UC2) Between '030' And '070') AND (([Incident Offenses-GTPD+APD].[St Num]) Is Not Null And ([Incident Offenses-GTPD+APD].[St Num])<>'0') AND (([Incident Offenses-GTPD+APD].[Report Date]) Between @START_DATE And @END_DATE) AND (([Incident Offenses-GTPD+APD].[Location Code])<>'APD' Or ([Incident Offenses-GTPD+APD].[Location Code]) Is Null)) OR ((([Incident Offenses-GTPD+APD].[Case Disposition]) Is Null) AND (([Codes-Offense].UC2) Between '030' And '070') AND (([Incident Offenses-GTPD+APD].[St Num]) Is Not Null And ([Incident Offenses-GTPD+APD].[St Num])<>'0') AND (([Incident Offenses-GTPD+APD].[Report Date]) Between @START_DATE And @END_DATE) AND (([Incident Offenses-GTPD+APD].[Location Code])<>'APD' Or ([Incident Offenses-GTPD+APD].[Location Code]) Is Null))
-
-
-GROUP BY [Incident Offenses-GTPD+APD].[St Num], [Incident Offenses-GTPD+APD].Street, [Codes-Addresses-Unique].[Building Name], [Codes-Addresses-Unique].[Loc Type]
-
-ORDER BY [CountOfOCA Number] DESC;
-
-*/ 

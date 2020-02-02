@@ -64,7 +64,7 @@ class FilterResult extends Component {
         return (
             <div className="main">
                 <div className="card">
-                    <div className="card-body">
+                    <div className="card-body" style={{marginBottom:30, fontSize: 12}}>
                         <MDBDataTable
                             scrollX
                             striped

@@ -46,7 +46,6 @@ function db_query(query_string, next) {
 
 // Router
 function add_router(app) {
-    /* For now, pulls data from fake table, but will from [Incident Offenses-GTPD+APD] table */
     app.get('/showall', function (req, res) {
         queryString = query_factory.showall();
         db_query(queryString, (err, result) => {
@@ -91,7 +90,6 @@ function add_router(app) {
         });
     });
     app.get('/crimeCategories', function (req, res) {
-        console.log(query_factory.crimeCategories)
         db_query(query_factory.crimeCategories, (err, result) => {
             if (!err) res.send(result);
             else 
@@ -330,8 +328,8 @@ function add_router(app) {
         });
     });
 
-    app.get('/narrative/:incident_number', function (req, res) {
-        query = query_factory.get_narrative(req.params.incident_number)
+    app.get('/narrative_GTPD/:incident_number', function (req, res) {
+        query = query_factory.get_narrative_GTPD(req.params.incident_number)
         db_query(query, (err, result) => {
             if (!err) {
                 if (result != null && result[0] != null)

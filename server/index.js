@@ -1,4 +1,4 @@
-console.log("\n\n[Server] Starting server on port 5000")
+console.log("\n\n[Server] Starting server on port 5001")
 
 const app = require('express')();
 const body_parser = require('body-parser');
@@ -11,4 +11,4 @@ app.use(body_parser.urlencoded({extended: true}));  // url encoded
 require('./router')(app);
 
 // Open connection from external ip
-app.listen(5000, '0.0.0.0');
+app.listen(5001, '0.0.0.0');

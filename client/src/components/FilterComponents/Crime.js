@@ -36,13 +36,7 @@ class crime extends Component {
             this.props.crimeHandler(this.state)
         }); 
     };
-    setCrimeCategory = selectedCrimeCategory => { 
-        this.setState({selectedCrimeCategory},
-        function() {
-            this.props.crimeHandler(this.state)
-        }); 
-    };
-    
+
     setArrest = selectedArrest => { 
         this.setState({selectedArrest},
         function() {
@@ -60,32 +54,24 @@ class crime extends Component {
         function() {
             this.props.crimeHandler(this.state)
         });
-        var j = 0;
         newCrimeTypeOptions = [];
         if(selectedCrimeCategory.value !== "Any") {
             for(var i = 0; i < crimeTypeOptions.length; i++) {
                 if(crimeTypeOptions[i]['NIBRS_Category'] === selectedCrimeCategory.value) {
-                    newCrimeTypeOptions[j] = crimeTypeOptions[i];
-                    j++;
+                    newCrimeTypeOptions.push(crimeTypeOptions[i]);
                 }
             }
-        } else {
+        } 
+        else {
             newCrimeTypeOptions = crimeTypeOptions;
         }
         this.forceUpdate()
     }
     populateCrimes(data) {
         for(var i = 0; i < data.length; i++) {
-            if(data[i]["NIBRS_Category"] === null) {
-                crimeTypeOptions[i] = data[i];
-                crimeTypeOptions[i].value =  data[i]['Inc_Desc_PCase'];
-                crimeTypeOptions[i].label =  data[i]['Inc_Desc_PCase'];
-                crimeTypeOptions[i]['NIBRS_Category'] =  "All Other Offenses";
-            } else {
-                crimeTypeOptions[i] = data[i];
-                crimeTypeOptions[i].value = data[i]['UCR_CODE1'];
-                crimeTypeOptions[i].label = data[i]['Inc_Desc_PCase'];
-            }
+            crimeTypeOptions[i] = data[i];
+            crimeTypeOptions[i].value = data[i]['NIBRS_Code_Extended'];
+            crimeTypeOptions[i].label = data[i]['Description'];
         }
         crimeTypeOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
         this.forceUpdate()  // If this function runs slow and could not be completed before render call, Select options may not be populated. so force update at the end.
@@ -94,21 +80,13 @@ class crime extends Component {
         crimeCategoryOptions = []
         let null_category_codes = []
         for(var i = 0; i < data.length; i++) {
-            var code_set = data[i]['NIBRS_Offense_code']==null ? new Set(['']) : new Set(data[i]['NIBRS_Offense_code'].split(','))
-            if(data[i]["NIBRS_Category"] === null) {    // All codes referring to this will be put into 'All other offenses' category
-                code_set.delete('')
-                null_category_codes = Array.from(code_set)
-            } else {
-                crimeCategoryOptions[i] = data[i];
-                code_set.delete('')
-                crimeCategoryOptions[i]['NIBRS_Offense_code'] = Array.from(code_set)
-                crimeCategoryOptions[i].value = data[i]['NIBRS_Category'];
-                crimeCategoryOptions[i].label = data[i]['NIBRS_Category'];
-            }
+            var code_set = data[i]['Aggregated_NIBRS_Code_Extended']==null ? new Set(['']) : new Set(data[i]['Aggregated_NIBRS_Code_Extended'].split(','))
+            crimeCategoryOptions[i] = data[i];
+            code_set.delete('')
+            crimeCategoryOptions[i]['NIBRS_Offense_code'] = Array.from(code_set)
+            crimeCategoryOptions[i].value = data[i]['NIBRS_Category'];
+            crimeCategoryOptions[i].label = data[i]['NIBRS_Category'];
         }
-
-        // put null_category_codes into 'All other offenses' category.
-        crimeCategoryOptions.forEach((item) => {if (item.label==='All Other Offenses') item['NIBRS_Offense_code'] = item['NIBRS_Offense_code'].concat(null_category_codes)})
 
         crimeCategoryOptions.sort((a, b) => (a.label > b.label) ? 1 : -1);
         crimeCategoryOptions.unshift({value: "Any", label: "Any"})
