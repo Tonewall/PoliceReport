@@ -223,6 +223,17 @@ module.exports.get_property = function(incident_number) {
     ', incident_number)
 }
 
+module.exports.getOfficers = 
+    "SELECT [FirstName],\
+        [LastName],\
+        [Officer],\
+        [IDNumber]\
+    FROM [SS_GARecords_Config].[dbo].[tblUser]\
+    WHERE [FirstName] not like 'NULL'\
+    AND [IDNumber] not like 'NULL'\
+    AND [Officer] = '1'\
+    ORDER BY [LastName]"
+
 module.exports.crimeTypes = 
 "SELECT DISTINCT [NIBRS_Code],[Description],[NIBRS_Category],[NIBRS_Code_Extended] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
 module.exports.crimeCategories = 

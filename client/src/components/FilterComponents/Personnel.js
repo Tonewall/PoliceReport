@@ -23,11 +23,15 @@ const shiftOptions = [
 
 ]
 
+const officerOptions = [{value: '', label: 'Any'}];
+
 
 class personnel extends Component {
     state = {
         selectedShift: null,
-        officerName: null,
+        officerName: '',
+        selectedOfficer: {value: '', label: 'Any'},
+
     };
 
     setShift = selectedShift => { this.setState({selectedShift},
@@ -41,10 +45,39 @@ class personnel extends Component {
             });
     }
 
-    
+    componentDidMount() {
+        fetch('/getOfficers')
+            .then(results => {
+                results.json().then(data=> {
+                    this.getOfficers(data)
+                })
+            })
+            .catch(err => console.error(err))
+    }
+
+    getOfficers(data) {
+        for(var i = 0; i < data.length; i++) {
+            var name = data[i]['FirstName'] + ' ' + data[i]['LastName']
+
+            //James Cornacchia not in the database correctly
+            if(data[i]['LastName'] === ' Cornacchia') {
+                name = data[i]['FirstName'] + data[i]['LastName']
+            }
+            var ID = data[i]['LastName'] + ', ' + data[i]['FirstName'] + ' - ' + data[i]['IDNumber']
+            officerOptions.push({value: name, label: ID})
+        }
+    }
+
+    setOfficer = selectedOfficer => {
+        this.setState({selectedOfficer})
+        this.setState({officerName: selectedOfficer.value},
+            function() {
+                this.props.personnelHandler(this.state)
+            });
+    }
 
     render() {
-        const { selectedShift } = this.state;
+        const { selectedShift, selectedOfficer } = this.state;
         return(
         <div className="main">
             <div className="card filterTypeCards shiftCard">
@@ -63,9 +96,16 @@ class personnel extends Component {
                         />
                     </div>
                     <div className="form-group row">
-                        <label htmlFor="inputStreet" className="col-12 col-form-label">Officer Name</label>
+                        <label htmlFor="inputStreet" className="col-12 col-form-label">
+                            Officer
+                        </label>
                         <div className="col-12">
-                        <input type="text" name="officerName" onChange={this.handleChange} className="form-control" id="inputID" placeholder="Any"/>
+                            <Select 
+                            value={selectedOfficer} 
+                            onChange={this.setOfficer} 
+                            options={officerOptions} 
+                            placeholder={"Any"}
+                            />
                         </div>
                     </div>
                 </div>
