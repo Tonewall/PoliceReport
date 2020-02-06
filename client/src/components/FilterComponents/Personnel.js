@@ -3,24 +3,19 @@ import Select from "react-select";
 
 
 const shiftOptions = [
-    {value: 'aShift', label: 'A'},
-    {value: 'bShift', label: 'B'},
-    {value: 'cShift', label: 'C'},
-    {value: 'cidShift', label: 'CID'},
-    {value: 'coreShift', label: 'Core'},
-    {value: 'cpShift', label: 'CP'},
-    {value: 'csaShift', label: 'CSA'},
-    {value: 'csuShift', label: 'CSU'},
-    {value: 'dShift', label: 'D'},
     {value: 'dayShift', label: 'Day'},
     {value: 'eveShift', label: 'Eve'},
+    {value: 'mornShift', label: 'Morn'},
+    {value: 'coreShift', label: 'Core'},
+    {value: 'martaShift', label: 'SRT'},
+    {value: 'csuShift', label: 'CSU'},
+    {value: 'trafficShift', label: 'Traff'},
+    {value: 'cidShift', label: 'CID'},
     {value: 'eventShift', label: 'Event'},
+    {value: 'cpShift', label: 'CP'},
     {value: 'fitShift', label: 'FIT'},
     {value: 'martaShift', label: 'MARTA'},
-    {value: 'mornShift', label: 'Morn'},
-    {value: 'trafficShift', label: 'Traffic'},
-    {value: 'otherShift', label: 'Other'},
-
+    {value: 'otherShift', label: 'Other'},    
 ]
 
 const officerOptions = [{value: '', label: 'Any'}];
