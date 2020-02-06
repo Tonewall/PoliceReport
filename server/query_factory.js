@@ -2,7 +2,7 @@ const sprintf = require('sprintf-js').sprintf;
 
 // TODO: add more methods for common query generation
 
-module.exports.showall = function(additional_join_statement=null, criteria=null, num_incidents=1000) {
+module.exports.showall = function(top_count="TOP 1000", additional_join_statement=null, criteria=null) {
     /* Supports caller defined additional joins and conditionals
         - default join: [Codes-Offense], [tblIncidentOffender]-->TODO: This only accounts for offenders in GTPD RMS
         - format
@@ -10,7 +10,7 @@ module.exports.showall = function(additional_join_statement=null, criteria=null,
             - criteria: ( len([OCA Number]) = 8 )
      */
     return sprintf('\
-        SELECT distinct top (%d) [OCA Number] as [Incident Number]\n', num_incidents) +
+        SELECT distinct %s [OCA Number] as [Incident Number]\n', top_count) +
         '\
             , CONVERT(varchar, [Report Date], 23) as [Report Date]\
             , convert(varchar, [From Time], 8) as [Time]\
@@ -563,6 +563,11 @@ module.exports.filter = function(criteria) {
         }
     }
 
+    top_count = ''
+    if(criteria.selectedCount != 'All') {
+        top_count = "TOP " + criteria.selectedCount
+    }
+
     /* Date Filter */
     criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') 
             + '(' + '[Report Date] >= \'' + criteria.startDate + '\' AND [Report Date] <= \'' + criteria.endDate + '\')'
@@ -572,6 +577,6 @@ module.exports.filter = function(criteria) {
             'LEFT JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON (CAST([Codes_Addresses_Unique].[St #] as nvarchar(255)) = [Incident Offenses-GTPD+APD].[St Num]\
                 AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name]) '
 
-    return this.showall(additional_join_statement = additional_join_statement.length==0 ? null : additional_join_statement, 
+    return this.showall(top_count = top_count, additional_join_statement = additional_join_statement.length==0 ? null : additional_join_statement, 
                         criteria = criteria_script.length==0 ? null : criteria_script)
 }

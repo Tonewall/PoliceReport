@@ -4,6 +4,7 @@ import Date from "./FilterComponents/Date"
 import Location from "./FilterComponents/Location"
 import Crime from "./FilterComponents/Crime"
 import Personnel from "./FilterComponents/Personnel"
+import Count from "./FilterComponents/Count"
 import {Redirect} from 'react-router-dom'
 
 class gtpdFilter extends Component {
@@ -25,11 +26,13 @@ class gtpdFilter extends Component {
             selectedBuilding: null,
             selectedDepartment: null,
             selectedGTLocationType: null,
+            selectedCount: 1000,
         };
         this.dateHandler = this.dateHandler.bind(this)
         this.locationHandler = this.locationHandler.bind(this)
         this.crimeHandler = this.crimeHandler.bind(this)
         this.personnelHandler = this.personnelHandler.bind(this)
+        this.countHandler = this.countHandler.bind(this)
     }
 
     dateHandler = (date) => {
@@ -65,6 +68,9 @@ class gtpdFilter extends Component {
             selectedShift: personnel.selectedShift, 
         })
     }
+    countHandler = (count) => {
+        this.setState({selectedCount: count})
+    }
 
     handleSubmit = () => {
         console.log(this.state)
@@ -88,6 +94,7 @@ class gtpdFilter extends Component {
                                 </div>
                                 <div className="col-lg-4 col-6">
                                     <Date dateHandler={this.dateHandler}/>
+                                    <Count countHandler={this.countHandler}/>
                                 </div>
                             </div>
                             <div className="row">
