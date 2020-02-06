@@ -30,13 +30,13 @@ class LocationStatistics extends Component {
                         sort: 'asc'
                     },
                     {
-                        label: "Larceny/Theft",
+                        label: "Larceny",
                         field: "larceny",
                         width: 100,
                         sort: 'asc'
                     },
                     {
-                        label: "Assault Offense",
+                        label: "Assault",
                         field: "assault",
                         width: 100,
                         sort: 'asc'
@@ -44,6 +44,24 @@ class LocationStatistics extends Component {
                     {
                         label: "Burglary",
                         field: "burglary",
+                        width: 100,
+                        sort: 'asc'
+                    },
+                    {
+                        label: "Arson",
+                        field: "arson",
+                        width: 100,
+                        sort: 'asc'
+                    },
+                    {
+                        label: "Homicide",
+                        field: "homicide",
+                        width: 100,
+                        sort: 'asc'
+                    },
+                    {
+                        label: "Sex Offenses",
+                        field: "sexOffenses",
                         width: 100,
                         sort: 'asc'
                     },
@@ -94,9 +112,12 @@ class LocationStatistics extends Component {
                 location: data[i]['Building Name'], 
                 partI: data[i]['PART I'].toString(), 
                 robbery: data[i]['Robbery'].toString(), 
-                larceny: data[i]['Larceny/Theft Offenses'].toString(), 
-                assault: data[i]['Assault Offenses'].toString(),
-                burglary: data[i]['Burglary/Breaking & Entering'].toString(),
+                larceny: data[i]['Larceny'].toString(), 
+                assault: data[i]['Assault'].toString(),
+                burglary: data[i]['Burglary'].toString(),
+                arson: data[i]['Arson'].toString(),
+                homicide: data[i]['Homicide'].toString(),
+                sexOffenses: data[i]['Sex Offenses'].toString(),
                 motor: data[i]['Motor Vehicle Theft'].toString()
             }
         }

@@ -386,9 +386,12 @@ module.exports.getLocationRanking = function(body) {
         "SELECT [Building Name],\
         COUNT(*) as [PART I],\
         sum(case when [NIBRS_Category] = 'Robbery' then 1 else 0 end) AS [Robbery],\
-        sum(case when [NIBRS_Category] = 'Larceny/Theft Offenses' then 1 else 0 end) AS [Larceny/Theft Offenses],\
-        sum(case when [NIBRS_Category] = 'Assault Offenses' then 1 else 0 end) AS [Assault Offenses],\
-        sum(case when [NIBRS_Category] = 'Burglary/Breaking & Entering' then 1 else 0 end) AS [Burglary/Breaking & Entering],\
+        sum(case when [NIBRS_Category] = 'Larceny' then 1 else 0 end) AS [Larceny],\
+        sum(case when [NIBRS_Category] = 'Assault' then 1 else 0 end) AS [Assault],\
+        sum(case when [NIBRS_Category] = 'Burglary' then 1 else 0 end) AS [Burglary],\
+        sum(case when [NIBRS_Category] = 'Arson' then 1 else 0 end) AS [Arson],\
+        sum(case when [NIBRS_Category] = 'Homicide' then 1 else 0 end) AS [Homicide],\
+        sum(case when [NIBRS_Category] = 'Sex Offenses' then 1 else 0 end) AS [Sex Offenses],\
         sum(case when [NIBRS_Category] = 'Motor Vehicle Theft' then 1 else 0 end) AS [Motor Vehicle Theft]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
         JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Codes-Offense].[NIBRS_Code_Extended] = [Incident Offenses-GTPD+APD].[Offense]\
@@ -396,7 +399,7 @@ module.exports.getLocationRanking = function(body) {
             AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name])\
         WHERE [Report Date] >= '%s'\n\
         AND [Report Date] <= '%s'\n\
-        AND [NIBRS_Category] in ('Robbery', 'Larceny/Theft Offenses', 'Assault Offenses', 'Burglary/Breaking & Entering', 'Motor Vehicle Theft')\
+        AND [NIBRS_Category] in ('Robbery', 'Larceny', 'Assault', 'Burglary', 'Motor Vehicle Theft', 'Arson', 'Homicide', 'Sex Offenses')\
         AND [Loc Code] NOT LIKE 'APD'\
         GROUP BY [Building Name]\
         ORDER BY COUNT(*) DESC"
