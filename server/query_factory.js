@@ -366,17 +366,19 @@ module.exports.getTimeCount = function(body) {
         crime = ''
     }
     return sprintf(
-        "SELECT DATEPART(HOUR, [From Time]) as [Hour], COUNT(*) AS [Count]\
+        "SELECT datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))) as [Hour], \
+        COUNT(*) AS [Count]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
         FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended]\
         WHERE YEAR([Report Date]) =\'%d'\n\
         AND [Officer Name] LIKE \'%%%s%%'\n\
         AND [Address] LIKE \'%%%s%%'\n\
         AND [Location Code] \%s\n\
+        AND DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME))) < 4\
         \%s\n\
         \%s\n\
-		GROUP BY DATEPART(HOUR, [From Time])\
-		ORDER BY DATEPART(HOUR, [From Time])"
+		GROUP BY (datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))))\
+		ORDER BY (datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))))"
         ,body.selectedYear.value, officerName, address, department, unit, crime
     )
 }
