@@ -14,7 +14,6 @@ const shiftOptions = [
     {value: 'eventShift', label: 'Event'},
     {value: 'cpShift', label: 'CP'},
     {value: 'fitShift', label: 'FIT'},
-    {value: 'martaShift', label: 'MARTA'},
     {value: 'otherShift', label: 'Other'},    
 ]
 
