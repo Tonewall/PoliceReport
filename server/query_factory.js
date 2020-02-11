@@ -202,7 +202,7 @@ module.exports.get_arrest_info = function(incident_number) {
 module.exports.get_property = function(incident_number) {
     return sprintf('\
         SELECT [SequenceNumber]\
-            , [Property Data Value] AS PropertyType\
+            , [Description] AS PropertyType\
             , [Status]\
             , [ItemDescription]\
             , [Make]\
@@ -216,8 +216,8 @@ module.exports.get_property = function(incident_number) {
             , [Recovered]\
             , [ObtainedAddress]\
             , [ObtainedCity]\
-        FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty] left join [CrimeAnalytics].[dbo].[Codes-NIBRS DE 15 Property Description] \
-                on ([tblIncidentProperty].[TypeCode] = [Codes-NIBRS DE 15 Property Description].[Property Code])\n\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty] left join [SS_GARecords_Config].[dbo].[tblLkpIBRProperty] \
+                on ([tblIncidentProperty].[TypeCode] = [tblLkpIBRProperty].[Code])\n\
         WHERE ([IncidentNumber]=\'%s\')\n\
         ORDER BY [SequenceNumber] ASC\
     ', incident_number)
