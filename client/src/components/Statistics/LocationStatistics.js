@@ -36,6 +36,12 @@ class LocationStatistics extends Component {
                         sort: 'asc'
                     },
                     {
+                        label: "Bicycle Theft",
+                        field: "bicycleTheft",
+                        width: 100,
+                        sort: 'asc'
+                    },
+                    {
                         label: "Assault",
                         field: "assault",
                         width: 100,
@@ -106,19 +112,21 @@ class LocationStatistics extends Component {
     }
 
     populate(data) {
+        console.log(data)
         var row = [];
         for (var i = 0; i < data.length; i++) {
             row[i] = {
                 location: data[i]['Building Name'], 
-                partI: data[i]['PART I'].toString(), 
-                robbery: data[i]['Robbery'].toString(), 
-                larceny: data[i]['Larceny'].toString(), 
-                assault: data[i]['Assault'].toString(),
-                burglary: data[i]['Burglary'].toString(),
-                arson: data[i]['Arson'].toString(),
-                homicide: data[i]['Homicide'].toString(),
-                sexOffenses: data[i]['Sex Offenses'].toString(),
-                motor: data[i]['Motor Vehicle Theft'].toString()
+                partI: data[i]['PART I'], 
+                robbery: data[i]['Robbery'], 
+                larceny: data[i]['Larceny'],
+                bicycleTheft: data[i]['Bicycle Theft'], 
+                assault: data[i]['Assault'],
+                burglary: data[i]['Burglary'],
+                arson: data[i]['Arson'],
+                homicide: data[i]['Homicide'],
+                sexOffenses: data[i]['Sex Offenses'],
+                motor: data[i]['Motor Vehicle Theft']
             }
         }
         this.setState({crimeData: {rows: row, columns: this.state.crimeData.columns}})
