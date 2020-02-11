@@ -5,6 +5,7 @@ import Location from "./FilterComponents/Location"
 import Crime from "./FilterComponents/Crime"
 import Personnel from "./FilterComponents/Personnel"
 import {Redirect} from 'react-router-dom'
+import CustomColumn from "./FilterComponents/CustomColumn"
 
 class gtpdFilter extends Component {
     constructor(props) {
@@ -25,17 +26,25 @@ class gtpdFilter extends Component {
             selectedBuilding: null,
             selectedDepartment: null,
             selectedGTLocationType: null,
+            selectedColumns: null,
         };
         this.dateHandler = this.dateHandler.bind(this)
         this.locationHandler = this.locationHandler.bind(this)
         this.crimeHandler = this.crimeHandler.bind(this)
         this.personnelHandler = this.personnelHandler.bind(this)
+        this.customColumnHandler = this.customColumnHandler.bind(this)
     }
 
     dateHandler = (date) => {
         this.setState({
             endDate: date.endDate, 
             startDate: date.startDate
+        })
+    }
+
+    customColumnHandler = (customColumn) => {
+        this.setState({
+            selectedColumns: customColumn.selectedColumns
         })
     }
 
@@ -88,6 +97,7 @@ class gtpdFilter extends Component {
                                 </div>
                                 <div className="col-lg-4 col-6">
                                     <Date dateHandler={this.dateHandler}/>
+                                    <CustomColumn customColumnHandler={this.customColumnHandler}/>
                                 </div>
                             </div>
                             <div className="row">
