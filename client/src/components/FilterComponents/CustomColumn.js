@@ -7,6 +7,7 @@ const customOptions = [
     {value: true, label: 'Custom'},
 ];
 const columns = [
+    /*DEFAULT*/
     {value: 'Offense', label: 'Offense'},
     {value: 'Location', label: 'Location'},
     {value: 'Landmark', label: 'Landmark'},
@@ -15,6 +16,7 @@ const columns = [
     {value: 'Average Date/Time', label: 'Average Date/Time'},
     {value: 'Occurred Shift', label: 'Occurred Shift'},
     {value: 'Case Status', label: 'Case Status'},
+    /*OPTIONAL*/
     {value: 'Unit', label: 'Unit'},
     {value: 'Offenders', label: 'Offenders'},
     {value: 'Victims', label: 'Victims'},
@@ -26,7 +28,16 @@ const columns = [
 class CustomColumn extends Component {
     state = {
         selectedCustom: {value: false, label: 'Default'},
-        selectedColumns: null,
+        selectedColumns: [
+            {value: 'Offense', label: 'Offense'},
+            {value: 'Location', label: 'Location'},
+            {value: 'Landmark', label: 'Landmark'},
+            {value: 'Department', label: 'Department'},
+            {value: 'Date/Time', label: 'Date/Time'},
+            {value: 'Average Date/Time', label: 'Average Date/Time'},
+            {value: 'Occurred Shift', label: 'Occurred Shift'},
+            {value: 'Case Status', label: 'Case Status'},
+        ],
     };
 
     constructor(props) {
