@@ -14,9 +14,11 @@ module.exports.showall = function(additional_join_statement=null, criteria=null,
         '\
             , CONVERT(varchar, [Report Date], 23) as [Report Date]\
             , convert(varchar, [From Time], 8) as [Time]\
-            , [Description]\
-            , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Street]\
-            , [Location Landmark] as [Location Name]\
+            , [Description] as [Offense]\
+            , [Case Status]\
+            , convert(varchar, [From Date], 23) as [From Time]\
+            , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Location]\
+            , [Location Landmark] as [Location Landmark]\
             , CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) AS [Offender Name]\
             , [Officer Name]\
             , CASE WHEN LEN([OCA Number]) = 8 THEN \'GTPD\'\
