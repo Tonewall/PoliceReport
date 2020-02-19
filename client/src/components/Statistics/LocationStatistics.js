@@ -30,13 +30,19 @@ class LocationStatistics extends Component {
                         sort: 'asc'
                     },
                     {
-                        label: "Larceny/Theft",
+                        label: "Larceny",
                         field: "larceny",
                         width: 100,
                         sort: 'asc'
                     },
                     {
-                        label: "Assault Offense",
+                        label: "Bicycle Theft",
+                        field: "bicycleTheft",
+                        width: 100,
+                        sort: 'asc'
+                    },
+                    {
+                        label: "Assault",
                         field: "assault",
                         width: 100,
                         sort: 'asc'
@@ -44,6 +50,24 @@ class LocationStatistics extends Component {
                     {
                         label: "Burglary",
                         field: "burglary",
+                        width: 100,
+                        sort: 'asc'
+                    },
+                    {
+                        label: "Arson",
+                        field: "arson",
+                        width: 100,
+                        sort: 'asc'
+                    },
+                    {
+                        label: "Homicide",
+                        field: "homicide",
+                        width: 100,
+                        sort: 'asc'
+                    },
+                    {
+                        label: "Sex Offenses",
+                        field: "sexOffenses",
                         width: 100,
                         sort: 'asc'
                     },
@@ -88,16 +112,21 @@ class LocationStatistics extends Component {
     }
 
     populate(data) {
+        console.log(data)
         var row = [];
         for (var i = 0; i < data.length; i++) {
             row[i] = {
                 location: data[i]['Building Name'], 
-                partI: data[i]['PART I'].toString(), 
-                robbery: data[i]['Robbery'].toString(), 
-                larceny: data[i]['Larceny/Theft Offenses'].toString(), 
-                assault: data[i]['Assault Offenses'].toString(),
-                burglary: data[i]['Burglary/Breaking & Entering'].toString(),
-                motor: data[i]['Motor Vehicle Theft'].toString()
+                partI: data[i]['PART I'], 
+                robbery: data[i]['Robbery'], 
+                larceny: data[i]['Larceny'],
+                bicycleTheft: data[i]['Bicycle Theft'], 
+                assault: data[i]['Assault'],
+                burglary: data[i]['Burglary'],
+                arson: data[i]['Arson'],
+                homicide: data[i]['Homicide'],
+                sexOffenses: data[i]['Sex Offenses'],
+                motor: data[i]['Motor Vehicle Theft']
             }
         }
         this.setState({crimeData: {rows: row, columns: this.state.crimeData.columns}})
