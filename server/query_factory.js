@@ -12,11 +12,36 @@ module.exports.showall = function(additional_join_statement=null, criteria=null,
     return sprintf('\
         SELECT distinct top (%d) [OCA Number] as [Incident Number]\n', num_incidents) +
         '\
-            , CONVERT(varchar, [Report Date], 23) as [Report Date]\
-            , convert(varchar, [From Time], 8) as [Time]\
+            , FORMAT(DATEADD(day, 2, [From Date] + [From Time]),\'yyyy-MM-dd hh:mm tt\') as [From]\
+            , FORMAT(DATEADD(day, 2, [To Date] + [To Time]),\'yyyy-MM-dd hh:mm tt\') as [To]\
+            , FORMAT(DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])), \'yyyy-MM-dd\') as [Average Day]\
             , [Description] as [Offense]\
+            , CASE WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) > 16\
+                    THEN \'Unknown or -\'\
+                WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) <= 16\
+                    THEN FORMAT(DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])), \'hh:mm tt\')\
+                End as [Average Time]\
+            , CASE WHEN LEN([OCA Number]) = 8 THEN CASE \
+                WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) > 16\
+                    THEN \'Unknown\'\
+                WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) <= 16 THEN CASE\
+                    WHEN DATEPART(HOUR, DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])))\
+                        IN (6,7,8,9,10,11,12,13)\
+                            THEN \'Morn\'\
+                    WHEN DATEPART(HOUR, DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])))\
+                        IN (14,15,16,17,18,19,20,21)\
+                            THEN \'Day\'\
+                    WHEN DATEPART(HOUR, DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])))\
+                        IN (22,23,0,1,2,3,4,5)\
+                            THEN \'Eve\'\
+                        END\
+                    END\
+                WHEN LEN([OCA Number]) != 8\
+                    THEN \'Unknown\'\
+                END AS [Occurred Shift]\
+            , FORMAT([Report Date], \'yyyy-MM-dd hh:mm tt\') as [Report Date]\
             , [Case Status]\
-            , convert(varchar, [From Date], 23) as [From Time]\
+            , [Unit]\
             , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Location]\
             , [Location Landmark] as [Location Landmark]\
             , CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) AS [Offender Name]\
@@ -31,7 +56,7 @@ module.exports.showall = function(additional_join_statement=null, criteria=null,
                 ON ( [tblIncidentOffender].[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number] )\n'+
             (additional_join_statement==null ? '' : additional_join_statement) + '\n'+
         (criteria==null ? '' : ('WHERE ' + criteria + '\n'))+
-        'ORDER BY [Report Date] DESC, [Time] DESC';
+        'ORDER BY [From] DESC';
 }
 
 

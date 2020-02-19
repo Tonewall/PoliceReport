@@ -8,20 +8,23 @@ const customOptions = [
 ];
 const columns = [
     /*DEFAULT*/
-    {value: 'Offense', label: 'Offense'},
-    {value: 'Location', label: 'Location'},
-    {value: 'Landmark', label: 'Landmark'},
-    {value: 'Department', label: 'Department'},
-    {value: 'Date/Time', label: 'Date/Time'},
-    {value: 'Average Date/Time', label: 'Average Date/Time'},
-    {value: 'Occurred Shift', label: 'Occurred Shift'},
-    {value: 'Case Status', label: 'Case Status'},
+    {value: 'Offense', field:'Offense', label: 'Offense', width: 200},
+    {value: 'Location', field:'Location', label: 'Location', width: 250},
+    {value: 'Location Landmark', field:'Landmark', label: 'Landmark', width: 200},
+    {value: 'From', field:'From Date/Time', label: 'From Date/Time', width: 100},
+    {value: 'To', field:'To Date/Time', label: 'To Date/Time', width: 100},
+    {value: 'Average Day', field:'Average Day', label: 'Avg Day', width: 100},
+    {value: 'Average Time', field:'Average Time', label: 'Avg Time', width: 100},
+    {value: 'Occurred Shift', field:'Occurred Shift', label: 'Occurred Shift', width: 100},
+    {value: 'Case Status', field:'Case Status', label: 'Status', width: 50},
+    {value: 'Department', field:'Department', label: 'Dept', width: 50},
     /*OPTIONAL*/
-    {value: 'Unit', label: 'Unit'},
-    {value: 'Offenders', label: 'Offenders'},
-    {value: 'Victims', label: 'Victims'},
-    {value: 'Property', label: 'Property'},
-    {value: 'Officer', label: 'Officer'},
+    {value: 'Unit', field: 'Unit', label: 'Unit', width: 50},
+    {value: 'Offender Name', field: 'Offenders', label: 'Offenders', width: 100},
+    {value: 'Victims', field: 'Victim', label: 'Victims', width: 100},
+    {value: 'Property', field: 'Property', label: 'Property', width: 200},
+    {value: 'Officer Name', field: 'Officer', label: 'Officer', width: 200},
+    {value: 'Report Date', field: 'Report Date', label: 'Report Date', width: 200},
 ];
 
 
@@ -29,14 +32,16 @@ class CustomColumn extends Component {
     state = {
         selectedCustom: {value: false, label: 'Default'},
         selectedColumns: [
-            {value: 'Offense', label: 'Offense'},
-            {value: 'Location', label: 'Location'},
-            {value: 'Landmark', label: 'Landmark'},
-            {value: 'Department', label: 'Department'},
-            {value: 'Date/Time', label: 'Date/Time'},
-            {value: 'Average Date/Time', label: 'Average Date/Time'},
-            {value: 'Occurred Shift', label: 'Occurred Shift'},
-            {value: 'Case Status', label: 'Case Status'},
+            {value: 'Offense', field:'Offense', label: 'Offense', width: 200},
+            {value: 'Location', field:'Location', label: 'Location', width: 250},
+            {value: 'Location Landmark', field:'Landmark', label: 'Landmark', width: 200},
+            {value: 'From', field:'From Date/Time', label: 'From Date/Time', width: 100},
+            {value: 'To', field:'To Date/Time', label: 'To Date/Time', width: 100},
+            {value: 'Average Day', field:'Average Day', label: 'Avg Day', width: 100},
+            {value: 'Average Time', field:'Average Time', label: 'Avg Time', width: 100},
+            {value: 'Occurred Shift', field:'Occurred Shift', label: 'Occurred Shift', width: 100},
+            {value: 'Case Status', field:'Case Status', label: 'Status', width: 50},
+            {value: 'Department', field:'Department', label: 'Dept', width: 50},
         ],
     };
 

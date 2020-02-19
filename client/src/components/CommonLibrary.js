@@ -18,15 +18,14 @@ for(var i=0;i<incident_keys.length;i++)
 
 module.exports.incident_datatable_feeds = function(data)
 {
-    console.log(data)
-    // data.forEach(element => {
+    data.forEach(element => {
         
-    //     incident_keys.forEach(key => {
-    //         if(element[key] == null)    element[key]='-'
-    //         else if(element[key] === true) element[key]='true'
-    //         else if(element[key] === false)    element[key]='false'
-    //     });
-    // });
+        incident_keys.forEach(key => {
+            if(element[key] == null)    element[key]='-'
+            else if(element[key] === true) element[key]='true'
+            else if(element[key] === false)    element[key]='false'
+        });
+    });
 
     return {'rows': data, 'columns': incident_columns}
 }
