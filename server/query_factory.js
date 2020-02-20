@@ -2,7 +2,7 @@ const sprintf = require('sprintf-js').sprintf;
 
 // TODO: add more methods for common query generation
 
-module.exports.showall = function(additional_join_statement=null, criteria=null, num_incidents=1000) {
+module.exports.showall = function(top_count="TOP 1000", additional_join_statement=null, criteria=null) {
     /* Supports caller defined additional joins and conditionals
         - default join: [Codes-Offense], [tblIncidentOffender]-->TODO: This only accounts for offenders in GTPD RMS
         - format
@@ -10,7 +10,7 @@ module.exports.showall = function(additional_join_statement=null, criteria=null,
             - criteria: ( len([OCA Number]) = 8 )
      */
     return sprintf('\
-        SELECT distinct top (%d)  [OCA Number] as [Incident Number]\n', num_incidents) +
+        SELECT distinct %s [OCA Number] as [Incident Number]\n', top_count) +
         '\
             , FORMAT(DATEADD(day, 2, [From Date] + [From Time]),\'yyyy-MM-dd hh:mm tt\') as [From]\
             , FORMAT(DATEADD(day, 2, [To Date] + [To Time]),\'yyyy-MM-dd hh:mm tt\') as [To]\
@@ -245,6 +245,17 @@ module.exports.get_property = function(incident_number) {
         ORDER BY [SequenceNumber] ASC\
     ', incident_number)
 }
+
+module.exports.getOfficers = 
+    "SELECT [FirstName],\
+        [LastName],\
+        [Officer],\
+        [IDNumber]\
+    FROM [SS_GARecords_Config].[dbo].[tblUser]\
+    WHERE [FirstName] not like 'NULL'\
+    AND [IDNumber] not like 'NULL'\
+    AND [Officer] = '1'\
+    ORDER BY [LastName]"
 
 module.exports.crimeTypes = 
 "SELECT DISTINCT [NIBRS_Code],[Description],[NIBRS_Category],[NIBRS_Code_Extended] FROM [CrimeAnalytics].[dbo].[Codes-Offense]"
@@ -581,6 +592,11 @@ module.exports.filter = function(criteria) {
         }
     }
 
+    top_count = ''
+    if(criteria.selectedCount != 'All') {
+        top_count = "TOP " + criteria.selectedCount
+    }
+
     /* Date Filter */
     criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') 
             + '(' + '[Report Date] >= \'' + criteria.startDate + '\' AND [Report Date] <= \'' + criteria.endDate + '\')'
@@ -590,6 +606,6 @@ module.exports.filter = function(criteria) {
             'LEFT JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON (CAST([Codes_Addresses_Unique].[St #] as nvarchar(255)) = [Incident Offenses-GTPD+APD].[St Num]\
                 AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name]) '
 
-    return this.showall(additional_join_statement = additional_join_statement.length==0 ? null : additional_join_statement, 
+    return this.showall(top_count = top_count, additional_join_statement = additional_join_statement.length==0 ? null : additional_join_statement, 
                         criteria = criteria_script.length==0 ? null : criteria_script)
 }
