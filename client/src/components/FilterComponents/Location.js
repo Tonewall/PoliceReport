@@ -90,7 +90,7 @@ class location extends Component {
         if(department.value === "gtpDepartment") {
             return(
                 <div className="GTFilters">
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Georgia Tech Location Type
                     </label>
                     <div>
@@ -100,7 +100,7 @@ class location extends Component {
                         options={gtLocationTypeOptions} 
                         />
                     </div>
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Georgia Tech Buildings
                     </label>
                     <div>
@@ -117,7 +117,7 @@ class location extends Component {
         } else if (department.value === "apDepartment") {
             return (
                 <div className="GTFilters">
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Atlanta Location Type
                     </label>
                     <div>
@@ -128,7 +128,7 @@ class location extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         APD Buildings
                     </label>
                     <div>
@@ -145,7 +145,7 @@ class location extends Component {
         } else if (department.value === "bothDepartment") {
             return(
                 <div className="BothFilters">
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Georgia Tech Location Type
                     </label>
                     <div>
@@ -155,7 +155,7 @@ class location extends Component {
                         options={gtLocationTypeOptions} 
                         />
                     </div>
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Georgia Tech Buildings
                     </label>
                     <div>
@@ -167,7 +167,7 @@ class location extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Atlanta Location Type
                     </label>
                     <div>
@@ -178,7 +178,7 @@ class location extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         APD Buildings
                     </label>
                     <div>
@@ -277,7 +277,7 @@ class location extends Component {
             <div className="card filterTypeCards locationsCard">
                 <h4 className="card-header">Location</h4>
                 <div className="card-body">
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Department
                     </label>
                     <div>
@@ -288,7 +288,7 @@ class location extends Component {
                         />
                     </div>
                     <div className="form-group row">
-                        <label htmlFor="inputStreet" className="col-12 col-form-label">Street Name</label>
+                        <label htmlFor="inputStreet" className="col-12 col-form-label" style={{fontSize: 13}}>Street Name</label>
                         <div className="col-12">
                         <input type="text" name="streetName" onChange={this.handleChange} className="form-control" id="inputStreet" placeholder="Street"/>
                         </div>

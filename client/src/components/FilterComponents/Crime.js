@@ -120,7 +120,7 @@ class crime extends Component {
            <div className="card filterTypeCards typeCard">
                 <h4 className="card-header">Crime</h4>
                 <div className="card-body">
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Category
                     </label>
                     <div>
@@ -131,7 +131,7 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Type
                     </label>
                     <div>
@@ -143,7 +143,7 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Arrests/Warnings
                     </label>
                     <div>
@@ -155,7 +155,7 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Felony/Misdemeanor
                     </label>
                     <div>

@@ -69,37 +69,60 @@ class date extends Component {
                 <div className="card filterTypeCards dateCard">
                     <h4 className="card-header">Date</h4>
                     <div className="card-body">
-                        <div className="col-12 dateFilters">
-                            <label className="col-12 col-form-label">
-                                Date Range
-                            </label>
-                            <div>
-                                <Select 
-                                value={selectedDate} 
-                                onChange={this.setDate} 
-                                options={dateOptions} 
-                                placeholder={"Custom"}
-                                />
+                        <div className="row">
+                            <div className="col-6 dateFilters">
+                                <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                                    Date Range
+                                </label>
+                                <div className="col-10">
+                                    <Select 
+                                    value={selectedDate} 
+                                    onChange={this.setDate} 
+                                    options={dateOptions} 
+                                    placeholder={"Custom"}
+                                    />
+                                </div>
+                            
+                                <div className="col-12">
+                                    <label className="dateLabel">From:</label>
+                                </div>
+                                <div className="col-12 dateFilters">
+                                    <DatePicker
+                                        selected={this.state.startDate}
+                                        onChange={this.handleStartChange}
+                                    />
+                                </div>
+                                <div className="col-12">
+                                    <label className="dateLabel">To:</label>
+                                </div>
+                                <div className="col-12 dateFilters">
+                                    <DatePicker
+                                        selected={this.state.endDate}
+                                        onChange={this.handleEndChange}
+                                    />
+                                </div>
+
+                            
                             </div>
-                        </div>
-                        
-                        <div className="col-12">
-                            <label className="dateLabel">From:</label>
-                        </div>
-                        <div className="col-12 dateFilters">
-                            <DatePicker
-                                selected={this.state.startDate}
-                                onChange={this.handleStartChange}
-                            />
-                        </div>
-                        <div className="col-12">
-                            <label className="dateLabel">To:</label>
-                        </div>
-                        <div className="col-12 dateFilters">
-                            <DatePicker
-                                selected={this.state.endDate}
-                                onChange={this.handleEndChange}
-                            />
+                            <div className="col-6 dateFilters">
+                                <label style={{fontSize: 13}}>Date Type</label>
+                                <label className="col-12">
+                                    <input type="radio" value="avg" checked={true}/>
+                                    Average Date
+                                </label>
+                                <label className="col-12">
+                                    <input type="radio" value="from"/>
+                                    From Date
+                                </label>
+                                <label className="col-12">
+                                    <input type="radio" value="to"/>
+                                    To Date
+                                </label>
+                                <label className="col-12">
+                                    <input type="radio" value="report"/>
+                                    Report Date
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
