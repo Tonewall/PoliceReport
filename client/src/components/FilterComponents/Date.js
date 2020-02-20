@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import TimeKeeper from 'react-timekeeper';
 
 
 const dateOptions = [
@@ -61,6 +62,9 @@ class date extends Component {
             this.props.dateHandler(this.state)
         });
     };
+    getPickerValue = value => {
+        console.log(value);
+      };
 
     render() {
         const { selectedDate } = this.state;
@@ -124,6 +128,10 @@ class date extends Component {
                                 </label>
                             </div>
                         </div>
+                        <TimeKeeper
+                            time={time}
+                            onChange={(data) => setTime(data.formatted12)}
+                        />
                     </div>
                 </div>
             </div>

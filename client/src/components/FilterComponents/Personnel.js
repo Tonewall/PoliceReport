@@ -99,7 +99,7 @@ class personnel extends Component {
                         />
                     </div>
                     <label className="col-12 col-form-label" style={{fontSize: 13}}>
-                        Unit
+                        Teams/Shifts
                     </label>
                     <div>
                         <Select 
