@@ -87,7 +87,7 @@ class personnel extends Component {
                 <h4 className="card-header">Personnel</h4>
                 <div className="card-body">
                     <label className="col-12 col-form-label" style={{fontSize: 13}}>
-                        Occurred Shift
+                        Occurred Shift (Shift of Occurrence)
                     </label>
                     <div>
                         <Select 

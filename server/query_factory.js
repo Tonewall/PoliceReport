@@ -572,6 +572,12 @@ module.exports.filter = function(criteria) {
     {
 
     }
+    if(criteria.selectedCaseStatus) {
+        if(criteria.selectedCaseStatus.value !== "Any") {
+            criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ')
+                + '[Case Status] = \'' + criteria.selectedCaseStatus.value + '\''
+        }
+    }
 
     /* Personnel Filter 
         - Priority: Officer Name -> Teams/Shifts

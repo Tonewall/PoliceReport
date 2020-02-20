@@ -28,6 +28,7 @@ class gtpdFilter extends Component {
             selectedDepartment: null,
             selectedGTLocationType: null,
             selectedCount: 1000,
+            selectedCaseStatus: null,
         };
         this.dateHandler = this.dateHandler.bind(this)
         this.locationHandler = this.locationHandler.bind(this)
@@ -67,6 +68,7 @@ class gtpdFilter extends Component {
             selectedCrimeCategory: crime.selectedCrimeCategory, 
             selectedArrest: crime.selectedArrest, 
             selectedOutcome: crime.selectedOutcome, 
+            selectedCaseStatus: crime.selectedCaseStatus,
         })
     }
 
