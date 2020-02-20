@@ -389,17 +389,19 @@ module.exports.getTimeCount = function(body) {
         crime = ''
     }
     return sprintf(
-        "SELECT DATEPART(HOUR, [From Time]) as [Hour], COUNT(*) AS [Count]\
+        "SELECT datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))) as [Hour], \
+        COUNT(*) AS [Count]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
         FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended]\
         WHERE YEAR([Report Date]) =\'%d'\n\
         AND [Officer Name] LIKE \'%%%s%%'\n\
         AND [Address] LIKE \'%%%s%%'\n\
         AND [Location Code] \%s\n\
+        AND DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME))) < 4\
         \%s\n\
         \%s\n\
-		GROUP BY DATEPART(HOUR, [From Time])\
-		ORDER BY DATEPART(HOUR, [From Time])"
+		GROUP BY (datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))))\
+		ORDER BY (datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))))"
         ,body.selectedYear.value, officerName, address, department, unit, crime
     )
 }
@@ -409,17 +411,21 @@ module.exports.getLocationRanking = function(body) {
         "SELECT [Building Name],\
         COUNT(*) as [PART I],\
         sum(case when [NIBRS_Category] = 'Robbery' then 1 else 0 end) AS [Robbery],\
-        sum(case when [NIBRS_Category] = 'Larceny/Theft Offenses' then 1 else 0 end) AS [Larceny/Theft Offenses],\
-        sum(case when [NIBRS_Category] = 'Assault Offenses' then 1 else 0 end) AS [Assault Offenses],\
-        sum(case when [NIBRS_Category] = 'Burglary/Breaking & Entering' then 1 else 0 end) AS [Burglary/Breaking & Entering],\
-        sum(case when [NIBRS_Category] = 'Motor Vehicle Theft' then 1 else 0 end) AS [Motor Vehicle Theft]\
+        sum(case when [NIBRS_Category] = 'Larceny' then 1 else 0 end) AS [Larceny],\
+        sum(case when [NIBRS_Category] = 'Assault' then 1 else 0 end) AS [Assault],\
+        sum(case when [NIBRS_Category] = 'Burglary' then 1 else 0 end) AS [Burglary],\
+        sum(case when [NIBRS_Category] = 'Arson' then 1 else 0 end) AS [Arson],\
+        sum(case when [NIBRS_Category] = 'Homicide' then 1 else 0 end) AS [Homicide],\
+        sum(case when [NIBRS_Category] = 'Sex Offenses' then 1 else 0 end) AS [Sex Offenses],\
+        sum(case when [NIBRS_Category] = 'Motor Vehicle Theft' then 1 else 0 end) AS [Motor Vehicle Theft],\
+        sum(case when [NIBRS_Code_Extended] = 'T-Bike' then 1 else 0 end) AS [Bicycle Theft]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
         JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Codes-Offense].[NIBRS_Code_Extended] = [Incident Offenses-GTPD+APD].[Offense]\
         JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON (CAST([Codes_Addresses_Unique].[St #] as nvarchar(255)) = [Incident Offenses-GTPD+APD].[St Num]\
             AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name])\
         WHERE [Report Date] >= '%s'\n\
         AND [Report Date] <= '%s'\n\
-        AND [NIBRS_Category] in ('Robbery', 'Larceny/Theft Offenses', 'Assault Offenses', 'Burglary/Breaking & Entering', 'Motor Vehicle Theft')\
+        AND [NIBRS_Category] in ('Robbery', 'Larceny', 'Assault', 'Burglary', 'Motor Vehicle Theft', 'Arson', 'Homicide', 'Sex Offenses')\
         AND [Loc Code] NOT LIKE 'APD'\
         GROUP BY [Building Name]\
         ORDER BY COUNT(*) DESC"
