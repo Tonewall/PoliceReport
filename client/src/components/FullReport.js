@@ -280,7 +280,7 @@ class fullReport extends Component {
         } else {
             return(
                 <div className="loading">
-                    Report Loading...
+                    Report Not Found
                 </div>
             )
         }

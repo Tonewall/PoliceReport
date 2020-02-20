@@ -149,6 +149,13 @@ function add_router(app) {
         });
     });
 
+    app.get('/getOfficers', function (req, res) {
+        db_query(query_factory.getOfficers, (err, result) => {
+            if (!err) res.send(result);
+            else res.status(400).send(err);
+        });
+    });
+
     
     /*
         Integrates basic_info with offense_desc, narratives, offender_info, arrest_info, property_info
