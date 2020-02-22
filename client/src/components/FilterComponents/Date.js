@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import TimeKeeper from 'react-timekeeper';
+import TimePicker from 'react-times';
+import 'react-times/css/material/default.css';
+import 'react-times/css/classic/default.css';
+
 
 
 const dateOptions = [
@@ -12,12 +15,19 @@ const dateOptions = [
     {value: 'year', label: 'Past Year'},
 ];
 
+const customTimeOptions = [
+    {value: false, label: 'Default'},
+    {value: true, label: 'Custom'},
+]
 
 class date extends Component {
     state = {
         endDate: null,
         startDate: null,
         selectedDate: null,
+        fromTime: "12:00 AM",
+        toTime: "11:59 PM",
+        selectedCustomTime: null,
     };
 
     constructor(props) {
@@ -50,6 +60,11 @@ class date extends Component {
             this.props.dateHandler(this.state)
         });
     }
+
+    setCustomTime = selectedCustomTime => {
+        this.setState({selectedCustomTime});
+    }
+
     handleStartChange = date => {
         this.setState({startDate: date},
         function() {
@@ -62,12 +77,50 @@ class date extends Component {
             this.props.dateHandler(this.state)
         });
     };
-    getPickerValue = value => {
-        console.log(value);
-      };
+
+    onFromTimeChange(selectedTime) {
+        var newTime = selectedTime.hour + ':' + selectedTime.minute + ' ' + selectedTime.meridiem
+        this.setState({fromTime: newTime})
+    }
+    onToTimeChange(selectedTime) {
+        var newTime = selectedTime.hour + ':' + selectedTime.minute + ' ' + selectedTime.meridiem
+        this.setState({toTime: newTime})
+    }
+
+    timeOptions() {
+        if(this.state.selectedCustomTime && this.state.selectedCustomTime.value) {
+            return (
+                <div>
+                    <div style={{width: '90%', margin: 'auto'}}>
+                        <label style={{fontSize: 13}}>From</label>
+                        <TimePicker
+                        onTimeChange={this.onFromTimeChange.bind(this)}
+                        timeMode= '12'
+                        theme='classic'
+                        colorPalette="dark"
+                        time = {this.state.fromTime}
+                        />
+                    </div>
+                    <div style={{width: '90%', margin: 'auto'}}>
+                        <label style={{fontSize: 13}}>To</label>
+                        <TimePicker
+                        onTimeChange={this.onToTimeChange.bind(this)}
+                        timeMode= '12'
+                        theme='classic'
+                        colorPalette="dark"
+                        time = {this.state.toTime}
+                        />
+                    </div>
+                </div>
+            )
+        } else {
+            return (<div></div>)
+        }
+    }
+
 
     render() {
-        const { selectedDate } = this.state;
+        const { selectedDate, selectedCustomTime } = this.state;
         return(
             <div className="main">
                 <div className="card filterTypeCards dateCard">
@@ -128,10 +181,19 @@ class date extends Component {
                                 </label>
                             </div>
                         </div>
-                        <TimeKeeper
-                            time={time}
-                            onChange={(data) => setTime(data.formatted12)}
-                        />
+                        <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                                    Choose Time Range
+                        </label>
+                        <div className="col-10">
+                            <Select 
+                            value={selectedCustomTime} 
+                            onChange={this.setCustomTime} 
+                            options={customTimeOptions} 
+                            placeholder={"Default"}
+                            />
+                        </div>
+                        {this.timeOptions()}
+                        
                     </div>
                 </div>
             </div>
