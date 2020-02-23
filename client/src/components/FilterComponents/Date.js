@@ -62,7 +62,10 @@ class date extends Component {
     }
 
     setCustomTime = selectedCustomTime => {
-        this.setState({selectedCustomTime});
+        this.setState({selectedCustomTime},
+            function() {
+                this.props.dateHandler(this.state)
+            });
     }
 
     handleStartChange = date => {
@@ -80,11 +83,17 @@ class date extends Component {
 
     onFromTimeChange(selectedTime) {
         var newTime = selectedTime.hour + ':' + selectedTime.minute + ' ' + selectedTime.meridiem
-        this.setState({fromTime: newTime})
+        this.setState({fromTime: newTime},
+            function() {
+                this.props.dateHandler(this.state)
+            })
     }
     onToTimeChange(selectedTime) {
         var newTime = selectedTime.hour + ':' + selectedTime.minute + ' ' + selectedTime.meridiem
-        this.setState({toTime: newTime})
+        this.setState({toTime: newTime},
+            function() {
+                this.props.dateHandler(this.state)
+            })
     }
 
     timeOptions() {

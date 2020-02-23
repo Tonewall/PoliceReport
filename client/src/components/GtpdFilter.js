@@ -29,6 +29,9 @@ class gtpdFilter extends Component {
             selectedGTLocationType: null,
             selectedCount: 1000,
             selectedCaseStatus: null,
+            fromTime: null,
+            toTime: null,
+            selectedCustomTime: null,
         };
         this.dateHandler = this.dateHandler.bind(this)
         this.locationHandler = this.locationHandler.bind(this)
@@ -41,7 +44,10 @@ class gtpdFilter extends Component {
     dateHandler = (date) => {
         this.setState({
             endDate: date.endDate, 
-            startDate: date.startDate
+            startDate: date.startDate,
+            fromTime: date.fromTime,
+            toTime: date.toTime,
+            selectedCustomTime: date.selectedCustomTime,
         })
     }
 
