@@ -28,6 +28,7 @@ class date extends Component {
         fromTime: "12:00 AM",
         toTime: "11:59 PM",
         selectedCustomTime: null,
+        dateTimeOption: 'avg'
     };
 
     constructor(props) {
@@ -92,6 +93,12 @@ class date extends Component {
         var newTime = selectedTime.hour + ':' + selectedTime.minute + ' ' + selectedTime.meridiem
         this.setState({toTime: newTime},
             function() {
+                this.props.dateHandler(this.state)
+            })
+    }
+    changedRadio = e => {
+        this.setState({dateTimeOption: e.currentTarget.value},
+            function(){
                 this.props.dateHandler(this.state)
             })
     }
@@ -173,19 +180,19 @@ class date extends Component {
                             <div className="col-6 dateFilters">
                                 <label style={{fontSize: 13}}>Date Type</label>
                                 <label className="col-12">
-                                    <input type="radio" value="avg" checked={true}/>
+                                    <input onChange={this.changedRadio} name="timeOption" type="radio" value="avg"/>
                                     Average Date
                                 </label>
                                 <label className="col-12">
-                                    <input type="radio" value="from"/>
+                                    <input onChange={this.changedRadio} name="timeOption" type="radio" value="from"/>
                                     From Date
                                 </label>
                                 <label className="col-12">
-                                    <input type="radio" value="to"/>
+                                    <input onChange={this.changedRadio} name="timeOption" type="radio" value="to"/>
                                     To Date
                                 </label>
                                 <label className="col-12">
-                                    <input type="radio" value="report"/>
+                                    <input onChange={this.changedRadio} name="timeOption" type="radio" value="report"/>
                                     Report Date
                                 </label>
                             </div>

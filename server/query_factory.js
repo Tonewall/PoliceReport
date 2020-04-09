@@ -387,6 +387,7 @@ module.exports.getTimeCount = function(body) {
         unit = ''
     }
 
+
     //CRIMES AND CATEGORIES
     if(body.selectedCrimeType) {
         crime = "AND ([Offense] LIKE '" + body.selectedCrimeType[0]['NIBRS_Code_Extended'] + "'"
@@ -539,6 +540,22 @@ module.exports.filter = function(criteria) {
             criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + apd_criteria_script
         }
     }
+
+    //need to get from avg, from, and to datetime in the database
+    // dateTimeOption = ''
+    // if(criteria.dateTimeOption === 'avg') {
+        
+    // } else if(criteria.dateTimeOption === 'from') {
+        
+    // } else if(criteria.dateTimeOption === 'to') {
+
+    // } else if(criteria.dateTimeOption === 'report') {
+
+    // }
+
+    // if(criteria.dateTimeOption) {
+    //     criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + dateTimeOptionScript
+    // }
 
 
     /* Crime Filter */

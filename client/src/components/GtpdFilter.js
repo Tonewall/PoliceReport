@@ -32,6 +32,7 @@ class gtpdFilter extends Component {
             fromTime: null,
             toTime: null,
             selectedCustomTime: null,
+            dateTimeOption: null,
         };
         this.dateHandler = this.dateHandler.bind(this)
         this.locationHandler = this.locationHandler.bind(this)
@@ -48,6 +49,7 @@ class gtpdFilter extends Component {
             fromTime: date.fromTime,
             toTime: date.toTime,
             selectedCustomTime: date.selectedCustomTime,
+            dateTimeOption: date.dateTimeOption
         })
     }
 

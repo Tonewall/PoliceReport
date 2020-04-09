@@ -15,13 +15,12 @@ const outcomeOptions = [
     {value: 'misdemeanor', label: 'Misdemeanor'},
 ];
 const caseStatusOptions = [
-    {value: '10', label: '10'},
     {value: 'A', label: 'A'},
     {value: 'CA', label: 'CA'},
     {value: 'CE', label: 'CE'},
     {value: 'CO', label: 'CO'},
     {value: 'I', label: 'I'},
-    {value: 'OJ', label: 'OJ'},
+    {value: 'L', label: 'L'},
     {value: 'U', label: 'U'},
 ];
 
