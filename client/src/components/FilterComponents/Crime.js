@@ -14,6 +14,15 @@ const outcomeOptions = [
     {value: 'felony', label: 'Felony'},
     {value: 'misdemeanor', label: 'Misdemeanor'},
 ];
+const caseStatusOptions = [
+    {value: 'A', label: 'A'},
+    {value: 'CA', label: 'CA'},
+    {value: 'CE', label: 'CE'},
+    {value: 'CO', label: 'CO'},
+    {value: 'I', label: 'I'},
+    {value: 'L', label: 'L'},
+    {value: 'U', label: 'U'},
+];
 
 
 
@@ -23,6 +32,7 @@ class crime extends Component {
         selectedCrimeCategory: {value: 'Any', label: 'Any'},
         selectedArrest: null,
         selectedOutcome: null,
+        selectedCaseStatus: {value: 'Any', label: 'Any'}
     };
 
     constructor(props) {
@@ -48,6 +58,12 @@ class crime extends Component {
         function() {
             this.props.crimeHandler(this.state)
         }); 
+    }
+    setCaseStatus = selectedCaseStatus => {
+        this.setState({selectedCaseStatus},
+        function() {
+            this.props.crimeHandler(this.state)
+        });
     }
     setCrimeCategory = selectedCrimeCategory => {
         this.setState({selectedCrimeCategory},
@@ -114,13 +130,14 @@ class crime extends Component {
             selectedArrest, 
             selectedOutcome, 
             selectedCrimeCategory, 
+            selectedCaseStatus,
         } = this.state;
         return(
         <div className="main">
            <div className="card filterTypeCards typeCard">
                 <h4 className="card-header">Crime</h4>
                 <div className="card-body">
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Category
                     </label>
                     <div>
@@ -131,7 +148,7 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Type
                     </label>
                     <div>
@@ -143,7 +160,7 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Arrests/Warnings
                     </label>
                     <div>
@@ -155,7 +172,7 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Felony/Misdemeanor
                     </label>
                     <div>
@@ -164,6 +181,17 @@ class crime extends Component {
                         onChange={this.setOutcome} 
                         options={outcomeOptions} 
                         isMulti={true}
+                        placeholder={"Any"}
+                        />
+                    </div>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Case Status
+                    </label>
+                    <div>
+                        <Select
+                        value={selectedCaseStatus}
+                        onChange={this.setCaseStatus}
+                        options={caseStatusOptions}
                         placeholder={"Any"}
                         />
                     </div>

@@ -6,6 +6,7 @@ import Crime from "./FilterComponents/Crime"
 import Personnel from "./FilterComponents/Personnel"
 import Count from "./FilterComponents/Count"
 import {Redirect} from 'react-router-dom'
+import CustomColumn from "./FilterComponents/CustomColumn"
 
 class gtpdFilter extends Component {
     constructor(props) {
@@ -27,18 +28,34 @@ class gtpdFilter extends Component {
             selectedDepartment: null,
             selectedGTLocationType: null,
             selectedCount: 1000,
+            selectedCaseStatus: null,
+            fromTime: null,
+            toTime: null,
+            selectedCustomTime: null,
+            dateTimeOption: null,
         };
         this.dateHandler = this.dateHandler.bind(this)
         this.locationHandler = this.locationHandler.bind(this)
         this.crimeHandler = this.crimeHandler.bind(this)
         this.personnelHandler = this.personnelHandler.bind(this)
+        this.customColumnHandler = this.customColumnHandler.bind(this)
         this.countHandler = this.countHandler.bind(this)
     }
 
     dateHandler = (date) => {
         this.setState({
             endDate: date.endDate, 
-            startDate: date.startDate
+            startDate: date.startDate,
+            fromTime: date.fromTime,
+            toTime: date.toTime,
+            selectedCustomTime: date.selectedCustomTime,
+            dateTimeOption: date.dateTimeOption
+        })
+    }
+
+    customColumnHandler = (customColumn) => {
+        this.setState({
+            selectedColumns: customColumn.selectedColumns
         })
     }
 
@@ -59,6 +76,7 @@ class gtpdFilter extends Component {
             selectedCrimeCategory: crime.selectedCrimeCategory, 
             selectedArrest: crime.selectedArrest, 
             selectedOutcome: crime.selectedOutcome, 
+            selectedCaseStatus: crime.selectedCaseStatus,
         })
     }
 
@@ -94,6 +112,7 @@ class gtpdFilter extends Component {
                                 </div>
                                 <div className="col-lg-4 col-6">
                                     <Date dateHandler={this.dateHandler}/>
+                                    <CustomColumn customColumnHandler={this.customColumnHandler}/>
                                     <Count countHandler={this.countHandler}/>
                                 </div>
                             </div>

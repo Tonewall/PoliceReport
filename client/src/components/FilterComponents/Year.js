@@ -37,7 +37,7 @@ class year extends Component {
                 <h4 className="card-header">Date</h4>
                 <div className="card-body">
                     <div className="col-12 dateFilters">
-                        <label className="col-12 col-form-label">
+                        <label className="col-12 col-form-label" style={{fontSize: 13}}>
                             Year
                         </label>
                         <div>

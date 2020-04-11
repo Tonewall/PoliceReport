@@ -2,9 +2,10 @@ var incident_keys = [
     'Incident Number', 
     'Report Date', 
     'Time', 
-    'Description', 
-    'Street',
-    'Location Name', 
+    'Offense', 
+    'Case Status',
+    'Location',
+    'Location Landmark', 
     'Offender Name', 
     'Officer Name', 
     'Department', 
@@ -18,6 +19,7 @@ for(var i=0;i<incident_keys.length;i++)
 module.exports.incident_datatable_feeds = function(data)
 {
     data.forEach(element => {
+        
         incident_keys.forEach(key => {
             if(element[key] == null)    element[key]='-'
             else if(element[key] === true) element[key]='true'

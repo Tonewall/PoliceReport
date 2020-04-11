@@ -7,7 +7,7 @@ const shiftOptions = [
     {value: 'eveShift', label: 'Eve'},
     {value: 'mornShift', label: 'Morn'},
     {value: 'coreShift', label: 'Core'},
-    {value: 'martaShift', label: 'SRT'},
+    {value: 'srtShift', label: 'SRT'},
     {value: 'csuShift', label: 'CSU'},
     {value: 'trafficShift', label: 'Traff'},
     {value: 'cidShift', label: 'CID'},
@@ -15,6 +15,11 @@ const shiftOptions = [
     {value: 'cpShift', label: 'CP'},
     {value: 'fitShift', label: 'FIT'},
     {value: 'otherShift', label: 'Other'},    
+]
+const occurredShiftOptions = [
+    {value: 'dayShift', label: 'Day'},
+    {value: 'eveShift', label: 'Eve'},
+    {value: 'mornShift', label: 'Morn'},   
 ]
 
 const officerOptions = [{value: '', label: 'Any'}];
@@ -25,10 +30,14 @@ class personnel extends Component {
         selectedShift: null,
         officerName: '',
         selectedOfficer: {value: '', label: 'Any'},
-
+        selectedOccurredShift: null,
     };
 
     setShift = selectedShift => { this.setState({selectedShift},
+        function() {
+            this.props.personnelHandler(this.state)
+        }); }
+    setOccurredShift = selectedOccurredShift => { this.setState({selectedOccurredShift},
         function() {
             this.props.personnelHandler(this.state)
         }); }
@@ -71,13 +80,25 @@ class personnel extends Component {
     }
 
     render() {
-        const { selectedShift, selectedOfficer } = this.state;
+        const { selectedShift, selectedOfficer, selectedOccurredShift } = this.state;
         return(
         <div className="main">
             <div className="card filterTypeCards shiftCard">
                 <h4 className="card-header">Personnel</h4>
                 <div className="card-body">
-                    <label className="col-12 col-form-label">
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Occurred Shift (Shift of Occurrence)
+                    </label>
+                    <div>
+                        <Select 
+                        value={selectedOccurredShift} 
+                        onChange={this.setOccurredShift} 
+                        options={occurredShiftOptions} 
+                        isMulti={true}
+                        placeholder={"Any"}
+                        />
+                    </div>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Teams/Shifts
                     </label>
                     <div>
@@ -89,18 +110,16 @@ class personnel extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <div className="form-group row">
-                        <label htmlFor="inputStreet" className="col-12 col-form-label">
-                            Officer
-                        </label>
-                        <div className="col-12">
-                            <Select 
-                            value={selectedOfficer} 
-                            onChange={this.setOfficer} 
-                            options={officerOptions} 
-                            placeholder={"Any"}
-                            />
-                        </div>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Officer
+                    </label>
+                    <div>
+                        <Select 
+                        value={selectedOfficer} 
+                        onChange={this.setOfficer} 
+                        options={officerOptions} 
+                        placeholder={"Any"}
+                        />
                     </div>
                 </div>
             </div>

@@ -12,11 +12,34 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
     return sprintf('\
         SELECT distinct %s [OCA Number] as [Incident Number]\n', top_count) +
         '\
-            , CONVERT(varchar, [Report Date], 23) as [Report Date]\
-            , convert(varchar, [From Time], 8) as [Time]\
-            , [Description]\
-            , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Street]\
-            , [Location Landmark] as [Location Name]\
+            , FORMAT(DATEADD(day, 2, [From Date] + [From Time]),\'yyyy-MM-dd hh:mm tt\') as [From]\
+            , FORMAT(DATEADD(day, 2, [To Date] + [To Time]),\'yyyy-MM-dd hh:mm tt\') as [To]\
+            , FORMAT(DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])), \'yyyy-MM-dd\') as [Average Day]\
+            , [Description] as [Offense]\
+            , CASE WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) > 16\
+                    THEN \'Unknown or -\'\
+                WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) <= 16\
+                    THEN FORMAT(DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])), \'hh:mm tt\')\
+                End as [Average Time]\
+            , CASE WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) > 16\
+                    THEN \'Unknown\'\
+                WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) <= 16 THEN CASE\
+                    WHEN DATEPART(HOUR, DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])))\
+                        IN (6,7,8,9,10,11,12,13)\
+                            THEN \'Day\'\
+                    WHEN DATEPART(HOUR, DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])))\
+                        IN (14,15,16,17,18,19,20,21)\
+                            THEN \'Eve\'\
+                    WHEN DATEPART(HOUR, DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])))\
+                        IN (22,23,0,1,2,3,4,5)\
+                            THEN \'Morn\'\
+                        END\
+                END AS [Occurred Shift]\
+            , FORMAT([Report Date], \'yyyy-MM-dd\') as [Report Date]\
+            , [Case Status]\
+            , [Unit]\
+            , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Location]\
+            , [Location Landmark] as [Location Landmark]\
             , CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) AS [Offender Name]\
             , [Officer Name]\
             , CASE WHEN LEN([OCA Number]) = 8 THEN \'GTPD\'\
@@ -29,7 +52,7 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 ON ( [tblIncidentOffender].[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number] )\n'+
             (additional_join_statement==null ? '' : additional_join_statement) + '\n'+
         (criteria==null ? '' : ('WHERE ' + criteria + '\n'))+
-        'ORDER BY [Report Date] DESC, [Time] DESC';
+        'ORDER BY [From] DESC';
 }
 
 
@@ -364,6 +387,7 @@ module.exports.getTimeCount = function(body) {
         unit = ''
     }
 
+
     //CRIMES AND CATEGORIES
     if(body.selectedCrimeType) {
         crime = "AND ([Offense] LIKE '" + body.selectedCrimeType[0]['NIBRS_Code_Extended'] + "'"
@@ -517,6 +541,22 @@ module.exports.filter = function(criteria) {
         }
     }
 
+    //need to get from avg, from, and to datetime in the database
+    // dateTimeOption = ''
+    // if(criteria.dateTimeOption === 'avg') {
+        
+    // } else if(criteria.dateTimeOption === 'from') {
+        
+    // } else if(criteria.dateTimeOption === 'to') {
+
+    // } else if(criteria.dateTimeOption === 'report') {
+
+    // }
+
+    // if(criteria.dateTimeOption) {
+    //     criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + dateTimeOptionScript
+    // }
+
 
     /* Crime Filter */
     if(criteria.selectedCrimeType)  // Crime type
@@ -548,6 +588,12 @@ module.exports.filter = function(criteria) {
     if(criteria.selectedOutcome)    // Felony/Misdemeanor
     {
 
+    }
+    if(criteria.selectedCaseStatus) {
+        if(criteria.selectedCaseStatus.value !== "Any") {
+            criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ')
+                + '[Case Status] = \'' + criteria.selectedCaseStatus.value + '\''
+        }
     }
 
     /* Personnel Filter 
