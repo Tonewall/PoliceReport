@@ -526,17 +526,8 @@ module.exports.filter = function(criteria) {
             criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + apd_criteria_script
         }
     }
-    // DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) > 16\
-    //                 THEN \'Unknown or -\'\
-    //             WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) <= 16\
-    //                 THEN FORMAT(DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])), \'hh:mm tt\')\
-    //             End as [Average Time]\
-    /* Date Filter */
-    // criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') 
-    //         + '(' + '[Report Date] >= \'' + criteria.startDate + '\' AND [Report Date] <= \'' + criteria.endDate + '\')'
-    // dateTimeOptionScript +='((' + '[Avg Time] >= \'' + criteria.fromTime + '\' AND [Avg Time] <= \'' + criteria.toTime + '\') OR (' + '[From Time] >= \'' + criteria.fromTime + '\' AND [To Time] <= \'' + criteria.toTime + '\'))'
 
-    //need to get from avg, from, and to datetime in the database
+    /* Date Filter */
     var dateTimeOptionScript = ''
     if(criteria.dateTimeOption === 'avg' || criteria.dateTimeOption === null) {
         dateTimeOptionScript = '((' + '[Avg Date] >= \'' + criteria.startDate + '\' AND [Avg Date] <= \'' + criteria.endDate + '\') OR (' + '[From Date] >= \'' + criteria.startDate + '\' AND [To Date] <= \'' + criteria.endDate + '\'))'
@@ -549,7 +540,7 @@ module.exports.filter = function(criteria) {
     } else if(criteria.dateTimeOption === 'to') {
 
     } else if(criteria.dateTimeOption === 'report') {
-
+        dateTimeOptionScript = '(' + '[Report Date] >= \'' + criteria.startDate + '\' AND [Report Date] <= \'' + criteria.endDate + '\')'
     }
     criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + dateTimeOptionScript
 
