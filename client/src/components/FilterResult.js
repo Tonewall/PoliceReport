@@ -49,6 +49,13 @@ class FilterResult extends Component {
     }
 
     componentDidMount() {
+        var temp = new Date()
+        temp = this.props.location.state.startDate
+        temp.setMinutes(temp.getMinutes() - 240)
+        this.props.location.state.startDate = temp
+        temp = this.props.location.state.endDate
+        temp.setMinutes(temp.getMinutes() - 240)
+        this.props.location.state.endDate = temp
         this.getData();
     }
 

@@ -7,7 +7,6 @@ import 'react-times/css/material/default.css';
 import 'react-times/css/classic/default.css';
 
 
-
 const dateOptions = [
     {value: 'week', label: 'Past Week'},
     {value: 'month', label: 'Past Month'},
@@ -61,7 +60,6 @@ class date extends Component {
             this.props.dateHandler(this.state)
         });
     }
-
     setCustomTime = selectedCustomTime => {
         this.setState({selectedCustomTime},
             function() {
@@ -70,12 +68,14 @@ class date extends Component {
     }
 
     handleStartChange = date => {
+        date.setHours(0,0,0,0)
         this.setState({startDate: date},
         function() {
             this.props.dateHandler(this.state)
         });
     };
     handleEndChange = date => {
+        date.setHours(23,59,59)
         this.setState({endDate: date},
         function() {
             this.props.dateHandler(this.state)

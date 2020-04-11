@@ -50,6 +50,9 @@ class gtpdFilter extends Component {
             toTime: date.toTime,
             selectedCustomTime: date.selectedCustomTime,
             dateTimeOption: date.dateTimeOption
+        },
+        function() {
+            console.log(this.state)
         })
     }
 
@@ -91,7 +94,6 @@ class gtpdFilter extends Component {
     }
 
     handleSubmit = () => {
-        console.log(this.state)
         this.setState({redirected: true})
     }
 

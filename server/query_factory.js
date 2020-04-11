@@ -16,28 +16,12 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
             , FORMAT(DATEADD(day, 2, [To Date] + [To Time]),\'yyyy-MM-dd hh:mm tt\') as [To]\
             , FORMAT(DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])), \'yyyy-MM-dd\') as [Average Day]\
             , [Description] as [Offense]\
-            , CASE WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) > 16\
-                    THEN \'Unknown or -\'\
-                WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) <= 16\
-                    THEN FORMAT(DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])), \'hh:mm tt\')\
-                End as [Average Time]\
-            , CASE WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) > 16\
-                    THEN \'Unknown\'\
-                WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) <= 16 THEN CASE\
-                    WHEN DATEPART(HOUR, DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])))\
-                        IN (6,7,8,9,10,11,12,13)\
-                            THEN \'Day\'\
-                    WHEN DATEPART(HOUR, DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])))\
-                        IN (14,15,16,17,18,19,20,21)\
-                            THEN \'Eve\'\
-                    WHEN DATEPART(HOUR, DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])))\
-                        IN (22,23,0,1,2,3,4,5)\
-                            THEN \'Morn\'\
-                        END\
-                END AS [Occurred Shift]\
             , FORMAT([Report Date], \'yyyy-MM-dd\') as [Report Date]\
             , [Case Status]\
             , [Unit]\
+            , [Avg Date]\
+            , [Avg Time]\
+            , [Avg Day]\
             , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Location]\
             , [Location Landmark] as [Location Landmark]\
             , CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) AS [Offender Name]\
@@ -48,6 +32,8 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
             LEFT JOIN [CrimeAnalytics].[dbo].[Codes-Offense]\
                 ON ([Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended])\n\
+            LEFT JOIN [CrimeAnalytics].[dbo].[Times]\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
                 ON ( [tblIncidentOffender].[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number] )\n'+
             (additional_join_statement==null ? '' : additional_join_statement) + '\n'+
@@ -540,22 +526,32 @@ module.exports.filter = function(criteria) {
             criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + apd_criteria_script
         }
     }
+    // DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) > 16\
+    //                 THEN \'Unknown or -\'\
+    //             WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) <= 16\
+    //                 THEN FORMAT(DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])), \'hh:mm tt\')\
+    //             End as [Average Time]\
+    /* Date Filter */
+    // criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') 
+    //         + '(' + '[Report Date] >= \'' + criteria.startDate + '\' AND [Report Date] <= \'' + criteria.endDate + '\')'
+    // dateTimeOptionScript +='((' + '[Avg Time] >= \'' + criteria.fromTime + '\' AND [Avg Time] <= \'' + criteria.toTime + '\') OR (' + '[From Time] >= \'' + criteria.fromTime + '\' AND [To Time] <= \'' + criteria.toTime + '\'))'
 
     //need to get from avg, from, and to datetime in the database
-    // dateTimeOption = ''
-    // if(criteria.dateTimeOption === 'avg') {
+    var dateTimeOptionScript = ''
+    if(criteria.dateTimeOption === 'avg' || criteria.dateTimeOption === null) {
+        dateTimeOptionScript = '((' + '[Avg Date] >= \'' + criteria.startDate + '\' AND [Avg Date] <= \'' + criteria.endDate + '\') OR (' + '[From Date] >= \'' + criteria.startDate + '\' AND [To Date] <= \'' + criteria.endDate + '\'))'
+        if(criteria.selectedCustomTime) {
+            dateTimeOptionScript +='AND ((' + '[Avg Time] >= \'1899-12-30 ' + criteria.fromTime + '\' AND [Avg Time] <= \'1899-12-30 ' + criteria.toTime + '\') OR (' + '[From Time] >= \'1899-12-30 ' + criteria.fromTime + '\' AND [To Time] <= \'1899-12-30 ' + criteria.toTime + '\'))'
+        }
         
-    // } else if(criteria.dateTimeOption === 'from') {
+    } else if(criteria.dateTimeOption === 'from') {
         
-    // } else if(criteria.dateTimeOption === 'to') {
+    } else if(criteria.dateTimeOption === 'to') {
 
-    // } else if(criteria.dateTimeOption === 'report') {
+    } else if(criteria.dateTimeOption === 'report') {
 
-    // }
-
-    // if(criteria.dateTimeOption) {
-    //     criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + dateTimeOptionScript
-    // }
+    }
+    criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + dateTimeOptionScript
 
 
     /* Crime Filter */
@@ -620,10 +616,7 @@ module.exports.filter = function(criteria) {
         top_count = "TOP " + criteria.selectedCount
     }
 
-    /* Date Filter */
-    criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') 
-            + '(' + '[Report Date] >= \'' + criteria.startDate + '\' AND [Report Date] <= \'' + criteria.endDate + '\')'
-
+    
     if(codes_address_unique_join)
         additional_join_statement += 
             'LEFT JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON (CAST([Codes_Addresses_Unique].[St #] as nvarchar(255)) = [Incident Offenses-GTPD+APD].[St Num]\
