@@ -18,6 +18,7 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
             , [Description] as [Offense]\
             , FORMAT([Report Date], \'yyyy-MM-dd\') as [Report Date]\
             , [Case Status]\
+            , [Shift2] as [Occurred Shift]\
             , [Unit]\
             , [Avg Date]\
             , [Avg Time]\
@@ -600,6 +601,19 @@ module.exports.filter = function(criteria) {
             shift_list_script = shift_list_script.substring(0, shift_list_script.length-1)
             criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ')+ '([Unit] in (' + shift_list_script + ') )'
         }
+    }
+    occurredShiftCriteria = ''
+    if(criteria.occurredShift) {
+        if(criteria.occurredShift.length ===3) {
+            occurredShiftCriteria = '([Shift2] in(\'' + criteria.occurredShift[0].label + '\', \'' + criteria.occurredShift[1].label + '\', \''+ criteria.occurredShift[2].label + '\'))'
+        } else if(criteria.occurredShift.length === 2) {
+            occurredShiftCriteria = '([Shift2] in(\'' + criteria.occurredShift[0].label + '\', \'' + criteria.occurredShift[1].label + '\'))'
+        } else {
+            occurredShiftCriteria = '([Shift2] in(\'' + criteria.occurredShift[0].label + '\'))'
+        }
+    }
+    if(occurredShiftCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + occurredShiftCriteria
     }
 
     top_count = ''

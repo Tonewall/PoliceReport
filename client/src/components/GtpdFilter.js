@@ -19,6 +19,7 @@ class gtpdFilter extends Component {
             selectedCrimeType: null,
             selectedCrimeCategory: null,
             selectedShift: null,
+            occurredShift: null,
             selectedArrest: null,
             selectedOutcome: null,
             officerName: null,
@@ -50,9 +51,6 @@ class gtpdFilter extends Component {
             toTime: date.toTime,
             selectedCustomTime: date.selectedCustomTime,
             dateTimeOption: date.dateTimeOption
-        },
-        function() {
-            console.log(this.state)
         })
     }
 
@@ -87,6 +85,7 @@ class gtpdFilter extends Component {
         this.setState({
             officerName: personnel.officerName, 
             selectedShift: personnel.selectedShift, 
+            occurredShift: personnel.selectedOccurredShift,
         })
     }
     countHandler = (count) => {
