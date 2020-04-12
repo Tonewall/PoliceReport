@@ -535,9 +535,15 @@ module.exports.filter = function(criteria) {
         }
         
     } else if(criteria.dateTimeOption === 'from') {
-        
+        dateTimeOptionScript = '(' + '[From Date] >= \'' + criteria.startDate + '\' AND [From Date] <= \'' + criteria.endDate + '\')'
+        if(criteria.selectedCustomTime) {
+            dateTimeOptionScript +='AND (' + '[From Time] >= \'1899-12-30 ' + criteria.fromTime + '\' AND [From Time] <= \'1899-12-30 ' + criteria.toTime + '\')'
+        }
     } else if(criteria.dateTimeOption === 'to') {
-
+        dateTimeOptionScript = '(' + '[To Date] >= \'' + criteria.startDate + '\' AND [To Date] <= \'' + criteria.endDate + '\')'
+        if(criteria.selectedCustomTime) {
+            dateTimeOptionScript +='AND (' + '[To Time] >= \'1899-12-30 ' + criteria.fromTime + '\' AND [To Time] <= \'1899-12-30 ' + criteria.toTime + '\')'
+        }
     } else if(criteria.dateTimeOption === 'report') {
         dateTimeOptionScript = '(' + '[Report Date] >= \'' + criteria.startDate + '\' AND [Report Date] <= \'' + criteria.endDate + '\')'
     }
