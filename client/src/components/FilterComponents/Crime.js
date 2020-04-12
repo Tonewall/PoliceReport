@@ -11,8 +11,8 @@ const arrestOptions = [
 ]
 
 const outcomeOptions = [
-    {value: 'felony', label: 'Felony'},
-    {value: 'misdemeanor', label: 'Misdemeanor'},
+    {value: 'F', label: 'Felony'},
+    {value: 'M', label: 'Misdemeanor'},
 ];
 const caseStatusOptions = [
     {value: 'A', label: 'A'},

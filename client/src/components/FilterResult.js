@@ -16,7 +16,6 @@ class FilterResult extends Component {
     }
 
     populateData = function (data) {
-        console.log(data)
         //retrieve the selected columns from filter page
         var selectedColumns = this.props.location.state.selectedColumns
         //add incident number to the columns

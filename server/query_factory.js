@@ -25,6 +25,7 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
             , [Location Landmark] as [Location Landmark]\
             , CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) AS [Offender Name]\
             , [Officer Name]\
+            , [OffenseType]\
             , CASE WHEN LEN([OCA Number]) = 8 THEN \'GTPD\'\
                    WHEN LEN([OCA Number]) != 8 THEN \'APD\'\
               END as [Department]\n\
@@ -33,6 +34,8 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 ON ([Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended])\n\
             LEFT JOIN [CrimeAnalytics].[dbo].[Times]\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOffense].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
                 ON ( [tblIncidentOffender].[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number] )\n'+
             (additional_join_statement==null ? '' : additional_join_statement) + '\n'+
@@ -524,6 +527,23 @@ module.exports.filter = function(criteria) {
         {
             criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + apd_criteria_script
         }
+    }
+
+    // Felony/Misdemeanor
+    var outcomeScript = ''
+    if(criteria.selectedOutcome) {
+        if(criteria.selectedOutcome.length === 1) {
+            if(criteria.selectedOutcome[0].value === 'M') {
+                outcomeScript = '[OffenseType] = \'M\''
+            } else {
+                outcomeScript = '[OffenseType] = \'F\''
+            }
+        } else {
+            outcomeScript = '[OffenseType] in (\'M\', \'F\')'
+        }
+    }
+    if(outcomeScript) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + outcomeScript
     }
 
     /* Date Filter */
