@@ -16,14 +16,12 @@ class FilterResult extends Component {
     }
 
     populateData = function (data) {
-        console.log(data)
 
         //retrieve the selected columns from filter page
         var selectedColumns = this.props.location.state.selectedColumns
         //add incident number to the columns
         selectedColumns.unshift({value: 'Incident Number', field:'Incident Number', label: 'Incident Number', width: 100})
         var rows = [];
-        console.log(selectedColumns)
 
         //for every incident, populate a blank row with the selected column data
         for(var i = 0; i < data.length; i++) {
