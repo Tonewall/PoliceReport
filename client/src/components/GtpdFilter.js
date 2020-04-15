@@ -78,6 +78,7 @@ class gtpdFilter extends Component {
             selectedArrest: crime.selectedArrest, 
             selectedOutcome: crime.selectedOutcome, 
             selectedCaseStatus: crime.selectedCaseStatus,
+            selectedCitation: crime.selectedCitation,
         })
     }
 

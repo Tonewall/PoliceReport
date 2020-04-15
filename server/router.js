@@ -73,7 +73,6 @@ function add_router(app) {
 
     app.post('/filter', function (req, res) {
         queryString = query_factory.filter(req.body)
-
         db_query(queryString, (err, result) => {
             if (!err) res.send(result);
             else {

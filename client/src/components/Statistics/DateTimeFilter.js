@@ -93,7 +93,6 @@ class gtpdFilter extends Component {
                                 </div>
                                 <div className="col-lg-4 col-6">
                                     <Crime crimeHandler={this.crimeHandler}/>
-                                    <Personnel personnelHandler={this.personnelHandler}/>
                                 </div>
                                 <div className="col-lg-4 col-6">
                                     <Year yearHandler={this.yearHandler}/>
@@ -114,6 +113,7 @@ class gtpdFilter extends Component {
                                             </div>
                                         </div>
                                     </div>
+                                    <Personnel personnelHandler={this.personnelHandler}/>
                                 </div>
                             </div>
                             <div className="row">

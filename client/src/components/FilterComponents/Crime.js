@@ -24,6 +24,12 @@ const caseStatusOptions = [
     {value: 'U', label: 'U'},
 ];
 
+const citationOptions = [
+    {value: '40-', label: 'Motor Vehicle and Traffic'},
+    {value: '16-', label: 'Crimes and Offenses'},
+    {value: 'Other', label: 'Other'}
+]
+
 
 
 class crime extends Component {
@@ -32,7 +38,8 @@ class crime extends Component {
         selectedCrimeCategory: {value: 'Any', label: 'Any'},
         selectedArrest: null,
         selectedOutcome: null,
-        selectedCaseStatus: {value: 'Any', label: 'Any'}
+        selectedCaseStatus: {value: 'Any', label: 'Any'},
+        selectedCitation: null,
     };
 
     constructor(props) {
@@ -83,6 +90,12 @@ class crime extends Component {
         }
         this.forceUpdate()
     }
+    setCitation = selectedCitation => {
+        this.setState({selectedCitation},
+            function() {
+                this.props.crimeHandler(this.state)
+            })
+    }
     populateCrimes(data) {
         for(var i = 0; i < data.length; i++) {
             crimeTypeOptions[i] = data[i];
@@ -131,6 +144,7 @@ class crime extends Component {
             selectedOutcome, 
             selectedCrimeCategory, 
             selectedCaseStatus,
+            selectedCitation
         } = this.state;
         return(
         <div className="main">
@@ -168,6 +182,18 @@ class crime extends Component {
                         value={selectedArrest} 
                         onChange={this.setArrest} 
                         options={arrestOptions} 
+                        isMulti={true}
+                        placeholder={"Any"}
+                        />
+                    </div>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Citation
+                    </label>
+                    <div>
+                        <Select 
+                        value={selectedCitation} 
+                        onChange={this.setCitation} 
+                        options={citationOptions} 
                         isMulti={true}
                         placeholder={"Any"}
                         />

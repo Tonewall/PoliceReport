@@ -19,11 +19,12 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
             , [Case Status]\
             , [Shift2] as [Occurred Shift]\
             , [Unit]\
+            , [ViolationCode]\
             , FORMAT([Avg Date],\'yyyy-MM-dd\') as [Average Day]\
             , FORMAT([Avg Time],\'hh:mm tt\') as [Average Time]\
             , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Location]\
             , [Location Landmark] as [Location Landmark]\
-            , CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) AS [Offender Name]\
+            , CONCAT([tblIncidentOffender].[FirstName], \' \', [tblIncidentOffender].[MiddleName], \' \', [tblIncidentOffender].[LastName]) AS [Offender Name]\
             , [Officer Name]\
             , [OffenseType]\
             , CASE WHEN LEN([OCA Number]) = 8 THEN \'GTPD\'\
@@ -34,6 +35,8 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 ON ([Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended])\n\
             LEFT JOIN [CrimeAnalytics].[dbo].[Times]\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
+            LEFT JOIN [SS_GARecords_Citation].[dbo].[tblCitation]\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblCitation].[AgencyCaseNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOffense].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
@@ -607,6 +610,32 @@ module.exports.filter = function(criteria) {
                 + '[Case Status] = \'' + criteria.selectedCaseStatus.value + '\''
         }
     }
+    citationScript = ''
+    if(criteria.selectedCitation) {
+        if(criteria.selectedCitation.length >= 1) {
+            if(criteria.selectedCitation[0].value == 'Other') {
+                citationScript = '(([ViolationCode] not like \'16%%\' AND [ViolationCode] not like \'40%%\')'
+            } else {
+                citationScript = '([ViolationCode] like \'' + criteria.selectedCitation[0].value + '%%\''
+            }
+        }
+        if(criteria.selectedCitation.length == 2) {
+            if(criteria.selectedCitation[1].value == 'Other') {
+                citationScript += 'OR ([ViolationCode] not like \'16%%\' AND [ViolationCode] not like \'40%%\')'
+            } else {
+                citationScript += 'OR ([ViolationCode] like \'' + criteria.selectedCitation[1].value + '%%\')'
+            }        
+        }
+        citationScript += ')'
+        if(criteria.selectedCitation.length == 2) {
+            citaitonScript = '[ViolationCode] not null'
+        }
+    }
+
+    if(citationScript) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + citationScript
+    }
+    
 
     /* Personnel Filter 
         - Priority: Officer Name -> Teams/Shifts
