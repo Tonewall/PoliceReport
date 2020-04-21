@@ -25,8 +25,8 @@ const caseStatusOptions = [
 ];
 
 const citationOptions = [
-    {value: '40-', label: 'Motor Vehicle and Traffic'},
-    {value: '16-', label: 'Crimes and Offenses'},
+    {value: '16-', label: 'Crimes and Offenses (Title 16)'},
+    {value: '40-', label: 'Motor Vehicle and Traffic (Title 40)'},
     {value: 'Other', label: 'Other'}
 ]
 
