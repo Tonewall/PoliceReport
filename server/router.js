@@ -219,7 +219,7 @@ function add_router(app) {
             
             // resolve narratives
             narratives_resolver = new Promise(async (res, rej) => {
-                query = query_factory.get_narratives(req.params.incident_number)
+                query = query_factory.get_narrative_GTPD(req.params.incident_number)
                 db_query(query, (err, result) => {
                     if (!err) {
                         if (result != null)
