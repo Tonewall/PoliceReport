@@ -42,7 +42,7 @@ class Incident extends Component {
 
     }
     getIncidentCount() {
-        if(this.state.incident){
+        if(this.state.incident && this.state.incident['Offense Description']){
             var incidentCounts = this.state.incident['Offense Description'].map((incident, index) =>
                 <input readOnly key={index} value={(incident.Counts === null) ? "" : " "+ incident.Counts} style={{ width: "100%" }}/>
             ) 
@@ -56,7 +56,7 @@ class Incident extends Component {
         } 
     }
     getIncidentCode() {
-        if(this.state.incident){
+        if(this.state.incident && this.state.incident['Offense Description']){
             var incidentCodes = this.state.incident['Offense Description'].map((incident, index) =>
                 <input readOnly key={index} value={" "+ incident.OffenseCode} style={{ width: "100%" }}/>
             ) 
@@ -70,7 +70,7 @@ class Incident extends Component {
         }
     }
     getStatute() {
-        if(this.state.incident){
+        if(this.state.incident && this.state.incident['Offense Description']){
             var statutes = this.state.incident['Offense Description'].map((incident, index) =>
                 <input readOnly key={index} value={" "+ incident.Statute} style={{ width: "100%" }}/>
             ) 

@@ -4,14 +4,10 @@ import Incident from './FullReportComponents/Incident'
 import Personnel from './FullReportComponents/Personnel'
 import Misc from './FullReportComponents/Misc'
 import Time from './FullReportComponents/Time'
-// import IncidentLocation from './FullReportComponents/IncidentLocation'
-// import IncidentTime from './FullReportComponents/IncidentTime'
-// import Complainant from './FullReportComponents/Complainant'
-// import Victim from './FullReportComponents/Victim'
-// import Offender from './FullReportComponents/Offender'
-// import Property from './FullReportComponents/Property'
-// import Narrative from './FullReportComponents/Narrative'
-// import Supplements from './FullReportComponents/Supplements'
+import Location from './FullReportComponents/Location'
+import Offense from './FullReportComponents/Offense'
+import OffenseList from './FullReportComponents/OffenseList'
+import Narrative from './FullReportComponents/Narrative'
 
 class FullReport extends Component {
     constructor(props) {
@@ -51,7 +47,7 @@ class FullReport extends Component {
             <div className="main mainFullReport">
                 <div className="card fullReportCard">
                 <h2 className="card-header caseCardHeader">Incident Report</h2>
-                    <div className="card-body">
+                    <div className="card-body" style={{marginLeft:10, marginRight:10}}>
                         <div className="row">
                             <div className="col-6">
                                 <b>Agency ID (ORI): GA0601000</b>
@@ -68,23 +64,15 @@ class FullReport extends Component {
                         <Misc incidentNumber={this.props.match.params.incidentNumber}/>
                         {gap}
                         <Time incidentNumber={this.props.match.params.incidentNumber}/>
-                        {/* {small_gap}
-                        <IncidentLocation incidentNumber={this.props.match.params.incidentNumber}/>
-                        {small_gap}
-                        <IncidentTime incidentNumber={this.props.match.params.incidentNumber}/>
-                        {small_gap}
-                        <Complainant incidentNumber={this.props.match.params.incidentNumber}/>
                         {gap}
-                        <Victim incidentNumber={this.props.match.params.incidentNumber}/>
+                        <Location incidentNumber={this.props.match.params.incidentNumber}/>
                         {gap}
-                        <Offender incidentNumber={this.props.match.params.incidentNumber}/>
+                        <Offense incidentNumber={this.props.match.params.incidentNumber}/>
                         {gap}
-                        <Property incidentNumber={this.props.match.params.incidentNumber}/>
+                        <OffenseList incidentNumber={this.props.match.params.incidentNumber}/>
                         {gap}
                         <Narrative incidentNumber={this.props.match.params.incidentNumber}/>
-                        {gap}
-                        <Supplements incidentNumber={this.props.match.params.incidentNumber}/> */}
-                    </div>
+                        </div>
                 </div>
             </div>
         )
