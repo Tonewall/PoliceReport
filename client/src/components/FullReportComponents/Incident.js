@@ -19,8 +19,7 @@ class Incident extends Component {
         fetch('/incident-number-integrated/'+this.state.incidentNumber)
                 .then(results => {
                     results.json().then(data => {
-                        this.setState({incident: data},
-                            function(){console.log(this.state.incident)})
+                        this.setState({incident: data})
                     })
                 })
                 .catch(err => console.error(err))

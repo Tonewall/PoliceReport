@@ -41,7 +41,6 @@ class Narrative extends Component {
         } else {return(<div><textarea readOnly className="form-control" rows="1"></textarea></div>)}
     }
     getSupplements() {
-        console.log(this.state)
         if(this.state.supplements && this.state.supplements.length > 0){
             var incidentType = this.state.supplements.map((incident, index) =>
             <div key={index}>
@@ -76,14 +75,14 @@ class Narrative extends Component {
             <div>
                 <div className='row'>
                     <div className='col-12'>
-                        <label style={{fontSize:15, marginLeft:20}}>Narrative</label>
+                        <label style={{fontSize:17, marginLeft:20}}>Narrative</label>
                         {this.getNarrative()}
                     </div>
                 </div>
                 <hr className="gap"></hr>
                 <div className='row'>
                     <div className='col-12'>
-                        <label style={{fontSize:15, marginLeft:20}}>Supplements</label>
+                        <label style={{fontSize:17, marginLeft:20}}>Supplements</label>
                         {this.getSupplements()}
                     </div>
                 </div>

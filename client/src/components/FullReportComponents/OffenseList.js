@@ -39,7 +39,7 @@ class OffenseDesc extends Component {
                     </div>  
                     <div className='col-1'>
                         <label>Code</label>
-                        <input readOnly value={(incident.OffenseCode === null) ? "" : " "+ incident.OffenseCode} style={{ width: "100%" }}/>
+                        <input readOnly value={(incident.OffenseCode === null) ? "" : " "+ incident.OffenseCode} style={{ width: "120%" }}/>
                     </div> 
                     <div className='col-1'>
                         <label>Complete</label>

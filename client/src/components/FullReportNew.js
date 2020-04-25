@@ -8,6 +8,10 @@ import Location from './FullReportComponents/Location'
 import Offense from './FullReportComponents/Offense'
 import OffenseList from './FullReportComponents/OffenseList'
 import Narrative from './FullReportComponents/Narrative'
+import Property from './FullReportComponents/Property'
+import Offender from './FullReportComponents/Offender'
+import Arrest from './FullReportComponents/Arrest'
+import MO from './FullReportComponents/MO'
 
 class FullReport extends Component {
     constructor(props) {
@@ -49,10 +53,10 @@ class FullReport extends Component {
                 <h2 className="card-header caseCardHeader">Incident Report</h2>
                     <div className="card-body" style={{marginLeft:10, marginRight:10}}>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-6" style={{fontSize:15}}>
                                 <b>Agency ID (ORI): GA0601000</b>
                             </div>
-                            <div className="col-6">
+                            <div className="col-6" style={{fontSize:15}}>
                                 <b>{this.getCaseNumber()}</b>
                             </div>
                         </div>
@@ -72,6 +76,14 @@ class FullReport extends Component {
                         <OffenseList incidentNumber={this.props.match.params.incidentNumber}/>
                         {gap}
                         <Narrative incidentNumber={this.props.match.params.incidentNumber}/>
+                        {gap}
+                        <Property incidentNumber={this.props.match.params.incidentNumber}/>
+                        {gap}
+                        <Offender incidentNumber={this.props.match.params.incidentNumber}/>
+                        {gap}
+                        <Arrest incidentNumber={this.props.match.params.incidentNumber}/>
+                        {gap}
+                        <MO incidentNumber={this.props.match.params.incidentNumber}/>
                         </div>
                 </div>
             </div>

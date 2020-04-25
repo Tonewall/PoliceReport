@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import DataView from './components/Data';
 import NavBar from './components/NavBar';
-import FullReport from './components/FullReport';
+// import FullReport from './components/FullReport';
 import GtpdFilter from './components/GtpdFilter';
 import IncidentNumber from './components/IncidentNumber'
 import FilterResult from './components/FilterResult'
@@ -25,7 +25,7 @@ class App extends Component {
                 <Router>
                         <NavBar />
                         <Route exact path="/" component={DataView} />
-                        <Route exact path="/full-report/:incidentNumber" component={FullReport} />
+                        {/* <Route exact path="/full-report/:incidentNumber" component={FullReport} /> */}
                         <Route exact path="/GTPD-Incident-Search" component={IncidentNumber} />
                         <Route exact path="/Filter-Result" component={FilterResult} />
                         {/* For server debugging */}
@@ -36,7 +36,7 @@ class App extends Component {
                         <Route exact path="/Location-Stats-Filter/" component={LocationStatsFilter} />
                         <Route exact path="/Location-Statistics/" component={LocationStatistics} />
                         <Route exact path="/Building-Information" component={BuildingInformation} />
-                        <Route exact path="/full-report-new/:incidentNumber" component={FullReportNew} />
+                        <Route exact path="/full-report/:incidentNumber" component={FullReportNew} />
 
                 </Router>
             </div>
