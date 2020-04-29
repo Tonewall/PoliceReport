@@ -122,6 +122,61 @@ module.exports.get_offense_description = function(incident_number) {
         ORDER BY [SequenceNumber] ASC\
     ', incident_number)
 }
+module.exports.get_personnel_data = function(incident_number) {
+    return sprintf('\
+    SELECT [ReportingOfficerName]\
+        ,[OtherZone]\
+        ,[CaseStatus]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncident]\
+        WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+module.exports.get_location_data = function(incident_number) {
+    return sprintf('\
+    SELECT [LocationLandmark]\
+        ,[Location]\
+        ,[LocationStreetNumber]\
+        ,[LocationStreet]\
+        ,[PatrolZone]\
+        ,[LocationCode]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncident]\
+        WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+
+module.exports.get_weapon_data = function(incident_number) {
+    return sprintf('\
+    SELECT [Weapon]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffenseWeapon]\
+        WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+
+module.exports.get_premise_data = function(incident_number) {
+    return sprintf('\
+    SELECT [PremisesEntered]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
+        WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+module.exports.get_drug_data = function(incident_number) {
+    return sprintf('\
+    SELECT [DrugRelated]\
+        ,[IncidentNumber]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncident]\
+        WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+module.exports.get_location_type = function(incident_number) {
+    return sprintf('\
+    SELECT [Location]\
+        ,[IncidentNumber]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
+        WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+
+
 
 module.exports.get_narrative_APD = function(incident_number) {
     return sprintf('\

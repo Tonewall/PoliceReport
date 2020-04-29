@@ -2,11 +2,9 @@ import React, { Component } from "react";
 import './FullReport.css';
 import Incident from './FullReportComponents/Incident'
 import Personnel from './FullReportComponents/Personnel'
-import Misc from './FullReportComponents/Misc'
 import Time from './FullReportComponents/Time'
 import Location from './FullReportComponents/Location'
 import Offense from './FullReportComponents/Offense'
-import OffenseList from './FullReportComponents/OffenseList'
 import Narrative from './FullReportComponents/Narrative'
 import Property from './FullReportComponents/Property'
 import Offender from './FullReportComponents/Offender'
@@ -21,6 +19,7 @@ class FullReport extends Component {
             permission_denied: true,
             report_class: '',
             incidentNumber: null,
+            department: null,
         }
     }
 
@@ -64,16 +63,12 @@ class FullReport extends Component {
                         <Incident incidentNumber={this.props.match.params.incidentNumber}/>
                         {small_gap}
                         <Personnel incidentNumber={this.props.match.params.incidentNumber}/>
-                        {small_gap}
-                        <Misc incidentNumber={this.props.match.params.incidentNumber}/>
                         {gap}
                         <Time incidentNumber={this.props.match.params.incidentNumber}/>
                         {gap}
                         <Location incidentNumber={this.props.match.params.incidentNumber}/>
                         {gap}
                         <Offense incidentNumber={this.props.match.params.incidentNumber}/>
-                        {gap}
-                        <OffenseList incidentNumber={this.props.match.params.incidentNumber}/>
                         {gap}
                         <Narrative incidentNumber={this.props.match.params.incidentNumber}/>
                         {gap}

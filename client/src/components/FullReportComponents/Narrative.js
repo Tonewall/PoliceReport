@@ -6,6 +6,7 @@ class Narrative extends Component {
         incidentNumber: null,
         incident: null,
         supplements: null,
+        narrative: null,
     };
 
     componentDidMount(){
@@ -17,13 +18,33 @@ class Narrative extends Component {
     }
 
     getIncidentData() {
-        fetch('/incident-number-integrated/'+this.state.incidentNumber)
-            .then(results => {
-                results.json().then(data => {
-                    this.setState({incident: data})
-                })
-            })
-            .catch(err => console.error(err))
+        if(this.state.incidentNumber != null) {
+            if(this.state.incidentNumber.length === 9) {
+                fetch('/narrative_APD/'+this.state.incidentNumber)
+                    .then(results => {
+                        results.json().then(data => {
+                            if(data) {
+                                var narrativeAPD = ''
+                                var field = 'Expr'
+                                for(var i = 1; i < 25; i++){
+                                    var temp = field+i
+                                    narrativeAPD += data[temp]
+                                }
+                                this.setState({narrative: {Narrative: narrativeAPD}})
+                            }
+                        })
+                    })
+                    .catch(err => console.error(err))
+            } else {
+                fetch('/narrative_GTPD/'+this.state.incidentNumber)
+                    .then(results => {
+                        results.json().then(data => {
+                            this.setState({narrative: data})
+                        })
+                    })
+                    .catch(err => console.error(err))
+            }
+        }
         fetch('/supplements/'+ this.state.incidentNumber)
             .then(results => {
                 results.json().then(data => {
@@ -34,9 +55,9 @@ class Narrative extends Component {
     }
 
     getNarrative() {
-        if(this.state.incident && this.state.incident['Narratives'] && this.state.incident['Narratives'][0]){
+        if(this.state.narrative){
             return (
-                <textarea readOnly rows='5' className="form-control" defaultValue={this.state.incident['Narratives'][0]['Narrative']}></textarea>
+                <textarea readOnly rows='5' className="form-control" defaultValue={this.state.narrative['Narrative']}></textarea>
             )
         } else {return(<div><textarea readOnly className="form-control" rows="1"></textarea></div>)}
     }

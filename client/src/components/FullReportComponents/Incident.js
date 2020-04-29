@@ -98,7 +98,7 @@ class Incident extends Component {
                     {this.getIncidentCount()}
                 </div>
                 <div className='col-1'>
-                    <label>Code</label>
+                    <label style={{width:'200%'}}>Offense Code</label>
                     {this.getIncidentCode()}
                 </div>
                 <div className='col-3'>

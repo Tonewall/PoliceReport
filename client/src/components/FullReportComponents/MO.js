@@ -25,7 +25,6 @@ class MO extends Component {
             .catch(err => console.error(err))
     }
     getMO() {
-        console.log(this.state.MO)
         if(this.state.MO && this.state.MO.length > 0){
             var MO = this.state.MO.map((incident, index) =>
             <div key={index}>

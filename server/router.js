@@ -401,6 +401,78 @@ function add_router(app) {
             else res.status(400).send(err);
         });
     });
+    app.get('/personnel-data/:incident_number', function (req, res) {
+        query = query_factory.get_personnel_data(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+    app.get('/location-data/:incident_number', function (req, res) {
+        query = query_factory.get_location_data(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+    app.get('/weapon-data/:incident_number', function (req, res) {
+        query = query_factory.get_weapon_data(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+    app.get('/premise-data/:incident_number', function (req, res) {
+        query = query_factory.get_premise_data(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+    app.get('/drug-data/:incident_number', function (req, res) {
+        query = query_factory.get_drug_data(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+    app.get('/location-type/:incident_number', function (req, res) {
+        query = query_factory.get_location_type(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
 }
 
 

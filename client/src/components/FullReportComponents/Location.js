@@ -5,6 +5,11 @@ class Location extends Component {
     state = {
         incidentNumber: null,
         incident: null,
+        landmark: null,
+        zone: null,
+        ltype: null,
+        lcode: null,
+
     };
 
     componentDidMount(){
@@ -23,40 +28,62 @@ class Location extends Component {
                     })
                 })
                 .catch(err => console.error(err))
+        fetch('/location-data/'+this.state.incidentNumber)
+            .then(results => {
+                results.json().then(data => {
+                    if(data.length){
+                        this.setState({landmark: data[0].LocationLandmark,
+                            zone: data[0].PatrolZone,
+                            address: data[0].LocationStreetNumber + ' ' + data[0].LocationStreet,
+                            lcode: data[0].LocationCode})
+                    }
+                    
+                })
+            })
+            .catch(err => console.error(err))
+        fetch('/location-type/'+this.state.incidentNumber)
+                .then(results => {
+                    results.json().then(data => {
+                        if(data.length){
+                            this.setState({ltype: data[data.length-1].Location})
+                        }
+                    })
+                })
+                .catch(err => console.error(err))
     }
 
     getLandmark() {
-        if(this.state.incident && this.state.incident['Location Landmark']){
+        if(this.state.landmark){
             return(
-                <input readOnly value={" "+ this.state.incident['Location Landmark']} style={{ width: "100%" }}/>
+                <input readOnly value={" "+ this.state.landmark} style={{ width: "100%" }}/>
             )
         } else {return(<div><input readOnly value={""} style={{ width: "100%" }}/></div>)}
     }
     getType() {
-        if(this.state.incident && this.state.incident['LType']){
+        if(this.state.ltype){
             return(
-                <input readOnly value={" "+ this.state.incident['LType']} style={{ width: "100%" }}/>
+                <input readOnly value={" "+ this.state.ltype} style={{ width: "100%" }}/>
             )
         } else {return(<div><input readOnly value={""} style={{ width: "100%" }}/></div>)}
     }
     getCode() {
-        if(this.state.incident && this.state.incident['Location Code']){
+        if(this.state.lcode){
             return(
-                <input readOnly value={" "+ this.state.incident['Location Code']} style={{ width: "100%" }}/>
+                <input readOnly value={" "+ this.state.lcode} style={{ width: "100%" }}/>
             )
         } else {return(<div><input readOnly value={""} style={{ width: "100%" }}/></div>)}
     }
     getZone() {
-        if(this.state.incident && this.state.incident['Patrol Zone']){
+        if(this.state.zone){
             return(
-                <input readOnly value={" "+ this.state.incident['Patrol Zone']} style={{ width: "100%" }}/>
+                <input readOnly value={" "+ this.state.zone} style={{ width: "100%" }}/>
             )
         } else {return(<div><input readOnly value={""} style={{ width: "100%" }}/></div>)}
     }
     getStreet() {
-        if(this.state.incident && this.state.incident['Address']){
+        if(this.state.address){
             return(
-                <input readOnly value={" "+ this.state.incident['Address']} style={{ width: "100%" }}/>
+                <input readOnly value={" "+ this.state.address} style={{ width: "100%" }}/>
             )
         } else {return(<div><input readOnly value={""} style={{ width: "100%" }}/></div>)}
     }

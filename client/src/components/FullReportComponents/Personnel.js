@@ -4,92 +4,57 @@ import "react-datepicker/dist/react-datepicker.css";
 class Personnel extends Component {
     state = {
         incidentNumber: null,
-        incident: null,
+        officer: null,
+        caseStatus: null,
+        unit: null,
     };
 
     componentDidMount(){
         this.setState({incidentNumber: this.props.incidentNumber},
             function() {
-                this.getIncidentData();
+                this.getPersonnel();
             })
         
     }
 
-    getIncidentData() {
-        fetch('/incident-number-integrated/'+this.state.incidentNumber)
+
+    getPersonnel() {
+        fetch('/personnel-data/'+this.state.incidentNumber)
                 .then(results => {
                     results.json().then(data => {
-                        this.setState({incident: data})
+                        if(data.length > 0){
+                            this.setState({officer: data[0].ReportingOfficerName, 
+                                caseStatus: data[0].CaseStatus,
+                                unit: data[0].OtherZone})
+                        }
+                        
                     })
                 })
                 .catch(err => console.error(err))
     }
 
-    getCaseDisposition() {
-        if(this.state.incident && this.state.incident['Case Disposition']){
-            return(
-                <input readOnly value={" "+ this.state.incident['Case Disposition']} style={{ width: "100%" }}/>
-            )
-        } else {
-            return(
-                <div>
-                    <input readOnly value={""} style={{ width: "100%" }}/>
-                </div>
-            )
-        }
 
+    getCaseStatus() {
+        if(this.state.caseStatus){
+            return(
+                <input readOnly value={" "+ this.state.caseStatus} style={{ width: "100%" }}/>
+            )
+        } else {return(<div> <input readOnly value={""} style={{ width: "100%" }}/></div>)}
     }
     getUnit() {
-        if(this.state.incident && this.state.incident['Unit']){
+        if(this.state.unit){
             return(
-                <input readOnly value={" "+ this.state.incident['Unit']} style={{ width: "100%" }}/>
+                <input readOnly value={" "+ this.state.unit} style={{ width: "100%" }}/>
             )
-        } else {
-            return(
-                <div>
-                    <input readOnly value={""} style={{ width: "100%" }}/>
-                </div>
-            )
-        } 
+        } else {return(<div> <input readOnly value={""} style={{ width: "100%" }}/></div>)}
     }
+    
     getOfficer() {
-        if(this.state.incident && this.state.incident['Officer Name']){
+        if(this.state.officer){
             return(
-                <input readOnly value={" "+ this.state.incident['Officer Name']} style={{ width: "100%" }}/>
+                <input readOnly value={" "+ this.state.officer} style={{ width: "100%" }}/>
             )
-        } else {
-            return(
-                <div>
-                    <input readOnly value={""} style={{ width: "100%" }}/>
-                </div>
-            )
-        }
-    }
-    getVClear() {
-        if(this.state.incident && this.state.incident['VClear'] != null){
-            return(
-                <input readOnly value={" "+ this.state.incident['VClear']} style={{ width: "100%" }}/>
-            )
-        } else {
-            return(
-                <div>
-                    <input readOnly value={""} style={{ width: "100%" }}/>
-                </div>
-            )
-        }
-    }
-    getVideo() {
-        if(this.state.incident && this.state.incident['Video'] != null){
-            return(
-                <input readOnly value={" "+ this.state.incident['Video']} style={{ width: "100%" }}/>
-            )
-        } else {
-            return(
-                <div>
-                    <input readOnly value={""} style={{ width: "100%" }}/>
-                </div>
-            )
-        }
+        } else {return(<div> <input readOnly value={""} style={{ width: "100%" }}/></div>)}
     }
 
     
@@ -98,8 +63,8 @@ class Personnel extends Component {
         return(
             <div className='row'>
                 <div className='col-2'>
-                    <label>Case Disposition</label>
-                    {this.getCaseDisposition()}
+                    <label>Case Status</label>
+                    {this.getCaseStatus()}
                         
                 </div>
                 <div className='col-2'>
@@ -109,14 +74,6 @@ class Personnel extends Component {
                 <div className='col-5'>
                     <label>Officer</label>
                     {this.getOfficer()}
-                </div>
-                <div className='col-1'>
-                    <label>VClear</label>
-                    {this.getVClear()}
-                </div>
-                <div className='col-1'>
-                    <label>Video</label>
-                    {this.getVideo()}
                 </div>
             </div>
             
