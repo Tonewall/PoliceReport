@@ -10,6 +10,8 @@ import Property from './FullReportComponents/Property'
 import Offender from './FullReportComponents/Offender'
 import Arrest from './FullReportComponents/Arrest'
 import MO from './FullReportComponents/MO'
+import Victim from './FullReportComponents/Victim'
+import Complainant from './FullReportComponents/Complainant'
 
 class FullReport extends Component {
     constructor(props) {
@@ -79,6 +81,10 @@ class FullReport extends Component {
                         <Arrest incidentNumber={this.props.match.params.incidentNumber}/>
                         {gap}
                         <MO incidentNumber={this.props.match.params.incidentNumber}/>
+                        {gap}
+                        <Victim incidentNumber={this.props.match.params.incidentNumber}/>
+                        {gap}
+                        <Complainant incidentNumber={this.props.match.params.incidentNumber}/>
                         </div>
                 </div>
             </div>

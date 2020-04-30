@@ -335,6 +335,35 @@ function add_router(app) {
         });
     });
 
+    app.get('/get_victim/:incident_number', function (req, res) {
+        query = query_factory.get_victim(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result != null)
+                {
+                    res.send(result);
+                }
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+    app.get('/get_complainant/:incident_number', function (req, res) {
+        query = query_factory.get_complainant(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result != null)
+                {
+                    res.send(result);
+                }
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+
     app.get('/narrative_GTPD/:incident_number', function (req, res) {
         query = query_factory.get_narrative_GTPD(req.params.incident_number)
         db_query(query, (err, result) => {

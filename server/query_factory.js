@@ -175,7 +175,134 @@ module.exports.get_location_type = function(incident_number) {
         WHERE ([IncidentNumber]=\'%s\')\
     ', incident_number)
 }
-
+module.exports.get_victim = function(incident_number) {
+    return sprintf('\
+    SELECT [IncidentNumber]\
+      ,[SequenceNumber]\
+      ,[SupplementNumber]\
+      ,[PersonID]\
+      ,[NameHistoryPrimaryKey]\
+      ,[VictimType]\
+      ,[Age]\
+      ,[Race]\
+      ,[Sex]\
+      ,[FirstName]\
+      ,[FirstNameMetaphone]\
+      ,[MiddleName]\
+      ,[MiddleNameMetaphone]\
+      ,[LastName]\
+      ,[LastNameMetaphone]\
+      ,[Suffix]\
+      ,[DateOfBirth]\
+      ,[SSN]\
+      ,[HomeAddress]\
+      ,[HomeLandmark]\
+      ,[HomeStreetNumber]\
+      ,[HomeFraction]\
+      ,[HomeDirectional]\
+      ,[HomeStreet]\
+      ,[HomeLocation]\
+      ,[HomeMailingAddress]\
+      ,[HomeCity]\
+      ,[HomeState]\
+      ,[HomeZipCode]\
+      ,[HomeLatitude]\
+      ,[HomeLongitude]\
+      ,[HomeAltitude]\
+      ,[HomePhoneNumber]\
+      ,[Occupation]\
+      ,[Employer]\
+      ,[EmployerAddress]\
+      ,[EmployerLandmark]\
+      ,[EmployerStreetNumber]\
+      ,[EmployerFraction]\
+      ,[EmployerDirectional]\
+      ,[EmployerStreet]\
+      ,[EmployerLocation]\
+      ,[EmployerMailingAddress]\
+      ,[EmployerCity]\
+      ,[EmployerState]\
+      ,[EmployerZipCode]\
+      ,[EmployerLatitude]\
+      ,[EmployerLongitude]\
+      ,[EmployerAltitude]\
+      ,[EmployerPhoneNumber]\
+      ,[Ethnicity]\
+      ,[EmployerPhoneExtension]\
+      ,[OfficerActivity]\
+      ,[OfficerAssignment]\
+      ,[Student]\
+      ,[CensusTract]\
+      ,[VictimSchool]\
+      ,[Juvenile]\
+      ,[SecondaryPhoneNumber]\
+      ,[DriverLicenseNumber]\
+      ,[DriverLicenseState]\
+      ,[JustifiableCircumstance]\
+      ,[ResidentStatus]\
+      ,[OtherORINumber]\
+  FROM [SS_GARecords_Incident].[dbo].[tblIncidentVictim]\
+  WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+module.exports.get_complainant = function(incident_number) {
+    return sprintf('SELECT [IncidentNumber]\
+      ,[SequenceNumber]\
+      ,[SupplementNumber]\
+      ,[PersonID]\
+      ,[NameHistoryPrimaryKey]\
+      ,[PersonType]\
+      ,[FirstName]\
+      ,[FirstNameMetaphone]\
+      ,[MiddleName]\
+      ,[MiddleNameMetaphone]\
+      ,[LastName]\
+      ,[LastNameMetaphone]\
+      ,[Suffix]\
+      ,[DateOfBirth]\
+      ,[Age]\
+      ,[Race]\
+      ,[Sex]\
+      ,[HomeAddress]\
+      ,[HomeLandmark]\
+      ,[HomeStreetNumber]\
+      ,[HomeFraction]\
+      ,[HomeDirectional]\
+      ,[HomeStreet]\
+      ,[HomeLocation]\
+      ,[HomeMailingAddress]\
+      ,[HomeCity]\
+      ,[HomeState]\
+      ,[HomeZipCode]\
+      ,[HomeLatitude]\
+      ,[HomeLongitude]\
+      ,[HomeAltitude]\
+      ,[HomePhoneNumber]\
+      ,[Employer]\
+      ,[EmployerAddress]\
+      ,[EmployerLandmark]\
+      ,[EmployerStreetNumber]\
+      ,[EmployerFraction]\
+      ,[EmployerDirectional]\
+      ,[EmployerStreet]\
+      ,[EmployerLocation]\
+      ,[EmployerMailingAddress]\
+      ,[EmployerCity]\
+      ,[EmployerState]\
+      ,[EmployerZipCode]\
+      ,[EmployerLatitude]\
+      ,[EmployerLongitude]\
+      ,[EmployerAltitude]\
+      ,[EmployerPhoneNumber]\
+      ,[EmployerPhoneExtension]\
+      ,[Juvenile]\
+      ,[SecondaryPhoneNumber]\
+      ,[DriverLicenseNumber]\
+      ,[DriverLicenseState]\
+  FROM [SS_GARecords_Incident].[dbo].[tblIncidentOthersInvolved]\
+  WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
 
 
 module.exports.get_narrative_APD = function(incident_number) {

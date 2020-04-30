@@ -9,6 +9,7 @@ class Location extends Component {
         zone: null,
         ltype: null,
         lcode: null,
+        locationDetails: null,
 
     };
 
@@ -35,7 +36,8 @@ class Location extends Component {
                         this.setState({landmark: data[0].LocationLandmark,
                             zone: data[0].PatrolZone,
                             address: data[0].LocationStreetNumber + ' ' + data[0].LocationStreet,
-                            lcode: data[0].LocationCode})
+                            lcode: data[0].LocationCode,
+                            locationDetails: data[0].Location})
                     }
                     
                 })
@@ -88,17 +90,9 @@ class Location extends Component {
         } else {return(<div><input readOnly value={""} style={{ width: "100%" }}/></div>)}
     }
     getApt() {
-        if(this.state.incident && this.state.incident['Apt-Rm-Ste']){
+        if(this.state.locationDetails){
             return(
-                <input readOnly value={" "+ this.state.incident['Apt-Rm-Ste']} style={{ width: "100%" }}/>
-            )
-        } else {return(<div><input readOnly value={""} style={{ width: "100%" }}/></div>)}
-    }
-
-    getIntersection() {
-        if(this.state.incident && this.state.incident['Intersection']){
-            return(
-                <input readOnly value={" "+ this.state.incident['Intersection']} style={{ width: "100%" }}/>
+                <input readOnly value={" "+ this.state.locationDetails} style={{ width: "100%" }}/>
             )
         } else {return(<div><input readOnly value={""} style={{ width: "100%" }}/></div>)}
     }
@@ -129,17 +123,15 @@ class Location extends Component {
                 </div>
                 <div style={{marginTop:10}}></div>
                 <div className='row'>
-                    <div className='col-6'>
+                    <div className='col-12'>
                         <label>Address</label>
                         {this.getStreet()}
                     </div>
-                    <div className='col-1'>
-                        <label>Apt</label>
+                </div>
+                <div className='row'>
+                    <div className='col-12'>
+                        <label>Location Details</label>
                         {this.getApt()}
-                    </div>
-                    <div className='col-4'>
-                        <label>Intersection</label>
-                        {this.getIntersection()}
                     </div>
                 </div>
             </div>
