@@ -4,7 +4,6 @@ import "react-datepicker/dist/react-datepicker.css";
 class Location extends Component {
     state = {
         incidentNumber: null,
-        incident: null,
         landmark: null,
         zone: null,
         ltype: null,
@@ -22,20 +21,13 @@ class Location extends Component {
     }
 
     getIncidentData() {
-        fetch('/incident-number-integrated/'+this.state.incidentNumber)
-                .then(results => {
-                    results.json().then(data => {
-                        this.setState({incident: data})
-                    })
-                })
-                .catch(err => console.error(err))
         fetch('/location-data/'+this.state.incidentNumber)
             .then(results => {
                 results.json().then(data => {
                     if(data.length){
                         this.setState({landmark: data[0].LocationLandmark,
                             zone: data[0].PatrolZone,
-                            address: data[0].LocationStreetNumber + ' ' + data[0].LocationStreet,
+                            address: ((data[0].LocationStreetNumber===null)?'':data[0].LocationStreetNumber) + ((data[0].LocationStreet===null)?'':' ' + data[0].LocationStreet),
                             lcode: data[0].LocationCode,
                             locationDetails: data[0].Location})
                     }

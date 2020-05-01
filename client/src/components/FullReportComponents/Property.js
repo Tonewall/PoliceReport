@@ -16,10 +16,17 @@ class Property extends Component {
     }
 
     getIncidentData() {
-        fetch('/incident-number-integrated/'+this.state.incidentNumber)
+        // fetch('/incident-number-integrated/'+this.state.incidentNumber)
+        //     .then(results => {
+        //         results.json().then(data => {
+        //             this.setState({property: data['Property Info']})
+        //         })
+        //     })
+        //     .catch(err => console.error(err))
+        fetch('/property-data/'+this.state.incidentNumber)
             .then(results => {
                 results.json().then(data => {
-                    this.setState({property: data['Property Info']})
+                    this.setState({property: data})
                 })
             })
             .catch(err => console.error(err))
@@ -35,8 +42,8 @@ class Property extends Component {
                             <input readOnly value={(incident.SequenceNumber === null) ? "" : " "+ incident.SequenceNumber} style={{ width: "100%" }}/>
                         </div>
                         <div className='col-3'>
-                            <label>Property Type</label>
-                            <input readOnly value={(incident.PropertyType === null) ? "" : " "+ incident.PropertyType} style={{ width: "100%" }}/>
+                            <label>Property</label>
+                            <input readOnly value={(incident.Description === null) ? "" : " "+ incident.Description} style={{ width: "100%" }}/>
                         </div>  
                         <div className='col-2'>
                             <label>Make</label>
@@ -56,7 +63,7 @@ class Property extends Component {
                         </div>
                         <div className='col-1'>
                             <label>Recovered</label>
-                            <input readOnly value={" "+ incident['Recovered']} style={{ width: "100%" }}/>
+                            <input readOnly value={(incident.Recovered === null) ? "" : " "+ incident.Recovered} style={{ width: "100%" }}/>
                         </div>
                     </div>
                     <div className='row'>
@@ -81,13 +88,28 @@ class Property extends Component {
                     </div>
                     <div className='row'>
                         <div className='col-1'></div>
-                        <div className='col-8'>
+                        <div className='col-3'>
+                            <label>Obtained Date/Time</label>
+                            <input readOnly value={((incident.DateObtained === null) ? "" : " "+ incident.DateObtained.substring(0,10)) + ((incident.TimeObtained === null) ? "" : ' ' + new Date(incident.TimeObtained).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }))} style={{ width: "100%" }}/>
+                        </div>
+                        <div className='col-3'>
+                            <label>Obtained Officer</label>
+                            <input readOnly value={(incident.ObtainedOfficerName === null) ? "" : " "+ incident.ObtainedOfficerName} style={{ width: "100%" }}/>
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-1'></div>
+                        <div className='col-7'>
                             <label>Obtained Address</label>
                             <input readOnly value={(incident.ObtainedAddress === null) ? "" : " "+ incident.ObtainedAddress} style={{ width: "100%" }}/>
                         </div>
                         <div className='col-2'>
                             <label>Obtained City</label>
                             <input readOnly value={(incident.ObtainedCity === null) ? "" : " "+ incident.ObtainedCity} style={{ width: "100%" }}/>
+                        </div>
+                        <div className='col-1'>
+                            <label>Zip Code</label>
+                            <input readOnly value={(incident.ObtainedZipCode === null) ? "" : " "+ incident.ObtainedZipCode} style={{ width: "100%" }}/>
                         </div>
                     </div>
                     <div className='row'>

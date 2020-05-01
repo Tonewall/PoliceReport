@@ -146,12 +146,111 @@ module.exports.get_location_data = function(incident_number) {
 
 module.exports.get_weapon_data = function(incident_number) {
     return sprintf('\
-    SELECT [Weapon]\
-        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffenseWeapon]\
-        WHERE ([IncidentNumber]=\'%s\')\
+    SELECT [tblIncidentOffense].[PrimaryKey]\
+      ,[IncidentNumber]\
+	  ,[tblIncidentOffenseWeapon].[Weapon]\
+	  ,[Description]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
+	        left join [SS_GARecords_Incident].[dbo].[tblIncidentOffenseWeapon] \
+                on ([tblIncidentOffenseWeapon].[ForeignKey] = [tblIncidentOffense].[PrimaryKey])\
+			left join [SS_GARecords_Config].[dbo].[tblLkpIBRWeapon] \
+                on ([tblIncidentOffenseWeapon].[Weapon] = [tblLkpIBRWeapon].[Code])\
+	    where Weapon is not null\
+        and ([IncidentNumber]=\'%s\')\
     ', incident_number)
 }
 
+module.exports.get_property_data = function(incident_number) {
+    return sprintf('\
+    SELECT [PrimaryKey]\
+      ,[SynchronizePrimaryKey]\
+      ,[IncidentNumber]\
+      ,[SequenceNumber]\
+      ,[SupplementNumber]\
+      ,[VehicleID]\
+      ,[VehicleHistoryPrimaryKey]\
+      ,[TypeCode]\
+      ,[Status]\
+      ,[ItemValue]\
+      ,[OtherJurisdiction]\
+      ,[NonReportable]\
+      ,[DateObtained]\
+      ,[Vehicle]\
+      ,[ItemCategory]\
+      ,[Quantity]\
+      ,[ItemDescription]\
+      ,[Make]\
+      ,[Model]\
+      ,[SerialNumber]\
+      ,[OwnerNumber]\
+      ,[NCICNumber]\
+      ,[PrimaryColor]\
+      ,[SecondaryColor]\
+      ,[LossValue]\
+      ,[ReportAsProperty]\
+      ,[VehicleType]\
+      ,[VehicleYear]\
+      ,[VehicleStyle]\
+      ,[LicensePlateNumber]\
+      ,[LicensePlateState]\
+      ,[VIN]\
+      ,[Owner]\
+      ,[Recovered]\
+      ,[RecoveredValue]\
+      ,[RecoveredQuantity]\
+      ,[RecoveredDescription]\
+      ,[TimeObtained]\
+      ,[ObtainedOfficerID]\
+      ,[ObtainedOfficerName]\
+      ,[ObtainedOfficerSSN]\
+      ,[ObtainedAddress]\
+      ,[ObtainedLandmark]\
+      ,[ObtainedStreetNumber]\
+      ,[ObtainedFraction]\
+      ,[ObtainedDirectional]\
+      ,[ObtainedStreet]\
+      ,[ObtainedLocation]\
+      ,[ObtainedMailingAddress]\
+      ,[ObtainedCity]\
+      ,[ObtainedState]\
+      ,[ObtainedZipCode]\
+      ,[ObtainedLatitude]\
+      ,[ObtainedLongitude]\
+      ,[ObtainedAltitude]\
+      ,[ObtainedFrom]\
+      ,[RelatedOffense]\
+      ,[RegistrationYear]\
+      ,[InsuranceCompany]\
+      ,[IdentificationType]\
+      ,[MotorSize]\
+      ,[Transmission]\
+      ,[StolenVehicle]\
+      ,[RecoveredVehicle]\
+      ,[SuspectsVehicle]\
+      ,[Involvement]\
+      ,[InvolvementDescription]\
+      ,[Description]\
+  FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty]\
+    left join [SS_GARecords_Config].[dbo].[tblLkpIBRProperty] \
+        on ([tblLkpIBRProperty].[Code] = [tblIncidentProperty].[TypeCode])\
+  WHERE ([IncidentNumber]=\'%s\')\
+  order by [SequenceNumber]\
+    ', incident_number)
+}
+
+module.exports.get_time = function(incident_number) {
+    return sprintf('\
+    SELECT [IncidentNumber]\
+      ,[ReportDate]\
+      ,[ReportTime]\
+      ,[DateIncidentEnded]\
+      ,[TimeIncidentEnded]\
+      ,[IncidentDate]\
+      ,[IncidentTime]\
+    FROM [SS_GARecords_Incident].[dbo].[tblIncident]\
+        WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
 module.exports.get_premise_data = function(incident_number) {
     return sprintf('\
     SELECT [PremisesEntered]\

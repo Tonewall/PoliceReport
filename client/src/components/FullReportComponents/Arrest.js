@@ -50,7 +50,7 @@ class Arrest extends Component {
                     <div className='row'>
                         <div className='col-1'/>
                         <div className='col-7'>
-                            <label>Arrest Date</label>
+                            <label>Arrest Address</label>
                             <input readOnly value={(incident.ArrestAddress === null) ? "" : " "+ incident.ArrestAddress} style={{ width: "100%" }}/>
                         </div>
                     </div>

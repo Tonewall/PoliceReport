@@ -28,16 +28,22 @@ class Location extends Component {
                     }
                 })
                 .catch(err => console.error(err))
-        // fetch('/weapon-data/'+this.state.incidentNumber)
-        //         .then(results => {
-        //             if(results.status !== 400) {
-        //                 results.json().then(data => {
-        //                     this.setState({weapon: data[0]})
-        //                 }
-        //             )
-        //             }
-        //         })
-        //         .catch(err => console.error(err))
+        fetch('/weapon-data/'+this.state.incidentNumber)
+                .then(results => {
+                    if(results.status !== 400) {
+                        results.json().then(data => {
+                            var weapons = ''
+                            for(var i = 0; i < data.length; i++) {
+                                var code = (data[i]['Weapon']===null)?'':data[i]['Weapon']+' - '
+                                var desc = (data[i]['Description']===null)?'':data[i]['Description']
+                                weapons += (code + desc + ', ')
+                            }
+                            this.setState({weapon: weapons})
+                        }
+                    )
+                    }
+                })
+                .catch(err => console.error(err))
         fetch('/premise-data/'+this.state.incidentNumber)
                 .then(results => {
                     if(results.status !== 400) {
@@ -57,13 +63,13 @@ class Location extends Component {
             )
         } else {return(<div><input readOnly value={""} style={{ width: "100%" }}/></div>)}
     }
-    // getWeapons() {
-    //     if(this.state.weapon){
-    //         return(
-    //             <input readOnly value={" "+ this.state.weapon['Weapon']} style={{ width: "100%" }}/>
-    //         )
-    //     } else {return(<div><input readOnly value={""} style={{ width: "100%" }}/></div>)}
-    // }
+    getWeapons() {
+        if(this.state.weapon){
+            return(
+                <textarea readOnly rows='1' className="form-control" defaultValue={this.state.weapon}/>
+            )
+        } else {return(<div><textarea readOnly className="form-control" rows="1"></textarea></div>)}
+    }
     getPrem() {
         if(this.state.premise){
             return(
@@ -85,12 +91,12 @@ class Location extends Component {
                         {this.getDrugs()}
                     </div>
                     <div className='col-1'>
-                        <label>Weapon</label>
-                        {/* {this.getWeapons()} */}
-                    </div>
-                    <div className='col-1'>
                         <label>#Premises</label>
                         {this.getPrem()}
+                    </div>
+                    <div className='col-10'>
+                        <label>Weapon</label>
+                        {this.getWeapons()}
                     </div>
 
                 </div>

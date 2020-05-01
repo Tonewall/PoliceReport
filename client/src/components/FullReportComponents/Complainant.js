@@ -18,7 +18,6 @@ class Complainant extends Component {
         fetch('/get_complainant/'+this.state.incidentNumber)
                 .then(results => {
                     results.json().then(data => {
-                        console.log(data)
                         this.setState({complainant: data})
                     })
                 })

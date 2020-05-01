@@ -16,9 +16,17 @@ class Time extends Component {
     }
 
     getIncidentData() {
-        fetch('/incident-number-integrated/'+this.state.incidentNumber)
+        // fetch('/incident-number-integrated/'+this.state.incidentNumber)
+        //         .then(results => {
+        //             results.json().then(data => {
+        //                 this.setState({incident: data})
+        //             })
+        //         })
+        //         .catch(err => console.error(err))
+        fetch('/get-time/'+this.state.incidentNumber)
                 .then(results => {
                     results.json().then(data => {
+                        console.log(data)
                         this.setState({incident: data})
                     })
                 })
@@ -27,10 +35,10 @@ class Time extends Component {
 
     getFrom() {
         if(this.state.incident){
-            var date = this.state.incident['From Date']?this.state.incident['From Date'].substring(0,10):''
+            var date = this.state.incident['IncidentDate']?this.state.incident['IncidentDate'].substring(0,10):''
             var time = ''
-            if(this.state.incident['From Time']) {
-                time = new Date(this.state.incident['From Time']).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+            if(this.state.incident['IncidentTime']) {
+                time = new Date(this.state.incident['IncidentTime']).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
             }
 
             return(
@@ -40,10 +48,10 @@ class Time extends Component {
     }
     getTo() {
         if(this.state.incident){
-            var date = this.state.incident['To Date']?this.state.incident['To Date'].substring(0,10):''
+            var date = this.state.incident['DateIncidentEnded']?this.state.incident['DateIncidentEnded'].substring(0,10):''
             var time = ''
-            if(this.state.incident['To Time']) {
-                time = new Date(this.state.incident['To Time']).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+            if(this.state.incident['TimeIncidentEnded']) {
+                time = new Date(this.state.incident['TimeIncidentEnded']).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
             }
 
             return(
@@ -53,10 +61,13 @@ class Time extends Component {
     }
     getReport() {
         if(this.state.incident){
-            var date = this.state.incident['Report Date']?this.state.incident['Report Date'].substring(0,10):''
-
+            var date = this.state.incident['ReportDate']?this.state.incident['ReportDate'].substring(0,10):''
+            var time = ''
+            if(this.state.incident['ReportTime']) {
+                time = new Date(this.state.incident['ReportTime']).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+            }
             return(
-                <input readOnly value={" "+ date} style={{ width: "100%" }}/>
+                <input readOnly value={" "+ date+' '+time} style={{ width: "100%" }}/>
             )
         } else {return(<div><input readOnly value={""} style={{ width: "100%" }}/></div>)}
     }
@@ -68,15 +79,15 @@ class Time extends Component {
         return(
             <div className='row'>
                 <div className='col-2'>
-                    <label>Report Date</label>
+                    <label>Report Date/Time</label>
                     {this.getReport()}
                 </div>
                 <div className='col-2'>
-                    <label>From Date</label>
+                    <label>From Date/Time</label>
                     {this.getFrom()}
                 </div>
                 <div className='col-2'>
-                    <label>To Date</label>
+                    <label>To Date/Time</label>
                     {this.getTo()}
                 </div>
             </div>
