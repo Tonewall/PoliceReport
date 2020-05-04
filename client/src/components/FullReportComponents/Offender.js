@@ -16,7 +16,7 @@ class Offender extends Component {
     }
 
     getIncidentData() {
-        fetch('/offender-info/'+this.state.incidentNumber)
+        fetch('/get_offender/'+this.state.incidentNumber)
                 .then(results => {
                     results.json().then(data => {
                         this.setState({offender: data})
@@ -36,7 +36,7 @@ class Offender extends Component {
                         </div>
                         <div className='col-3'>
                             <label>Name</label>
-                            <input readOnly value={(incident.OffenderName === null) ? "" : " "+ incident.OffenderName} style={{ width: "100%" }}/>
+                            <input readOnly value={((incident.FirstName === null) ? "" : " "+ incident.FirstName) + ((incident.LastName === null) ? "" : " "+ incident.LastName)} style={{ width: "100%" }}/>
                         </div>
                         <div className='col-1'>
                             <label>Age</label>
@@ -56,15 +56,15 @@ class Offender extends Component {
                         </div>
                         <div className='col-1'>
                             <label>Arrest</label>
-                            <input readOnly value={" "+ incident.Arrest} style={{ width: "100%" }}/>
+                            <input className="row" style={{margin:'auto'}} type="checkbox"checked={incident.Arrest} disabled/>
                         </div>
                         <div className='col-1'>
                             <label>Warrant</label>
-                            <input readOnly value={" "+ incident.Warrant} style={{ width: "100%" }}/>
+                            <input className="row" style={{margin:'auto'}} type="checkbox"checked={incident.Warrant} disabled/>
                         </div>
                         <div className='col-1'>
                             <label>Wanted</label>
-                            <input readOnly value={" "+ incident.Wanted} style={{ width: "100%" }}/>
+                            <input className="row" style={{margin:'auto'}} type="checkbox"checked={incident.Wanted} disabled/>                        
                         </div>
                     </div>
                     <div className='row'>
@@ -93,6 +93,10 @@ class Offender extends Component {
                             <label>Driver License #</label>
                             <input readOnly value={(incident.DriverLicenseNumber === null) ? "" : " "+ incident.DriverLicenseNumber} style={{ width: "100%" }}/>
                         </div>
+                        <div className='col-2'>
+                            <label>Driver License State</label>
+                            <input readOnly value={(incident.DriverLicenseState === null) ? "" : " "+ incident.DriverLicenseState} style={{ width: "100%" }}/>
+                        </div>
                     </div>
                     <div className='row'>
                         <div className='col-1'/>
@@ -117,8 +121,8 @@ class Offender extends Component {
                         </div>
                         <div className='col-1'>
                             <label>Juvenile</label>
-                            <input readOnly value={" "+ incident.Juvenile} style={{ width: "100%" }}/>
-                        </div>
+                            <input className="row" style={{margin:'auto'}} type="checkbox"checked={incident.Juvenile} disabled/>                        
+                            </div>
                     </div>
 
                     <div style={{marginBottom: 20}}/>

@@ -402,6 +402,14 @@ module.exports.get_complainant = function(incident_number) {
   WHERE ([IncidentNumber]=\'%s\')\
     ', incident_number)
 }
+module.exports.get_offender = function(incident_number) {
+    return sprintf('\
+        SELECT *\n\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\n\
+        WHERE ([IncidentNumber]=\'%s\')\n\
+        Order by [SequenceNumber]\
+    ', incident_number)
+}
 
 
 module.exports.get_narrative_APD = function(incident_number) {
@@ -409,6 +417,13 @@ module.exports.get_narrative_APD = function(incident_number) {
         SELECT *\n\
         FROM [CrimeAnalytics].[dbo].[APD Narratives]\n\
         WHERE ([offense_id]=\'%s\')\n\
+    ', incident_number)
+}
+module.exports.get_offense = function(incident_number) {
+    return sprintf('\
+        SELECT *\n\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
+        WHERE ([IncidentNumber]=\'%s\')\n\
     ', incident_number)
 }
 

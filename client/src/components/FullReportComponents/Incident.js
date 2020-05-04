@@ -16,9 +16,11 @@ class Incident extends Component {
     }
 
     getIncidentData() {
-        fetch('/incident-number-integrated/'+this.state.incidentNumber)
+
+        fetch('/get-offense/'+this.state.incidentNumber)
                 .then(results => {
                     results.json().then(data => {
+                        console.log(data)
                         this.setState({incident: data})
                     })
                 })
@@ -26,10 +28,9 @@ class Incident extends Component {
     }
 
     getIncidentType() {
-        if(this.state.incident && this.state.incident['Offense Description']){
-            var incidentType = this.state.incident['Offense Description'].map((incident, index) =>
-                <input readOnly key={index} value={" "+ incident.OffenseDescription} style={{ width: "100%" }}/>
-            ) 
+        if(this.state.incident){
+            var incidentType = this.state.incident.map((incident, index) =>
+                <input readOnly key={index} value={(incident.OffenseDescription === null) ? "" : " "+ incident.OffenseDescription} style={{ width: "100%" }}/>            ) 
             return incidentType
         } else {
             return(
@@ -41,8 +42,8 @@ class Incident extends Component {
 
     }
     getIncidentCount() {
-        if(this.state.incident && this.state.incident['Offense Description']){
-            var incidentCounts = this.state.incident['Offense Description'].map((incident, index) =>
+        if(this.state.incident){
+            var incidentCounts = this.state.incident.map((incident, index) =>
                 <input readOnly key={index} value={(incident.Counts === null) ? "" : " "+ incident.Counts} style={{ width: "100%" }}/>
             ) 
             return incidentCounts
@@ -55,10 +56,9 @@ class Incident extends Component {
         } 
     }
     getIncidentCode() {
-        if(this.state.incident && this.state.incident['Offense Description']){
-            var incidentCodes = this.state.incident['Offense Description'].map((incident, index) =>
-                <input readOnly key={index} value={" "+ incident.OffenseCode} style={{ width: "100%" }}/>
-            ) 
+        if(this.state.incident){
+            var incidentCodes = this.state.incident.map((incident, index) =>
+                    <input readOnly key={index} value={(incident.OffenseCode === null) ? "" : " "+ incident.OffenseCode} style={{ width: "100%" }}/>            ) 
             return incidentCodes
         } else {
             return(
@@ -69,10 +69,9 @@ class Incident extends Component {
         }
     }
     getStatute() {
-        if(this.state.incident && this.state.incident['Offense Description']){
-            var statutes = this.state.incident['Offense Description'].map((incident, index) =>
-                <input readOnly key={index} value={" "+ incident.Statute} style={{ width: "100%" }}/>
-            ) 
+        if(this.state.incident){
+            var statutes = this.state.incident.map((incident, index) =>
+                <input readOnly key={index} value={(incident.Statute === null) ? "" : " "+ incident.Statute} style={{ width: "100%" }}/>            ) 
             return statutes
         } else {
             return(

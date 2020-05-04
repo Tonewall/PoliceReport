@@ -127,7 +127,7 @@ class Arrest extends Component {
                         </div>
                         <div className='col-1'>
                             <label>Juvenile</label>
-                            <input readOnly value={(incident.Juvenile === null) ? "" : " "+ incident.Juvenile} style={{ width: "100%" }}/>
+                            <input className="row" style={{margin:'auto'}} type="checkbox"checked={incident.Juvenile} disabled/>
                         </div>
                         <div className='col-2'>
                             <label>Driver License#</label>

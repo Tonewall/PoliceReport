@@ -16,13 +16,6 @@ class Property extends Component {
     }
 
     getIncidentData() {
-        // fetch('/incident-number-integrated/'+this.state.incidentNumber)
-        //     .then(results => {
-        //         results.json().then(data => {
-        //             this.setState({property: data['Property Info']})
-        //         })
-        //     })
-        //     .catch(err => console.error(err))
         fetch('/property-data/'+this.state.incidentNumber)
             .then(results => {
                 results.json().then(data => {
@@ -108,7 +101,7 @@ class Property extends Component {
                             <input readOnly value={(incident.ObtainedCity === null) ? "" : " "+ incident.ObtainedCity} style={{ width: "100%" }}/>
                         </div>
                         <div className='col-1'>
-                            <label>Zip Code</label>
+                            <label style={{width:'150%'}}>Zip Code</label>
                             <input readOnly value={(incident.ObtainedZipCode === null) ? "" : " "+ incident.ObtainedZipCode} style={{ width: "100%" }}/>
                         </div>
                     </div>

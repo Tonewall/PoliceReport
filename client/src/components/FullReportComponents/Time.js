@@ -16,17 +16,9 @@ class Time extends Component {
     }
 
     getIncidentData() {
-        // fetch('/incident-number-integrated/'+this.state.incidentNumber)
-        //         .then(results => {
-        //             results.json().then(data => {
-        //                 this.setState({incident: data})
-        //             })
-        //         })
-        //         .catch(err => console.error(err))
         fetch('/get-time/'+this.state.incidentNumber)
                 .then(results => {
                     results.json().then(data => {
-                        console.log(data)
                         this.setState({incident: data})
                     })
                 })
