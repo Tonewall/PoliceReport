@@ -56,7 +56,7 @@ class Property extends Component {
                         </div>
                         <div className='col-1'>
                             <label>Recovered</label>
-                            <input readOnly value={(incident.Recovered === null) ? "" : " "+ incident.Recovered} style={{ width: "100%" }}/>
+                            <input className="row" style={{margin:'auto'}} type="checkbox"checked={incident.Recovered} disabled/>                        
                         </div>
                     </div>
                     <div className='row'>
