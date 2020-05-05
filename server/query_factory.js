@@ -39,6 +39,10 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblCitation].[AgencyCaseNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOffense].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentVictim]\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentVictim].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOthersInvolved]\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOthersInvolved].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
                 ON ( [tblIncidentOffender].[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number] )\n'+
             (additional_join_statement==null ? '' : additional_join_statement) + '\n'+
@@ -667,6 +671,27 @@ module.exports.filter = function(criteria) {
     }
     if(occurredShiftCriteria) {
         criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + occurredShiftCriteria
+    }
+
+    nameCriteria = ''
+    if(criteria.selectedName && criteria.typedName) {
+        nameCriteria = '('
+        for(var i=0;i<criteria.selectedName.length;i++) {
+            if(i>0){
+                nameCriteria+=' OR '
+            }
+            if(criteria.selectedName[i].value === 'offender'){
+                nameCriteria+='(CONCAT([tblIncidentOffender].[FirstName], \' \', [tblIncidentOffender].[LastName]) like \'%%'+criteria.typedName+'%%\')'
+            } else if(criteria.selectedName[i].value === 'victim'){
+                nameCriteria+='(CONCAT([tblIncidentVictim].[FirstName], \' \', [tblIncidentVictim].[LastName]) like \'%%'+criteria.typedName+'%%\')'
+            }else if(criteria.selectedName[i].value === 'complainant'){
+                nameCriteria+='(CONCAT([tblIncidentOthersInvolved].[FirstName], \' \', [tblIncidentOthersInvolved].[LastName]) like \'%%'+criteria.typedName+'%%\')'
+            }
+        }
+        nameCriteria+=')'
+    }
+    if(nameCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + nameCriteria
     }
 
     top_count = ''

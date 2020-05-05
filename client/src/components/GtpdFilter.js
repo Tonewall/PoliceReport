@@ -34,6 +34,8 @@ class gtpdFilter extends Component {
             toTime: null,
             selectedCustomTime: null,
             dateTimeOption: null,
+            typedName: null,
+            selectedName: null,
         };
         this.dateHandler = this.dateHandler.bind(this)
         this.locationHandler = this.locationHandler.bind(this)
@@ -87,6 +89,8 @@ class gtpdFilter extends Component {
             officerName: personnel.officerName, 
             selectedShift: personnel.selectedShift, 
             occurredShift: personnel.selectedOccurredShift,
+            typedName: personnel.typedName,
+            selectedName: personnel.selectedName,
         })
     }
     countHandler = (count) => {

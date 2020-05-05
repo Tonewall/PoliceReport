@@ -38,7 +38,7 @@ class personnel extends Component {
         selectedOfficer: {value: '', label: 'Any'},
         selectedOccurredShift: null,
         typedName: '',
-        selectedName: {value: 'offender', label: 'Offender'},
+        selectedName: [{value: 'offender', label: 'Offender'}],
     };
 
     setShift = selectedShift => { this.setState({selectedShift},
@@ -145,7 +145,7 @@ class personnel extends Component {
                         placeholder={"Offender"}
                         />
                     </div>
-                    <input type="text" name="name" onChange={this.handleChange} className="form-control" id="inputName" placeholder="Enter Name"/>
+                    <input type="text" name="typedName" onChange={this.handleChange} className="form-control" id="inputName" placeholder="Enter Name"/>
                 </div>
             </div>
         </div>
