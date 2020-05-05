@@ -29,6 +29,17 @@ const citationOptions = [
     {value: '40-', label: 'Motor Vehicle and Traffic (Title 40)'},
     {value: 'Other', label: 'Other'}
 ]
+const mentalOptions = [
+    {value: 'EMS', label: 'EMS'},
+    {value: 'Injury', label: 'Injury'},
+    {value: 'Suicide', label: 'Suicide'},
+    {value: '1013', label: '1013'},
+]
+// const mentalOptions = [
+//     {value: 'Drug', label: 'Drug'},
+//     {value: 'Alcohol', label: 'Alcohol'},
+//     {value: 'Weapon', label: 'Weapon'},
+// ]
 
 
 
@@ -40,6 +51,7 @@ class crime extends Component {
         selectedOutcome: null,
         selectedCaseStatus: {value: 'Any', label: 'Any'},
         selectedCitation: null,
+        selectedMental: null,
     };
 
     constructor(props) {
@@ -68,6 +80,12 @@ class crime extends Component {
     }
     setCaseStatus = selectedCaseStatus => {
         this.setState({selectedCaseStatus},
+        function() {
+            this.props.crimeHandler(this.state)
+        });
+    }
+    setMental = selectedMental => {
+        this.setState({selectedMental},
         function() {
             this.props.crimeHandler(this.state)
         });
@@ -144,6 +162,7 @@ class crime extends Component {
             selectedOutcome, 
             selectedCrimeCategory, 
             selectedCaseStatus,
+            selectedMental,
             selectedCitation
         } = this.state;
         return(
@@ -174,6 +193,30 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Injury/Mental Health
+                    </label>
+                    <div>
+                        <Select 
+                        value={selectedMental} 
+                        onChange={this.setMental} 
+                        options={mentalOptions} 
+                        isMulti={true}
+                        placeholder={"Any"}
+                        />
+                    </div>
+                    {/* <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Drug/Alcohol/Weapon
+                    </label>
+                    <div>
+                        <Select 
+                        value={selectedDrug} 
+                        onChange={this.setDrug} 
+                        options={drugOptions} 
+                        isMulti={true}
+                        placeholder={"Any"}
+                        />
+                    </div> */}
                     <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Arrests/Warnings
                     </label>

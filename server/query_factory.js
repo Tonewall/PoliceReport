@@ -639,7 +639,29 @@ module.exports.filter = function(criteria) {
     if(citationScript) {
         criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + citationScript
     }
-    
+
+    mentalCriteria = ''
+    if(criteria.selectedMental) {
+        mentalCriteria = '('
+        for(var i=0;i<criteria.selectedMental.length;i++) {
+            if(i>0){
+                mentalCriteria+=' OR '
+            }
+            if(criteria.selectedMental[i].value === 'EMS'){
+                mentalCriteria+='([EMS] is not null)'
+            } else if(criteria.selectedMental[i].value === '1013'){
+                mentalCriteria+='([1013] > 0)'
+            }else if(criteria.selectedMental[i].value === 'Suicide'){
+                mentalCriteria+='([Suicide] is not null)'
+            }else if(criteria.selectedMental[i].value === 'Injury'){
+            mentalCriteria+='([Injured] is not null)'
+        }
+        }
+        mentalCriteria+=')'
+    }
+    if(mentalCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + mentalCriteria
+    }    
 
     /* Personnel Filter 
         - Priority: Officer Name -> Teams/Shifts

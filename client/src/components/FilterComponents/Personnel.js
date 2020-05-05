@@ -64,6 +64,7 @@ class personnel extends Component {
         fetch('/getOfficers')
             .then(results => {
                 results.json().then(data=> {
+                    console.log(data)
                     this.getOfficers(data)
                 })
             })
@@ -145,7 +146,7 @@ class personnel extends Component {
                         placeholder={"Offender"}
                         />
                     </div>
-                    <input type="text" name="typedName" onChange={this.handleChange} className="form-control" id="inputName" placeholder="Enter Name"/>
+                    <input type="text" name="typedName" onChange={this.handleChange} className="form-control" id="inputName" placeholder="Enter Name" style={{marginTop:'10px'}}/>
                 </div>
             </div>
         </div>
