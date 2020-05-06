@@ -37,6 +37,12 @@ class gtpdFilter extends Component {
             typedName: null,
             selectedName: null,
             selectedMental: null,
+            alcohol: false,
+            drug: false,
+            weapon: false,
+            selectedZone: null,
+            selectedLocationCode: null,
+            MO: null,
         };
         this.dateHandler = this.dateHandler.bind(this)
         this.locationHandler = this.locationHandler.bind(this)
@@ -71,7 +77,10 @@ class gtpdFilter extends Component {
             selectedDepartment: location.selectedDepartment, 
             selectedGTLocationType: location.selectedGTLocationType, 
             streetName: location.streetName, 
-        })
+            selectedZone: location.selectedZone,
+            selectedLocationCode: location.selectedLocationCode,
+            MO: location.MO,
+        }, function(){console.log(this.state)})
     }
 
     crimeHandler = (crime) => {
@@ -83,7 +92,10 @@ class gtpdFilter extends Component {
             selectedCaseStatus: crime.selectedCaseStatus,
             selectedCitation: crime.selectedCitation,
             selectedMental: crime.selectedMental,
-        },function(){console.log(this.state)})
+            alcohol: crime.alcohol,
+            drug: crime.drug,
+            weapon: crime.weapon,
+        })
     }
 
     personnelHandler = (personnel) => {

@@ -64,7 +64,6 @@ class personnel extends Component {
         fetch('/getOfficers')
             .then(results => {
                 results.json().then(data=> {
-                    console.log(data)
                     this.getOfficers(data)
                 })
             })

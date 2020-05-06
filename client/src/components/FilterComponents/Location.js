@@ -51,6 +51,23 @@ const apdLocationTypeOptions = [
     {value: 'APD-Theatre', label: 'APD-Theatre'},
 ]
 
+const zoneOptions = [
+    {value: 'Z1', label: 'Z1'},
+    {value: 'Z2', label: 'Z2'},
+    {value: 'Z3', label: 'Z3'},
+    {value: 'Z4', label: 'Z4'},
+]
+
+const locationCodeOptions = [
+    {value: 'ONCAM', label: 'ONCAM'},
+    {value: 'ONCAMRES', label: 'ONCAMRES'},
+    {value: 'NONCAM', label: 'NONCAM'},
+    {value: 'PUB', label: 'PUB'},
+    {value: 'NONCLERY', label: 'NONCLERY'},
+    {value: 'APD', label: 'APD'},
+    {value: 'MARTA', label: 'MARTA'},
+]
+
 
 class location extends Component {
     state = {
@@ -60,6 +77,9 @@ class location extends Component {
         selectedDepartment: {value: 'bothDepartment', label: 'Both Departments'},
         selectedGTLocationType: {value: 'Any', label: 'Any'},
         selectedAPDLocationType: {value: 'Any', label: 'Any'},
+        selectedZone: null,
+        selectedLocationCode:null,
+        MO: false,
     };
 
     constructor(props) {
@@ -79,6 +99,20 @@ class location extends Component {
         function() {
             this.props.locationHandler(this.state)
         }); }
+    setZone = selectedZone => { this.setState({selectedZone},
+        function() {
+            this.props.locationHandler(this.state)
+        }); }
+    setLocationCode = selectedLocationCode => { this.setState({selectedLocationCode},
+        function() {
+            this.props.locationHandler(this.state)
+        }); }
+    handleCheck = event => {
+        this.setState({[event.target.name]: event.target.checked},
+            function() {
+                this.props.locationHandler(this.state)
+            });
+    }
 
 
 
@@ -101,6 +135,16 @@ class location extends Component {
                         />
                     </div>
                     <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Georgia Tech Zones
+                    </label>
+                    <div>
+                        <Select 
+                        value={this.state.selectedZone} 
+                        onChange={this.setZone} 
+                        options={zoneOptions} 
+                        />
+                    </div>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Georgia Tech Buildings
                     </label>
                     <div>
@@ -112,6 +156,25 @@ class location extends Component {
                         placeholder={"Any"}
                         />
                     </div>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Location Code
+                    </label>
+                    <div>
+                        <Select 
+                        value={this.selectedLocationCode} 
+                        onChange={this.setLocationCode} 
+                        options={locationCodeOptions} 
+                        placeholder={"Any"}
+                        />
+                    </div>
+                    <div className='col-1'></div>
+                    <label className='col-2'>MO</label>
+                    <input className='row col-2' 
+                        type="checkbox"
+                        name={'MO'}
+                        style={{marginLeft: '0'}}
+                        checked={this.state.MO}
+                        onChange={this.handleCheck}/>
                 </div>
             )
         } else if (department.value === "apDepartment") {
@@ -140,6 +203,25 @@ class location extends Component {
                         placeholder={"Any"}
                         />
                     </div>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Location Code
+                    </label>
+                    <div>
+                        <Select 
+                        value={this.selectedLocationCode} 
+                        onChange={this.setLocationCode} 
+                        options={locationCodeOptions} 
+                        placeholder={"Any"}
+                        />
+                    </div>
+                    <div className='col-1'></div>
+                    <label className='col-2'>MO</label>
+                    <input className='row col-2' 
+                        type="checkbox"
+                        name={'MO'}
+                        style={{marginLeft: '0'}}
+                        checked={this.state.MO}
+                        onChange={this.handleCheck}/>
                 </div>
             )
         } else if (department.value === "bothDepartment") {
@@ -153,6 +235,16 @@ class location extends Component {
                         value={this.state.selectedGTLocationType} 
                         onChange={this.setGTLocationType} 
                         options={gtLocationTypeOptions} 
+                        />
+                    </div>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Georgia Tech Zones
+                    </label>
+                    <div>
+                        <Select 
+                        value={this.state.selectedZone} 
+                        onChange={this.setZone} 
+                        options={zoneOptions} 
                         />
                     </div>
                     <label className="col-12 col-form-label" style={{fontSize: 13}}>
@@ -190,6 +282,25 @@ class location extends Component {
                         placeholder={"Any"}
                         />
                     </div>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Location Code
+                    </label>
+                    <div>
+                        <Select 
+                        value={this.selectedLocationCode} 
+                        onChange={this.setLocationCode} 
+                        options={locationCodeOptions} 
+                        placeholder={"Any"}
+                        />
+                    </div>
+                    <div className='col-1'></div>
+                    <label className='col-2'>MO</label>
+                    <input className='row col-2' 
+                        type="checkbox"
+                        name={'MO'}
+                        style={{marginLeft: '0'}}
+                        checked={this.state.MO}
+                        onChange={this.handleCheck}/>
                 </div>
             )
         }

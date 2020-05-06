@@ -1,5 +1,7 @@
 .filterMain {
     min-height: 110vh;
+    max-width: 1300px;
+    margin: auto;
 }
 .searchButton {
     margin-top: 20px;

@@ -35,11 +35,6 @@ const mentalOptions = [
     {value: 'Suicide', label: 'Suicide'},
     {value: '1013', label: '1013'},
 ]
-// const mentalOptions = [
-//     {value: 'Drug', label: 'Drug'},
-//     {value: 'Alcohol', label: 'Alcohol'},
-//     {value: 'Weapon', label: 'Weapon'},
-// ]
 
 
 
@@ -52,6 +47,9 @@ class crime extends Component {
         selectedCaseStatus: {value: 'Any', label: 'Any'},
         selectedCitation: null,
         selectedMental: null,
+        weapon: false,
+        drug: false,
+        alcohol: false,
     };
 
     constructor(props) {
@@ -114,6 +112,7 @@ class crime extends Component {
                 this.props.crimeHandler(this.state)
             })
     }
+    setAlcohol
     populateCrimes(data) {
         for(var i = 0; i < data.length; i++) {
             crimeTypeOptions[i] = data[i];
@@ -153,6 +152,12 @@ class crime extends Component {
                 })
             })
             .catch(err => console.error(err))
+    }
+    handleChange = event => {
+        this.setState({[event.target.name]: event.target.checked},
+            function() {
+                this.props.crimeHandler(this.state)
+            });
     }
 
     render() {
@@ -205,18 +210,35 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    {/* <label className="col-12 col-form-label" style={{fontSize: 13}}>
-                        Drug/Alcohol/Weapon
-                    </label>
-                    <div>
-                        <Select 
-                        value={selectedDrug} 
-                        onChange={this.setDrug} 
-                        options={drugOptions} 
-                        isMulti={true}
-                        placeholder={"Any"}
-                        />
-                    </div> */}
+                    <div className='row'>
+                    <div className='col-4'>
+                        <label className='col-12' style={{marginLeft: '15%'}}>Alcohol</label>
+                        <input className='col-12' 
+                        type="checkbox"
+                        name={'alcohol'}
+                        checked={this.state.alcohol}
+                        onChange={this.handleChange}/>
+                    </div>
+                    <div className='col-4'>
+                        <label className='col-12' style={{marginLeft: '15%'}}>Drug</label>
+                        <input className='col-12' 
+                        type="checkbox"
+                        name={'drug'}
+                        checked={this.state.drug}
+                        onChange={this.handleChange}/>
+                    </div>
+                    <div className='col-4'>
+                        <label className='col-12' style={{marginLeft: '15%'}}>Weapon</label>
+                        <input className='col-12' 
+                        type="checkbox"
+                        name={'weapon'}
+                        checked={this.state.weapon}
+                        onChange={this.handleChange}/>
+                    </div>
+                    </div>
+                    
+                                            
+
                     <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Arrests/Warnings
                     </label>

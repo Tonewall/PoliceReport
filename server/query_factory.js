@@ -695,6 +695,59 @@ module.exports.filter = function(criteria) {
         criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + occurredShiftCriteria
     }
 
+    drugAlcCriteria = ''
+    var drugAlc = []
+    if(criteria.drug) {
+        drugAlc.push('([Drug] > 0)')
+    }
+    if(criteria.alcohol) {
+        drugAlc.push('([Alcohol] > 0)')
+    }
+    if(criteria.weapon) {
+        drugAlc.push('([Weapon] is not null)')
+    }
+
+    if(drugAlc.length > 0) {
+        drugAlcCriteria += '('
+        for(var i=0;i<drugAlc.length;i++) {
+            if(i>0){
+                drugAlcCriteria+=' OR '
+            }
+            drugAlcCriteria += drugAlc[i]
+        }
+        drugAlcCriteria+=')'
+    }
+    if(drugAlcCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + drugAlcCriteria
+    }
+
+    zoneCriteria = ''
+    if(criteria.selectedZone) {
+        zoneCriteria = '[Patrol Zone] = \''+criteria.selectedZone.value+'\''
+    }
+    if(zoneCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + zoneCriteria
+    }
+    console.log(zoneCriteria)
+
+    locationCodeCriteria = ''
+    if(criteria.selectedLocationCode) {
+        locationCodeCriteria = '[Location Code] = \''+criteria.selectedLocationCode.value+'\''
+    }
+    if(locationCodeCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + locationCodeCriteria
+    }
+    console.log(locationCodeCriteria)
+
+    MOCriteria = ''
+    if(criteria.MO) {
+        MOCriteria = '[MO] is not null'
+    }
+    if(zoneCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + zoneCriteria
+    }
+    console.log(MOCriteria)
+
     nameCriteria = ''
     if(criteria.selectedName && criteria.typedName) {
         nameCriteria = '('
