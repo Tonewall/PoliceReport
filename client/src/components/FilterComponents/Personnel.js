@@ -21,6 +21,11 @@ const occurredShiftOptions = [
     {value: 'eveShift', label: 'Eve'},
     {value: 'mornShift', label: 'Morn'},   
 ]
+const nameOption = [
+    {value: 'offender', label: 'Offender'},
+    {value: 'victim', label: 'Victim'},
+    {value: 'complainant', label: 'Complainant/Witness'}, 
+]
 
 const officerOptions = [{value: '', label: 'Any'}];
 
@@ -29,8 +34,11 @@ class personnel extends Component {
     state = {
         selectedShift: null,
         officerName: '',
+        name: null,
         selectedOfficer: {value: '', label: 'Any'},
         selectedOccurredShift: null,
+        typedName: '',
+        selectedName: [{value: 'offender', label: 'Offender'}],
     };
 
     setShift = selectedShift => { this.setState({selectedShift},
@@ -38,6 +46,10 @@ class personnel extends Component {
             this.props.personnelHandler(this.state)
         }); }
     setOccurredShift = selectedOccurredShift => { this.setState({selectedOccurredShift},
+        function() {
+            this.props.personnelHandler(this.state)
+        }); }
+    setNameOption = selectedName => { this.setState({selectedName},
         function() {
             this.props.personnelHandler(this.state)
         }); }
@@ -80,7 +92,7 @@ class personnel extends Component {
     }
 
     render() {
-        const { selectedShift, selectedOfficer, selectedOccurredShift } = this.state;
+        const { selectedShift, selectedOfficer, selectedOccurredShift, selectedName } = this.state;
         return(
         <div className="main">
             <div className="card filterTypeCards shiftCard">
@@ -121,6 +133,19 @@ class personnel extends Component {
                         placeholder={"Any"}
                         />
                     </div>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Name Search
+                    </label>
+                    <div>
+                        <Select 
+                        value={selectedName} 
+                        onChange={this.setNameOption} 
+                        options={nameOption} 
+                        isMulti={true}
+                        placeholder={"Offender"}
+                        />
+                    </div>
+                    <input type="text" name="typedName" onChange={this.handleChange} className="form-control" id="inputName" placeholder="Enter Name" style={{marginTop:'10px'}}/>
                 </div>
             </div>
         </div>

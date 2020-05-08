@@ -19,6 +19,7 @@ class gtpdFilter extends Component {
             selectedCrimeType: null,
             selectedCrimeCategory: null,
             selectedShift: null,
+            occurredShift: null,
             selectedArrest: null,
             selectedOutcome: null,
             officerName: null,
@@ -33,6 +34,15 @@ class gtpdFilter extends Component {
             toTime: null,
             selectedCustomTime: null,
             dateTimeOption: null,
+            typedName: null,
+            selectedName: null,
+            selectedMental: null,
+            alcohol: false,
+            drug: false,
+            weapon: false,
+            selectedZone: null,
+            selectedLocationCode: null,
+            MO: null,
         };
         this.dateHandler = this.dateHandler.bind(this)
         this.locationHandler = this.locationHandler.bind(this)
@@ -50,9 +60,6 @@ class gtpdFilter extends Component {
             toTime: date.toTime,
             selectedCustomTime: date.selectedCustomTime,
             dateTimeOption: date.dateTimeOption
-        },
-        function() {
-            console.log(this.state)
         })
     }
 
@@ -70,7 +77,10 @@ class gtpdFilter extends Component {
             selectedDepartment: location.selectedDepartment, 
             selectedGTLocationType: location.selectedGTLocationType, 
             streetName: location.streetName, 
-        })
+            selectedZone: location.selectedZone,
+            selectedLocationCode: location.selectedLocationCode,
+            MO: location.MO,
+        }, function(){console.log(this.state)})
     }
 
     crimeHandler = (crime) => {
@@ -80,6 +90,11 @@ class gtpdFilter extends Component {
             selectedArrest: crime.selectedArrest, 
             selectedOutcome: crime.selectedOutcome, 
             selectedCaseStatus: crime.selectedCaseStatus,
+            selectedCitation: crime.selectedCitation,
+            selectedMental: crime.selectedMental,
+            alcohol: crime.alcohol,
+            drug: crime.drug,
+            weapon: crime.weapon,
         })
     }
 
@@ -87,6 +102,9 @@ class gtpdFilter extends Component {
         this.setState({
             officerName: personnel.officerName, 
             selectedShift: personnel.selectedShift, 
+            occurredShift: personnel.selectedOccurredShift,
+            typedName: personnel.typedName,
+            selectedName: personnel.selectedName,
         })
     }
     countHandler = (count) => {

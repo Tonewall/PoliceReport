@@ -11,8 +11,8 @@ const arrestOptions = [
 ]
 
 const outcomeOptions = [
-    {value: 'felony', label: 'Felony'},
-    {value: 'misdemeanor', label: 'Misdemeanor'},
+    {value: 'F', label: 'Felony'},
+    {value: 'M', label: 'Misdemeanor'},
 ];
 const caseStatusOptions = [
     {value: 'A', label: 'A'},
@@ -24,6 +24,18 @@ const caseStatusOptions = [
     {value: 'U', label: 'U'},
 ];
 
+const citationOptions = [
+    {value: '16-', label: 'Crimes and Offenses (Title 16)'},
+    {value: '40-', label: 'Motor Vehicle and Traffic (Title 40)'},
+    {value: 'Other', label: 'Other'}
+]
+const mentalOptions = [
+    {value: 'EMS', label: 'EMS'},
+    {value: 'Injury', label: 'Injury'},
+    {value: 'Suicide', label: 'Suicide'},
+    {value: '1013', label: '1013'},
+]
+
 
 
 class crime extends Component {
@@ -32,7 +44,12 @@ class crime extends Component {
         selectedCrimeCategory: {value: 'Any', label: 'Any'},
         selectedArrest: null,
         selectedOutcome: null,
-        selectedCaseStatus: {value: 'Any', label: 'Any'}
+        selectedCaseStatus: {value: 'Any', label: 'Any'},
+        selectedCitation: null,
+        selectedMental: null,
+        weapon: false,
+        drug: false,
+        alcohol: false,
     };
 
     constructor(props) {
@@ -65,6 +82,12 @@ class crime extends Component {
             this.props.crimeHandler(this.state)
         });
     }
+    setMental = selectedMental => {
+        this.setState({selectedMental},
+        function() {
+            this.props.crimeHandler(this.state)
+        });
+    }
     setCrimeCategory = selectedCrimeCategory => {
         this.setState({selectedCrimeCategory},
         function() {
@@ -83,6 +106,13 @@ class crime extends Component {
         }
         this.forceUpdate()
     }
+    setCitation = selectedCitation => {
+        this.setState({selectedCitation},
+            function() {
+                this.props.crimeHandler(this.state)
+            })
+    }
+    setAlcohol
     populateCrimes(data) {
         for(var i = 0; i < data.length; i++) {
             crimeTypeOptions[i] = data[i];
@@ -123,6 +153,12 @@ class crime extends Component {
             })
             .catch(err => console.error(err))
     }
+    handleChange = event => {
+        this.setState({[event.target.name]: event.target.checked},
+            function() {
+                this.props.crimeHandler(this.state)
+            });
+    }
 
     render() {
         const {             
@@ -131,6 +167,8 @@ class crime extends Component {
             selectedOutcome, 
             selectedCrimeCategory, 
             selectedCaseStatus,
+            selectedMental,
+            selectedCitation
         } = this.state;
         return(
         <div className="main">
@@ -161,6 +199,47 @@ class crime extends Component {
                         />
                     </div>
                     <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Injury/Mental Health
+                    </label>
+                    <div>
+                        <Select 
+                        value={selectedMental} 
+                        onChange={this.setMental} 
+                        options={mentalOptions} 
+                        isMulti={true}
+                        placeholder={"Any"}
+                        />
+                    </div>
+                    <div className='row'>
+                    <div className='col-4'>
+                        <label className='col-12' style={{marginLeft: '15%'}}>Alcohol</label>
+                        <input className='col-12' 
+                        type="checkbox"
+                        name={'alcohol'}
+                        checked={this.state.alcohol}
+                        onChange={this.handleChange}/>
+                    </div>
+                    <div className='col-4'>
+                        <label className='col-12' style={{marginLeft: '15%'}}>Drug</label>
+                        <input className='col-12' 
+                        type="checkbox"
+                        name={'drug'}
+                        checked={this.state.drug}
+                        onChange={this.handleChange}/>
+                    </div>
+                    <div className='col-4'>
+                        <label className='col-12' style={{marginLeft: '15%'}}>Weapon</label>
+                        <input className='col-12' 
+                        type="checkbox"
+                        name={'weapon'}
+                        checked={this.state.weapon}
+                        onChange={this.handleChange}/>
+                    </div>
+                    </div>
+                    
+                                            
+
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Arrests/Warnings
                     </label>
                     <div>
@@ -168,6 +247,18 @@ class crime extends Component {
                         value={selectedArrest} 
                         onChange={this.setArrest} 
                         options={arrestOptions} 
+                        isMulti={true}
+                        placeholder={"Any"}
+                        />
+                    </div>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        Citation
+                    </label>
+                    <div>
+                        <Select 
+                        value={selectedCitation} 
+                        onChange={this.setCitation} 
+                        options={citationOptions} 
                         isMulti={true}
                         placeholder={"Any"}
                         />

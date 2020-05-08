@@ -25,6 +25,7 @@ const columns = [
     {value: 'Property', field: 'Property', label: 'Property', width: 200},
     {value: 'Officer Name', field: 'Officer', label: 'Officer', width: 200},
     {value: 'Report Date', field: 'Report Date', label: 'Report Date', width: 200},
+    {value: 'ViolationCode', field: 'ViolationCode', label: 'Violation Code', width: 100},
 ];
 
 

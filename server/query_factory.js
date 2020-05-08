@@ -14,18 +14,19 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
         '\
             , FORMAT(DATEADD(day, 2, [From Date] + [From Time]),\'yyyy-MM-dd hh:mm tt\') as [From]\
             , FORMAT(DATEADD(day, 2, [To Date] + [To Time]),\'yyyy-MM-dd hh:mm tt\') as [To]\
-            , FORMAT(DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])), \'yyyy-MM-dd\') as [Average Day]\
             , [Description] as [Offense]\
             , FORMAT([Report Date], \'yyyy-MM-dd\') as [Report Date]\
             , [Case Status]\
+            , [Shift2] as [Occurred Shift]\
             , [Unit]\
-            , [Avg Date]\
-            , [Avg Time]\
-            , [Avg Day]\
+            , [ViolationCode]\
+            , FORMAT([Avg Date],\'yyyy-MM-dd\') as [Average Day]\
+            , FORMAT([Avg Time],\'hh:mm tt\') as [Average Time]\
             , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Location]\
             , [Location Landmark] as [Location Landmark]\
-            , CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) AS [Offender Name]\
+            , CONCAT([tblIncidentOffender].[FirstName], \' \', [tblIncidentOffender].[MiddleName], \' \', [tblIncidentOffender].[LastName]) AS [Offender Name]\
             , [Officer Name]\
+            , [OffenseType]\
             , CASE WHEN LEN([OCA Number]) = 8 THEN \'GTPD\'\
                    WHEN LEN([OCA Number]) != 8 THEN \'APD\'\
               END as [Department]\n\
@@ -34,6 +35,14 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 ON ([Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended])\n\
             LEFT JOIN [CrimeAnalytics].[dbo].[Times]\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
+            LEFT JOIN [SS_GARecords_Citation].[dbo].[tblCitation]\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblCitation].[AgencyCaseNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOffense].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentVictim]\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentVictim].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOthersInvolved]\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOthersInvolved].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
                 ON ( [tblIncidentOffender].[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number] )\n'+
             (additional_join_statement==null ? '' : additional_join_statement) + '\n'+
@@ -526,30 +535,44 @@ module.exports.filter = function(criteria) {
             criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + apd_criteria_script
         }
     }
-    // DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) > 16\
-    //                 THEN \'Unknown or -\'\
-    //             WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time]))) <= 16\
-    //                 THEN FORMAT(DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [From Date] + [From Time])), (DATEADD(day, 2, [To Date] + [To Time])))/2, DATEADD(day, 2, [From Date] + [From Time])), \'hh:mm tt\')\
-    //             End as [Average Time]\
-    /* Date Filter */
-    // criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') 
-    //         + '(' + '[Report Date] >= \'' + criteria.startDate + '\' AND [Report Date] <= \'' + criteria.endDate + '\')'
-    // dateTimeOptionScript +='((' + '[Avg Time] >= \'' + criteria.fromTime + '\' AND [Avg Time] <= \'' + criteria.toTime + '\') OR (' + '[From Time] >= \'' + criteria.fromTime + '\' AND [To Time] <= \'' + criteria.toTime + '\'))'
 
-    //need to get from avg, from, and to datetime in the database
+    // Felony/Misdemeanor
+    var outcomeScript = ''
+    if(criteria.selectedOutcome) {
+        if(criteria.selectedOutcome.length === 1) {
+            if(criteria.selectedOutcome[0].value === 'M') {
+                outcomeScript = '[OffenseType] = \'M\''
+            } else {
+                outcomeScript = '[OffenseType] = \'F\''
+            }
+        } else {
+            outcomeScript = '[OffenseType] in (\'M\', \'F\')'
+        }
+    }
+    if(outcomeScript) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + outcomeScript
+    }
+
+    /* Date Filter */
     var dateTimeOptionScript = ''
     if(criteria.dateTimeOption === 'avg' || criteria.dateTimeOption === null) {
         dateTimeOptionScript = '((' + '[Avg Date] >= \'' + criteria.startDate + '\' AND [Avg Date] <= \'' + criteria.endDate + '\') OR (' + '[From Date] >= \'' + criteria.startDate + '\' AND [To Date] <= \'' + criteria.endDate + '\'))'
         if(criteria.selectedCustomTime) {
-            dateTimeOptionScript +='AND ((' + '[Avg Time] >= \'1899-12-30 ' + criteria.fromTime + '\' AND [Avg Time] <= \'1899-12-30 ' + criteria.toTime + '\') OR (' + '[From Time] >= \'1899-12-30 ' + criteria.fromTime + '\' AND [To Time] <= \'1899-12-30 ' + criteria.toTime + '\'))'
+            dateTimeOptionScript +='AND (' + '[Avg Time] >= \'1899-12-30 ' + criteria.fromTime + '\' AND [Avg Time] <= \'1899-12-30 ' + criteria.toTime + '\')'
         }
         
     } else if(criteria.dateTimeOption === 'from') {
-        
+        dateTimeOptionScript = '(' + '[From Date] >= \'' + criteria.startDate + '\' AND [From Date] <= \'' + criteria.endDate + '\')'
+        if(criteria.selectedCustomTime) {
+            dateTimeOptionScript +='AND (' + '[From Time] >= \'1899-12-30 ' + criteria.fromTime + '\' AND [From Time] <= \'1899-12-30 ' + criteria.toTime + '\')'
+        }
     } else if(criteria.dateTimeOption === 'to') {
-
+        dateTimeOptionScript = '(' + '[To Date] >= \'' + criteria.startDate + '\' AND [To Date] <= \'' + criteria.endDate + '\')'
+        if(criteria.selectedCustomTime) {
+            dateTimeOptionScript +='AND (' + '[To Time] >= \'1899-12-30 ' + criteria.fromTime + '\' AND [To Time] <= \'1899-12-30 ' + criteria.toTime + '\')'
+        }
     } else if(criteria.dateTimeOption === 'report') {
-
+        dateTimeOptionScript = '(' + '[Report Date] >= \'' + criteria.startDate + '\' AND [Report Date] <= \'' + criteria.endDate + '\')'
     }
     criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + dateTimeOptionScript
 
@@ -591,6 +614,54 @@ module.exports.filter = function(criteria) {
                 + '[Case Status] = \'' + criteria.selectedCaseStatus.value + '\''
         }
     }
+    citationScript = ''
+    if(criteria.selectedCitation) {
+        if(criteria.selectedCitation.length >= 1) {
+            if(criteria.selectedCitation[0].value == 'Other') {
+                citationScript = '(([ViolationCode] not like \'16%%\' AND [ViolationCode] not like \'40%%\')'
+            } else {
+                citationScript = '([ViolationCode] like \'' + criteria.selectedCitation[0].value + '%%\''
+            }
+        }
+        if(criteria.selectedCitation.length == 2) {
+            if(criteria.selectedCitation[1].value == 'Other') {
+                citationScript += 'OR ([ViolationCode] not like \'16%%\' AND [ViolationCode] not like \'40%%\')'
+            } else {
+                citationScript += 'OR ([ViolationCode] like \'' + criteria.selectedCitation[1].value + '%%\')'
+            }        
+        }
+        citationScript += ')'
+        if(criteria.selectedCitation.length == 2) {
+            citaitonScript = '[ViolationCode] not null'
+        }
+    }
+
+    if(citationScript) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + citationScript
+    }
+
+    mentalCriteria = ''
+    if(criteria.selectedMental) {
+        mentalCriteria = '('
+        for(var i=0;i<criteria.selectedMental.length;i++) {
+            if(i>0){
+                mentalCriteria+=' OR '
+            }
+            if(criteria.selectedMental[i].value === 'EMS'){
+                mentalCriteria+='([EMS] is not null)'
+            } else if(criteria.selectedMental[i].value === '1013'){
+                mentalCriteria+='([1013] > 0)'
+            }else if(criteria.selectedMental[i].value === 'Suicide'){
+                mentalCriteria+='([Suicide] is not null)'
+            }else if(criteria.selectedMental[i].value === 'Injury'){
+            mentalCriteria+='([Injured] is not null)'
+        }
+        }
+        mentalCriteria+=')'
+    }
+    if(mentalCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + mentalCriteria
+    }    
 
     /* Personnel Filter 
         - Priority: Officer Name -> Teams/Shifts
@@ -609,6 +680,93 @@ module.exports.filter = function(criteria) {
             shift_list_script = shift_list_script.substring(0, shift_list_script.length-1)
             criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ')+ '([Unit] in (' + shift_list_script + ') )'
         }
+    }
+    occurredShiftCriteria = ''
+    if(criteria.occurredShift) {
+        if(criteria.occurredShift.length ===3) {
+            occurredShiftCriteria = '([Shift2] in(\'' + criteria.occurredShift[0].label + '\', \'' + criteria.occurredShift[1].label + '\', \''+ criteria.occurredShift[2].label + '\'))'
+        } else if(criteria.occurredShift.length === 2) {
+            occurredShiftCriteria = '([Shift2] in(\'' + criteria.occurredShift[0].label + '\', \'' + criteria.occurredShift[1].label + '\'))'
+        } else {
+            occurredShiftCriteria = '([Shift2] in(\'' + criteria.occurredShift[0].label + '\'))'
+        }
+    }
+    if(occurredShiftCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + occurredShiftCriteria
+    }
+
+    drugAlcCriteria = ''
+    var drugAlc = []
+    if(criteria.drug) {
+        drugAlc.push('([Drug] > 0)')
+    }
+    if(criteria.alcohol) {
+        drugAlc.push('([Alcohol] > 0)')
+    }
+    if(criteria.weapon) {
+        drugAlc.push('([Weapon] is not null)')
+    }
+
+    if(drugAlc.length > 0) {
+        drugAlcCriteria += '('
+        for(var i=0;i<drugAlc.length;i++) {
+            if(i>0){
+                drugAlcCriteria+=' OR '
+            }
+            drugAlcCriteria += drugAlc[i]
+        }
+        drugAlcCriteria+=')'
+    }
+    if(drugAlcCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + drugAlcCriteria
+    }
+
+    zoneCriteria = ''
+    if(criteria.selectedZone) {
+        zoneCriteria = '[Patrol Zone] = \''+criteria.selectedZone.value+'\''
+    }
+    if(zoneCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + zoneCriteria
+    }
+    console.log(zoneCriteria)
+
+    locationCodeCriteria = ''
+    if(criteria.selectedLocationCode) {
+        locationCodeCriteria = '[Location Code] = \''+criteria.selectedLocationCode.value+'\''
+    }
+    if(locationCodeCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + locationCodeCriteria
+    }
+    console.log(locationCodeCriteria)
+
+    MOCriteria = ''
+    if(criteria.MO) {
+        MOCriteria = '[MO] is not null'
+    }
+    if(zoneCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + zoneCriteria
+    }
+    console.log(MOCriteria)
+
+    nameCriteria = ''
+    if(criteria.selectedName && criteria.typedName) {
+        nameCriteria = '('
+        for(var i=0;i<criteria.selectedName.length;i++) {
+            if(i>0){
+                nameCriteria+=' OR '
+            }
+            if(criteria.selectedName[i].value === 'offender'){
+                nameCriteria+='(CONCAT([tblIncidentOffender].[FirstName], \' \', [tblIncidentOffender].[LastName]) like \'%%'+criteria.typedName+'%%\')'
+            } else if(criteria.selectedName[i].value === 'victim'){
+                nameCriteria+='(CONCAT([tblIncidentVictim].[FirstName], \' \', [tblIncidentVictim].[LastName]) like \'%%'+criteria.typedName+'%%\')'
+            }else if(criteria.selectedName[i].value === 'complainant'){
+                nameCriteria+='(CONCAT([tblIncidentOthersInvolved].[FirstName], \' \', [tblIncidentOthersInvolved].[LastName]) like \'%%'+criteria.typedName+'%%\')'
+            }
+        }
+        nameCriteria+=')'
+    }
+    if(nameCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + nameCriteria
     }
 
     top_count = ''
