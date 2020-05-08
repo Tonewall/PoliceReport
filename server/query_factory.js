@@ -131,12 +131,308 @@ module.exports.get_offense_description = function(incident_number) {
         ORDER BY [SequenceNumber] ASC\
     ', incident_number)
 }
+module.exports.get_personnel_data = function(incident_number) {
+    return sprintf('\
+    SELECT [ReportingOfficerName]\
+        ,[OtherZone]\
+        ,[CaseStatus]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncident]\
+        WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+module.exports.get_location_data = function(incident_number) {
+    return sprintf('\
+    SELECT [LocationLandmark]\
+        ,[Location]\
+        ,[LocationStreetNumber]\
+        ,[LocationStreet]\
+        ,[PatrolZone]\
+        ,[LocationCode]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncident]\
+        WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+
+module.exports.get_weapon_data = function(incident_number) {
+    return sprintf('\
+    SELECT [tblIncidentOffense].[PrimaryKey]\
+      ,[IncidentNumber]\
+	  ,[tblIncidentOffenseWeapon].[Weapon]\
+	  ,[Description]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
+	        left join [SS_GARecords_Incident].[dbo].[tblIncidentOffenseWeapon] \
+                on ([tblIncidentOffenseWeapon].[ForeignKey] = [tblIncidentOffense].[PrimaryKey])\
+			left join [SS_GARecords_Config].[dbo].[tblLkpIBRWeapon] \
+                on ([tblIncidentOffenseWeapon].[Weapon] = [tblLkpIBRWeapon].[Code])\
+	    where Weapon is not null\
+        and ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+
+module.exports.get_property_data = function(incident_number) {
+    return sprintf('\
+    SELECT [PrimaryKey]\
+      ,[SynchronizePrimaryKey]\
+      ,[IncidentNumber]\
+      ,[SequenceNumber]\
+      ,[SupplementNumber]\
+      ,[VehicleID]\
+      ,[VehicleHistoryPrimaryKey]\
+      ,[TypeCode]\
+      ,[Status]\
+      ,[ItemValue]\
+      ,[OtherJurisdiction]\
+      ,[NonReportable]\
+      ,[DateObtained]\
+      ,[Vehicle]\
+      ,[ItemCategory]\
+      ,[Quantity]\
+      ,[ItemDescription]\
+      ,[Make]\
+      ,[Model]\
+      ,[SerialNumber]\
+      ,[OwnerNumber]\
+      ,[NCICNumber]\
+      ,[PrimaryColor]\
+      ,[SecondaryColor]\
+      ,[LossValue]\
+      ,[ReportAsProperty]\
+      ,[VehicleType]\
+      ,[VehicleYear]\
+      ,[VehicleStyle]\
+      ,[LicensePlateNumber]\
+      ,[LicensePlateState]\
+      ,[VIN]\
+      ,[Owner]\
+      ,[Recovered]\
+      ,[RecoveredValue]\
+      ,[RecoveredQuantity]\
+      ,[RecoveredDescription]\
+      ,[TimeObtained]\
+      ,[ObtainedOfficerID]\
+      ,[ObtainedOfficerName]\
+      ,[ObtainedOfficerSSN]\
+      ,[ObtainedAddress]\
+      ,[ObtainedLandmark]\
+      ,[ObtainedStreetNumber]\
+      ,[ObtainedFraction]\
+      ,[ObtainedDirectional]\
+      ,[ObtainedStreet]\
+      ,[ObtainedLocation]\
+      ,[ObtainedMailingAddress]\
+      ,[ObtainedCity]\
+      ,[ObtainedState]\
+      ,[ObtainedZipCode]\
+      ,[ObtainedLatitude]\
+      ,[ObtainedLongitude]\
+      ,[ObtainedAltitude]\
+      ,[ObtainedFrom]\
+      ,[RelatedOffense]\
+      ,[RegistrationYear]\
+      ,[InsuranceCompany]\
+      ,[IdentificationType]\
+      ,[MotorSize]\
+      ,[Transmission]\
+      ,[StolenVehicle]\
+      ,[RecoveredVehicle]\
+      ,[SuspectsVehicle]\
+      ,[Involvement]\
+      ,[InvolvementDescription]\
+      ,[Description]\
+  FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty]\
+    left join [SS_GARecords_Config].[dbo].[tblLkpIBRProperty] \
+        on ([tblLkpIBRProperty].[Code] = [tblIncidentProperty].[TypeCode])\
+  WHERE ([IncidentNumber]=\'%s\')\
+  order by [SequenceNumber]\
+    ', incident_number)
+}
+
+module.exports.get_time = function(incident_number) {
+    return sprintf('\
+    SELECT [IncidentNumber]\
+      ,[ReportDate]\
+      ,[ReportTime]\
+      ,[DateIncidentEnded]\
+      ,[TimeIncidentEnded]\
+      ,[IncidentDate]\
+      ,[IncidentTime]\
+    FROM [SS_GARecords_Incident].[dbo].[tblIncident]\
+        WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+module.exports.get_premise_data = function(incident_number) {
+    return sprintf('\
+    SELECT [PremisesEntered]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
+        WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+module.exports.get_drug_data = function(incident_number) {
+    return sprintf('\
+    SELECT [DrugRelated]\
+        ,[IncidentNumber]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncident]\
+        WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+module.exports.get_location_type = function(incident_number) {
+    return sprintf('\
+    SELECT [Location]\
+        ,[IncidentNumber]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
+        WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+module.exports.get_victim = function(incident_number) {
+    return sprintf('\
+    SELECT [IncidentNumber]\
+      ,[SequenceNumber]\
+      ,[SupplementNumber]\
+      ,[PersonID]\
+      ,[NameHistoryPrimaryKey]\
+      ,[VictimType]\
+      ,[Age]\
+      ,[Race]\
+      ,[Sex]\
+      ,[FirstName]\
+      ,[FirstNameMetaphone]\
+      ,[MiddleName]\
+      ,[MiddleNameMetaphone]\
+      ,[LastName]\
+      ,[LastNameMetaphone]\
+      ,[Suffix]\
+      ,[DateOfBirth]\
+      ,[SSN]\
+      ,[HomeAddress]\
+      ,[HomeLandmark]\
+      ,[HomeStreetNumber]\
+      ,[HomeFraction]\
+      ,[HomeDirectional]\
+      ,[HomeStreet]\
+      ,[HomeLocation]\
+      ,[HomeMailingAddress]\
+      ,[HomeCity]\
+      ,[HomeState]\
+      ,[HomeZipCode]\
+      ,[HomeLatitude]\
+      ,[HomeLongitude]\
+      ,[HomeAltitude]\
+      ,[HomePhoneNumber]\
+      ,[Occupation]\
+      ,[Employer]\
+      ,[EmployerAddress]\
+      ,[EmployerLandmark]\
+      ,[EmployerStreetNumber]\
+      ,[EmployerFraction]\
+      ,[EmployerDirectional]\
+      ,[EmployerStreet]\
+      ,[EmployerLocation]\
+      ,[EmployerMailingAddress]\
+      ,[EmployerCity]\
+      ,[EmployerState]\
+      ,[EmployerZipCode]\
+      ,[EmployerLatitude]\
+      ,[EmployerLongitude]\
+      ,[EmployerAltitude]\
+      ,[EmployerPhoneNumber]\
+      ,[Ethnicity]\
+      ,[EmployerPhoneExtension]\
+      ,[OfficerActivity]\
+      ,[OfficerAssignment]\
+      ,[Student]\
+      ,[CensusTract]\
+      ,[VictimSchool]\
+      ,[Juvenile]\
+      ,[SecondaryPhoneNumber]\
+      ,[DriverLicenseNumber]\
+      ,[DriverLicenseState]\
+      ,[JustifiableCircumstance]\
+      ,[ResidentStatus]\
+      ,[OtherORINumber]\
+  FROM [SS_GARecords_Incident].[dbo].[tblIncidentVictim]\
+  WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+module.exports.get_complainant = function(incident_number) {
+    return sprintf('SELECT [IncidentNumber]\
+      ,[SequenceNumber]\
+      ,[SupplementNumber]\
+      ,[PersonID]\
+      ,[NameHistoryPrimaryKey]\
+      ,[PersonType]\
+      ,[FirstName]\
+      ,[FirstNameMetaphone]\
+      ,[MiddleName]\
+      ,[MiddleNameMetaphone]\
+      ,[LastName]\
+      ,[LastNameMetaphone]\
+      ,[Suffix]\
+      ,[DateOfBirth]\
+      ,[Age]\
+      ,[Race]\
+      ,[Sex]\
+      ,[HomeAddress]\
+      ,[HomeLandmark]\
+      ,[HomeStreetNumber]\
+      ,[HomeFraction]\
+      ,[HomeDirectional]\
+      ,[HomeStreet]\
+      ,[HomeLocation]\
+      ,[HomeMailingAddress]\
+      ,[HomeCity]\
+      ,[HomeState]\
+      ,[HomeZipCode]\
+      ,[HomeLatitude]\
+      ,[HomeLongitude]\
+      ,[HomeAltitude]\
+      ,[HomePhoneNumber]\
+      ,[Employer]\
+      ,[EmployerAddress]\
+      ,[EmployerLandmark]\
+      ,[EmployerStreetNumber]\
+      ,[EmployerFraction]\
+      ,[EmployerDirectional]\
+      ,[EmployerStreet]\
+      ,[EmployerLocation]\
+      ,[EmployerMailingAddress]\
+      ,[EmployerCity]\
+      ,[EmployerState]\
+      ,[EmployerZipCode]\
+      ,[EmployerLatitude]\
+      ,[EmployerLongitude]\
+      ,[EmployerAltitude]\
+      ,[EmployerPhoneNumber]\
+      ,[EmployerPhoneExtension]\
+      ,[Juvenile]\
+      ,[SecondaryPhoneNumber]\
+      ,[DriverLicenseNumber]\
+      ,[DriverLicenseState]\
+  FROM [SS_GARecords_Incident].[dbo].[tblIncidentOthersInvolved]\
+  WHERE ([IncidentNumber]=\'%s\')\
+    ', incident_number)
+}
+module.exports.get_offender = function(incident_number) {
+    return sprintf('\
+        SELECT *\n\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\n\
+        WHERE ([IncidentNumber]=\'%s\')\n\
+        Order by [SequenceNumber]\
+    ', incident_number)
+}
+
 
 module.exports.get_narrative_APD = function(incident_number) {
     return sprintf('\
         SELECT *\n\
         FROM [CrimeAnalytics].[dbo].[APD Narratives]\n\
         WHERE ([offense_id]=\'%s\')\n\
+    ', incident_number)
+}
+module.exports.get_offense = function(incident_number) {
+    return sprintf('\
+        SELECT *\n\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
+        WHERE ([IncidentNumber]=\'%s\')\n\
     ', incident_number)
 }
 
