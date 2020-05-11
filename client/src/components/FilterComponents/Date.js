@@ -140,7 +140,7 @@ class date extends Component {
         return(
             <div className="main">
                 <div className="card filterTypeCards dateCard">
-                    <h4 className="card-header">Date</h4>
+                    <h4 className="card-header">Date/Time</h4>
                     <div className="card-body">
                         <div className="row">
                             <div className="col-6 dateFilters">
@@ -181,7 +181,7 @@ class date extends Component {
                                 <label style={{fontSize: 13}}>Date Type</label>
                                 <label className="col-12">
                                     <input onChange={this.changedRadio} name="timeOption" type="radio" value="avg"/>
-                                    Average Date
+                                    Occurred Shift
                                 </label>
                                 <label className="col-12">
                                     <input onChange={this.changedRadio} name="timeOption" type="radio" value="from"/>

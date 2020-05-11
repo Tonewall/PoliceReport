@@ -442,6 +442,18 @@ function add_router(app) {
             else res.status(400).send(err);
         });
     });
+    app.get('/get-distinct-mo', function (req, res) {
+        query = query_factory.get_distinct_mo()
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
     app.get('/personnel-data/:incident_number', function (req, res) {
         query = query_factory.get_personnel_data(req.params.incident_number)
         db_query(query, (err, result) => {

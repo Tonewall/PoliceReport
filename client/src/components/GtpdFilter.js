@@ -7,6 +7,7 @@ import Personnel from "./FilterComponents/Personnel"
 import Count from "./FilterComponents/Count"
 import {Redirect} from 'react-router-dom'
 import CustomColumn from "./FilterComponents/CustomColumn"
+import Name from './FilterComponents/Name'
 
 class gtpdFilter extends Component {
     constructor(props) {
@@ -80,7 +81,7 @@ class gtpdFilter extends Component {
             selectedZone: location.selectedZone,
             selectedLocationCode: location.selectedLocationCode,
             MO: location.MO,
-        }, function(){console.log(this.state)})
+        })
     }
 
     crimeHandler = (crime) => {
@@ -103,6 +104,10 @@ class gtpdFilter extends Component {
             officerName: personnel.officerName, 
             selectedShift: personnel.selectedShift, 
             occurredShift: personnel.selectedOccurredShift,
+        })
+    }
+    nameHandler = (personnel) => {
+        this.setState({
             typedName: personnel.typedName,
             selectedName: personnel.selectedName,
         })
@@ -134,6 +139,7 @@ class gtpdFilter extends Component {
                                     <Date dateHandler={this.dateHandler}/>
                                     <CustomColumn customColumnHandler={this.customColumnHandler}/>
                                     <Count countHandler={this.countHandler}/>
+                                    <Name nameHandler={this.nameHandler}/>
                                 </div>
                             </div>
                             <div className="row">

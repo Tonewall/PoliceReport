@@ -15,6 +15,7 @@ const outcomeOptions = [
     {value: 'M', label: 'Misdemeanor'},
 ];
 const caseStatusOptions = [
+    {value: 'Any', label: 'Any'},
     {value: 'A', label: 'A'},
     {value: 'CA', label: 'CA'},
     {value: 'CE', label: 'CE'},
@@ -30,10 +31,10 @@ const citationOptions = [
     {value: 'Other', label: 'Other'}
 ]
 const mentalOptions = [
-    {value: 'EMS', label: 'EMS'},
+    {value: 'EMS', label: 'EMS Response'},
     {value: 'Injury', label: 'Injury'},
-    {value: 'Suicide', label: 'Suicide'},
-    {value: '1013', label: '1013'},
+    {value: 'Suicide', label: 'Mental Health'},
+    {value: '1013', label: '1013 Form'},
 ]
 
 
@@ -173,7 +174,7 @@ class crime extends Component {
         return(
         <div className="main">
            <div className="card filterTypeCards typeCard">
-                <h4 className="card-header">Crime</h4>
+                <h4 className="card-header">Incident</h4>
                 <div className="card-body">
                     <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Category

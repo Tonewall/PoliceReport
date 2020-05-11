@@ -41,6 +41,8 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOffense].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentVictim]\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentVictim].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentMO]\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentMO].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOthersInvolved]\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOthersInvolved].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
@@ -511,6 +513,13 @@ module.exports.get_arrest_info = function(incident_number) {
         WHERE ([IncidentNumber]=\'%s\')\n\
         ORDER BY [SequenceNumber] ASC\
     ', incident_number)
+}
+
+module.exports.get_distinct_mo = function() {
+    return sprintf('\
+        SELECT distinct [MO]\
+        from [SS_GARecords_Incident].[dbo].[tblIncidentMO]'
+    )
 }
 
 module.exports.get_property = function(incident_number) {
@@ -1018,31 +1027,28 @@ module.exports.filter = function(criteria) {
     }
 
     zoneCriteria = ''
-    if(criteria.selectedZone) {
+    if(criteria.selectedZone && criteria.selectedZone.value != 'Any') {
         zoneCriteria = '[Patrol Zone] = \''+criteria.selectedZone.value+'\''
     }
     if(zoneCriteria) {
         criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + zoneCriteria
     }
-    console.log(zoneCriteria)
 
     locationCodeCriteria = ''
-    if(criteria.selectedLocationCode) {
+    if(criteria.selectedLocationCode && criteria.selectedLocationCode.value!='Any') {
         locationCodeCriteria = '[Location Code] = \''+criteria.selectedLocationCode.value+'\''
     }
     if(locationCodeCriteria) {
         criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + locationCodeCriteria
     }
-    console.log(locationCodeCriteria)
 
     MOCriteria = ''
-    if(criteria.MO) {
-        MOCriteria = '[MO] is not null'
+    if(criteria.MO && criteria.MO.value != 'Any') {
+        MOCriteria = '[tblIncidentMO].[MO] = \''+criteria.MO.value+'\''
     }
-    if(zoneCriteria) {
-        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + zoneCriteria
+    if(MOCriteria) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + MOCriteria
     }
-    console.log(MOCriteria)
 
     nameCriteria = ''
     if(criteria.selectedName && criteria.typedName) {
