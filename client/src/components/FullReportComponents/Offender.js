@@ -23,6 +23,13 @@ class Offender extends Component {
                     })
                 })
                 .catch(err => console.error(err))
+                fetch('/get_wr/')
+                .then(results => {
+                    results.json().then(data => {
+                        console.log(data)                    
+                    })
+                })
+                .catch(err => console.error(err))
     }
 
     getOffender() {

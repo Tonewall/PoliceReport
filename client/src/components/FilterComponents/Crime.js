@@ -264,7 +264,7 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                    {/* <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Felony/Misdemeanor
                     </label>
                     <div>
@@ -275,7 +275,7 @@ class crime extends Component {
                         isMulti={true}
                         placeholder={"Any"}
                         />
-                    </div>
+                    </div> */}
                     <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Case Status
                     </label>

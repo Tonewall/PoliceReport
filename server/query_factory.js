@@ -421,6 +421,12 @@ module.exports.get_offender = function(incident_number) {
         Order by [SequenceNumber]\
     ', incident_number)
 }
+module.exports.get_wr = function() {
+    return sprintf('\
+        SELECT *\n\
+        FROM [SS_GARecords_Warning].[dbo].[tblWarningCharge]\n\
+    ')
+}
 
 
 module.exports.get_narrative_APD = function(incident_number) {
@@ -905,12 +911,24 @@ module.exports.filter = function(criteria) {
         }
     }
 
+
+    arrest_script=''
     if(criteria.selectedArrest) // Arrests/CT Warnings
     {
+        if(criteria.selectedArrest.length == 2) {
+            arrest_script='([Arrest]=true) or [Warning]=true)'
+        } else if (criteria.selectedArrest.length == 1) {
+            if(criteria.selectedArrest[0].value == 'arrests'){
+                arrest_script='([Arrest]=true)'
+            } else {
+                arrest_script='([Warning]=true)'
+            }
+        }
         
     }
     if(criteria.selectedOutcome)    // Felony/Misdemeanor
     {
+        console.log(criteria.selectedOutcome)
 
     }
     if(criteria.selectedCaseStatus) {
