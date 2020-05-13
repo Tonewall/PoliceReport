@@ -574,6 +574,18 @@ function add_router(app) {
             else res.status(400).send(err);
         });
     });
+    app.get('/get-repeat-offender', function (req, res) {
+        query = query_factory.get_repeat_offender()
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
 }
 
 

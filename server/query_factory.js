@@ -530,15 +530,26 @@ module.exports.get_distinct_mo = function() {
 
 module.exports.get_repeat_offender = function(date) {
     return sprintf('\
-    SELECT [PersonID]\
-    ,count(*)\
-        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
-        LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncident]\
-                    ON ([tblIncidentOffender].[IncidentNumber] = [tblIncident].[IncidentNumber])\
-        where [Arrest]=\'true\' and PersonID is not null and [ReportDate] > \'2017-5-12\'\
-        group by [PersonID]\
-        having count(*) > 2\
-    ', date)
+        Select [First Name]\
+        ,[Last Name]\
+        ,[Middle Name]\
+        ,[Aliases]\
+        ,[Race]\
+        ,[Sex]\
+        ,[DOB]\
+        ,[Height]\
+        From [CrimeAnalytics].[dbo].[RepeatOffenders]\
+    ')
+    // return sprintf('\
+    // SELECT [PersonID]\
+    // ,count(*)\
+    //     FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
+    //     LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncident]\
+    //                 ON ([tblIncidentOffender].[IncidentNumber] = [tblIncident].[IncidentNumber])\
+    //     where [Arrest]=\'true\' and PersonID is not null and [ReportDate] > \'2017-5-12\'\
+    //     group by [PersonID]\
+    //     having count(*) > 2\
+    // ', date)
 }
 // have another function that checks all of the personid and returns the names in an array
 module.exports.get_repeat_offender_name = function(ids) {

@@ -13,6 +13,7 @@ import LocationStatistics from './components/Statistics/LocationStatistics'
 import StatisticsRedirect from './components/Statistics/StatisticsRedirect'
 import BuildingInformation from './components/BuildingInformation'
 import FullReportNew from './components/FullReportNew'
+import RepeatOffender from './components/RepeatOffender'
 import 'bootstrap/dist/css/bootstrap.css';
 
 /* For server debugging */
@@ -37,6 +38,7 @@ class App extends Component {
                         <Route exact path="/Location-Statistics/" component={LocationStatistics} />
                         <Route exact path="/Building-Information" component={BuildingInformation} />
                         <Route exact path="/full-report/:incidentNumber" component={FullReportNew} />
+                        <Route exact path="/Repeat-Offenders" component={RepeatOffender} />
 
                 </Router>
             </div>
