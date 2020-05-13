@@ -14,16 +14,6 @@ const outcomeOptions = [
     {value: 'F', label: 'Felony'},
     {value: 'M', label: 'Misdemeanor'},
 ];
-const caseStatusOptions = [
-    {value: 'Any', label: 'Any'},
-    {value: 'A', label: 'A'},
-    {value: 'CA', label: 'CA'},
-    {value: 'CE', label: 'CE'},
-    {value: 'CO', label: 'CO'},
-    {value: 'I', label: 'I'},
-    {value: 'L', label: 'L'},
-    {value: 'U', label: 'U'},
-];
 
 const citationOptions = [
     {value: '16-', label: 'Crimes and Offenses (Title 16)'},
@@ -45,7 +35,6 @@ class crime extends Component {
         selectedCrimeCategory: {value: 'Any', label: 'Any'},
         selectedArrest: null,
         selectedOutcome: null,
-        selectedCaseStatus: {value: 'Any', label: 'Any'},
         selectedCitation: null,
         selectedMental: null,
         weapon: false,
@@ -76,12 +65,6 @@ class crime extends Component {
         function() {
             this.props.crimeHandler(this.state)
         }); 
-    }
-    setCaseStatus = selectedCaseStatus => {
-        this.setState({selectedCaseStatus},
-        function() {
-            this.props.crimeHandler(this.state)
-        });
     }
     setMental = selectedMental => {
         this.setState({selectedMental},
@@ -167,7 +150,6 @@ class crime extends Component {
             selectedArrest, 
             selectedOutcome, 
             selectedCrimeCategory, 
-            selectedCaseStatus,
             selectedMental,
             selectedCitation
         } = this.state;
@@ -254,16 +236,7 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
-                        Case Status
-                    </label>
-                    <div>
-                        <Select
-                        value={selectedCaseStatus}
-                        onChange={this.setCaseStatus}
-                        options={caseStatusOptions}
-                        placeholder={"Any"}
-                        />
+                    <div className='row'>
                     </div>
                         <input 
                         type="checkbox"
@@ -272,9 +245,10 @@ class crime extends Component {
                         onChange={this.handleChange}/>
                     <label style={{fontSize: '13px', marginLeft:'5px', marginTop:'10px'}}>Arrests</label>
 
+                    </div>
+                    
                 </div>
             </div>
-        </div>
         )
     }
 }
