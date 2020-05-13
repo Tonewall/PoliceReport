@@ -528,6 +528,35 @@ module.exports.get_distinct_mo = function() {
     )
 }
 
+module.exports.get_repeat_offender = function(date) {
+    return sprintf('\
+    SELECT [PersonID]\
+    ,count(*)\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
+        LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncident]\
+                    ON ([tblIncidentOffender].[IncidentNumber] = [tblIncident].[IncidentNumber])\
+        where [Arrest]=\'true\' and PersonID is not null and [ReportDate] > \'2017-5-12\'\
+        group by [PersonID]\
+        having count(*) > 2\
+    ', date)
+}
+// have another function that checks all of the personid and returns the names in an array
+module.exports.get_repeat_offender_name = function(ids) {
+    idList = ''
+    idList = ids[0]['PersonID']
+    for(var i = 1; i<ids.length;i++){
+        idList+=', \'' + ids[i]['PersonID']+'\''
+    }
+    return sprintf('\
+    SELECT [PersonID]\
+    ,[FirstName]\
+    ,[LastName]\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
+    where [PersonID] in (%s)\n\
+    ', idList)
+}
+
+
 module.exports.get_property = function(incident_number) {
     return sprintf('\
         SELECT [SequenceNumber]\
@@ -915,22 +944,13 @@ module.exports.filter = function(criteria) {
     arrest_script=''
     if(criteria.selectedArrest) // Arrests/CT Warnings
     {
-        if(criteria.selectedArrest.length == 2) {
-            arrest_script='([Arrest]=true) or [Warning]=true)'
-        } else if (criteria.selectedArrest.length == 1) {
-            if(criteria.selectedArrest[0].value == 'arrests'){
-                arrest_script='([Arrest]=true)'
-            } else {
-                arrest_script='([Warning]=true)'
-            }
-        }
-        
+        arrest_script='[Arrest] = \'true\''
     }
-    if(criteria.selectedOutcome)    // Felony/Misdemeanor
-    {
-        console.log(criteria.selectedOutcome)
+    if(arrest_script) {
+        criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ') + arrest_script
+    }
 
-    }
+
     if(criteria.selectedCaseStatus) {
         if(criteria.selectedCaseStatus.value !== "Any") {
             criteria_script = (criteria_script.length == 0 ? '' : criteria_script + ' AND ')

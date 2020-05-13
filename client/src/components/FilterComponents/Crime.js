@@ -211,32 +211,24 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <div className='row'>
-                    <div className='col-4'>
-                        <label className='col-12' style={{marginLeft: '15%'}}>Alcohol</label>
-                        <input className='col-12' 
+                    <input 
                         type="checkbox"
                         name={'alcohol'}
                         checked={this.state.alcohol}
                         onChange={this.handleChange}/>
-                    </div>
-                    <div className='col-4'>
-                        <label className='col-12' style={{marginLeft: '15%'}}>Drug</label>
-                        <input className='col-12' 
+                    <label style={{fontSize: '13px', marginLeft:'5px', marginTop:'10px', marginRight:'20px'}}>Alcohol</label>
+                    <input 
                         type="checkbox"
                         name={'drug'}
                         checked={this.state.drug}
                         onChange={this.handleChange}/>
-                    </div>
-                    <div className='col-4'>
-                        <label className='col-12' style={{marginLeft: '15%'}}>Weapon</label>
-                        <input className='col-12' 
+                    <label style={{fontSize: '13px', marginLeft:'5px', marginTop:'10px', marginRight:'20px'}}>Drug</label>
+                    <input 
                         type="checkbox"
                         name={'weapon'}
                         checked={this.state.weapon}
                         onChange={this.handleChange}/>
-                    </div>
-                    </div>
+                    <label style={{fontSize: '13px', marginLeft:'5px', marginTop:'10px', marginRight:'20px'}}>Weapon</label>
                     
                                             
 
@@ -264,7 +256,7 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    {/* <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Felony/Misdemeanor
                     </label>
                     <div>
@@ -275,7 +267,7 @@ class crime extends Component {
                         isMulti={true}
                         placeholder={"Any"}
                         />
-                    </div> */}
+                    </div>
                     <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Case Status
                     </label>
@@ -287,6 +279,13 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
+                        <input 
+                        type="checkbox"
+                        name={'selectedArrest'}
+                        checked={this.state.selectedArrest}
+                        onChange={this.handleChange}/>
+                    <label style={{fontSize: '13px', marginLeft:'5px', marginTop:'10px'}}>Arrests</label>
+
                 </div>
             </div>
         </div>
