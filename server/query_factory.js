@@ -54,7 +54,7 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
 
 
 module.exports.locations = 
-    "SELECT [Building Name],[Loc Type],[St #],[Street-MSAG],[Loc Code] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
+    "SELECT [Building Name],[Loc Type],[St #],[Street-MSAG],[Loc Code], [X_Coord], [Y_Coord] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
 
 module.exports.get_incident_basic = function(incident_number) {
     return sprintf('\
@@ -150,6 +150,8 @@ module.exports.get_location_data = function(incident_number) {
         ,[LocationStreet]\
         ,[PatrolZone]\
         ,[LocationCode]\
+        ,[X_Coord]\
+        ,[Y_Coord]\
         FROM [SS_GARecords_Incident].[dbo].[tblIncident]\
         WHERE ([IncidentNumber]=\'%s\')\
     ', incident_number)

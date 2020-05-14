@@ -402,6 +402,7 @@ class location extends Component {
         fetch('/get-distinct-mo')
             .then(results => {
                 results.json().then(data=> {
+                    console.log(data)
                     this.populateMO(data)
                 })
             })
