@@ -15,9 +15,6 @@ import BuildingInformation from './components/BuildingInformation'
 import FullReportNew from './components/FullReportNew'
 import 'bootstrap/dist/css/bootstrap.css';
 
-/* For server debugging */
-import DirectQuery from './components/DirectQuerying/DirectQuery';
-
 class App extends Component {
     render() {
         return (
@@ -29,7 +26,6 @@ class App extends Component {
                         <Route exact path="/GTPD-Incident-Search" component={IncidentNumber} />
                         <Route exact path="/Filter-Result" component={FilterResult} />
                         {/* For server debugging */}
-                        <Route exact path="/direct-query" component={DirectQuery} />
                         <Route exact path="/GTPD-Filter" component={GtpdFilter} />
                         <Route exact path="/Statistics/" component={StatisticsRedirect} />
                         <Route exact path="/Date-Time-Filter/" component={DateTimeFilter} />
