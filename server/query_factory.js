@@ -1051,6 +1051,7 @@ module.exports.filter = function(criteria) {
         // Make GTPD part
         if(criteria.selectedBuilding != null && criteria.selectedBuilding.length > 0)   // GTPD-Building
         {
+            //here
             building_list_script = ''
             criteria.selectedBuilding.forEach((item)=>{ building_list_script += ('\'' + item['Building Name'] + '\'' + ',') })
             building_list_script = building_list_script.substring(0, building_list_script.length-1)

@@ -395,6 +395,7 @@ class location extends Component {
         fetch('/locations')
             .then(results => {
                 results.json().then(data=> {
+                    console.log(data)
                     this.populateLocations(data)
                 })
             })
@@ -402,7 +403,6 @@ class location extends Component {
         fetch('/get-distinct-mo')
             .then(results => {
                 results.json().then(data=> {
-                    console.log(data)
                     this.populateMO(data)
                 })
             })
