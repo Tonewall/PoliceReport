@@ -43,7 +43,7 @@ class crime extends Component {
     state = {
         selectedCrimeType: null,
         selectedCrimeCategory: {value: 'Any', label: 'Any'},
-        selectedArrest: null,
+        selectedArrest: false,
         selectedOutcome: null,
         selectedCaseStatus: {value: 'Any', label: 'Any'},
         selectedCitation: null,

@@ -634,24 +634,24 @@ module.exports.getBothCount = function(body) {
     if(body.selectedBuilding != null && body.selectedBuilding.length > 0) {
         body.selectedBuilding.forEach((item)=>{ buildings += ('\'' + item['Building Name'] + '\'' + ',') })
         buildings = buildings.substring(0, buildings.length-1)
-        buildingScript = 'AND [Location Landmark] in (' + buildings + ')'
+        buildingScript = ' AND [Location Landmark] in (' + buildings + ')'
     }
     finalScript+=buildingScript
 
     zone = ""
     if(body.selectedZone && body.selectedZone.value !== 'Any') {
-        zone = "AND [Patrol Zone] LIKE \'"+body.selectedZone.value+'\''
+        zone = " AND [Patrol Zone] LIKE \'"+body.selectedZone.value+'\''
     }
     finalScript+=zone
     MO = ""
     if(body.MO && body.MO.value !== 'Any') {
-        MO = "AND [tblIncidentMO].[MO] LIKE \'"+body.MO.value+'\''
+        MO = " AND [tblIncidentMO].[MO] LIKE \'"+body.MO.value+'\''
     }
     finalScript+=MO
     
     mentalCriteria = ''
     if(body.selectedMental) {
-        mentalCriteria = 'AND ('
+        mentalCriteria = ' AND ('
         for(var i=0;i<body.selectedMental.length;i++) {
             if(i>0){
                 mentalCriteria+=' OR '
@@ -698,12 +698,12 @@ module.exports.getBothCount = function(body) {
     if(body.selectedOutcome) {
         if(body.selectedOutcome.length === 1) {
             if(body.selectedOutcome[0].value === 'M') {
-                outcomeScript = 'AND [OffenseType] = \'M\''
+                outcomeScript = ' AND [OffenseType] = \'M\''
             } else {
-                outcomeScript = 'AND [OffenseType] = \'F\''
+                outcomeScript = ' AND [OffenseType] = \'F\''
             }
         } else {
-            outcomeScript = 'AND [OffenseType] in (\'M\', \'F\')'
+            outcomeScript = ' AND [OffenseType] in (\'M\', \'F\')'
         }
     }
     finalScript+=outcomeScript
@@ -711,14 +711,14 @@ module.exports.getBothCount = function(body) {
     var arrestScript = ''
     if(body.selectedArrest) {
         if(body.selectedArrest) {
-            arrestScript='AND [Arrest] = \'true\''
+            arrestScript=' AND [Arrest] = \'true\''
         }
     }
     finalScript+=arrestScript
 
     //SHIFTS AND TEAMS
     if(body.selectedShift) {
-        unit = "AND ([Unit] LIKE \'" + body.selectedShift[0].label + "\'"
+        unit = " AND ([Unit] LIKE \'" + body.selectedShift[0].label + "\'"
         for(var i = 1; i < body.selectedShift.length; i++) {
             unit += " OR [Unit] LIKE '" + body.selectedShift[i].label + "'"
         }
@@ -728,7 +728,7 @@ module.exports.getBothCount = function(body) {
     }
     finalScript+=unit
     if(body.selectedOccurredShift) {
-        shift = "AND ([Shift2] LIKE '" + body.selectedOccurredShift[0].label + "'"
+        shift = " AND ([Shift2] LIKE '" + body.selectedOccurredShift[0].label + "'"
         for(var i = 1; i < body.selectedOccurredShift.length; i++) {
             shift += " OR [Shift2] LIKE '" + body.selectedOccurredShift[i].label + "'"
         }
@@ -740,13 +740,13 @@ module.exports.getBothCount = function(body) {
 
     //CRIMES AND CATEGORIES
     if(body.selectedCrimeType) {
-        crime = "AND ([Offense] LIKE '" + body.selectedCrimeType[0]['NIBRS_Code_Extended'] + "'"
+        crime = " AND ([Offense] LIKE '" + body.selectedCrimeType[0]['NIBRS_Code_Extended'] + "'"
         for(var i = 1; i < body.selectedCrimeType.length; i++) {
             crime += " OR [Offense] LIKE '" + body.selectedCrimeType[i]['NIBRS_Code_Extended'] + "'"
         }
         crime += ")"
     } else if (body.selectedCrimeCategory && body.selectedCrimeCategory.value !== "Any") {
-        crime = "AND [NIBRS_Category] LIKE '" + body.selectedCrimeCategory.value + "'"
+        crime = " AND [NIBRS_Category] LIKE '" + body.selectedCrimeCategory.value + "'"
     } else {
         crime = ''
     }
@@ -754,7 +754,7 @@ module.exports.getBothCount = function(body) {
 
 
     if(body.selectedCitation) {
-        citation = "AND ([Statute] LIKE \'" + body.selectedCitation[0].value + "%\'"
+        citation = " AND ([Statute] LIKE \'" + body.selectedCitation[0].value + "%\'"
         for(var i = 1; i < body.selectedCitation.length; i++) {
             citation += " OR [Statute] LIKE \'" + body.selectedCitation[0].value + "%\'"
         }
@@ -767,17 +767,17 @@ module.exports.getBothCount = function(body) {
 
     
     return sprintf(
-        "SELECT MONTH([Report Date]) as [Month], COUNT(*) as [COUNT]\
-        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
-        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended]\
-        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentMO]\
-            ON ([tblIncidentMO].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\
-        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
-            ON ([tblIncidentOffense].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\
-        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
-            ON ([tblIncidentOffender].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\
-        Left Join [CrimeAnalytics].[dbo].[Times]\
-            ON ([Times].[CASE_NUMBER]=[Incident Offenses-GTPD+APD].[OCA Number])\
+        "SELECT MONTH([Report Date]) as [Month], COUNT(*) as [COUNT]\n\
+        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\n\
+        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended]\n\
+        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\
+            ON ([tblIncidentMO].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
+            ON ([tblIncidentOffense].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\n\
+            ON ([tblIncidentOffender].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        Left Join [CrimeAnalytics].[dbo].[Times]\n\
+            ON ([Times].[CASE_NUMBER]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
             WHERE YEAR([Report Date]) =\'%d'\n\
         AND [Officer Name] LIKE \'%%%s%%'\n\
         AND [Address] LIKE \'%%%s%%'\n\
@@ -789,44 +789,30 @@ module.exports.getBothCount = function(body) {
         officerName, 
         address, 
         code, 
-        unit, 
-        crime, 
         finalScript
     )
 }
 module.exports.getTimeCount = function(body) {
+
+    finalScript = ''
     //OFFICER NAME
     officerName = (body.officerName ? body.officerName : '')
 
     //ADDRESS
     address = (body.streetName ? body.streetName : '')
 
-    //DEPARTMENT
-    department = "LIKE '%%'"
-    if(body.selectedDepartment) {
-        if(body.selectedDepartment.value === 'gtpDepartment') {
-            department = "NOT LIKE'APD'"
-        } else if(body.selectedDepartment.value === 'apDepartment') {
-            department = "LIKE'APD'"
-        } 
+
+    //Location code
+    code = "LIKE '%%'"
+    if(body.selectedLocationCode && body.selectedLocationCode.value !== 'Any') {
+        code = "LIKE \'%%"+body.selectedLocationCode.value+'%%\''
+    } else {
+        code = "NOT LIKE \'APD\'"
     }
-
-    // //LOCATION
-    // if(body.selectedDepartment && body.selectedDepartment.value != "bothDepartment") {
-    //     //department chosen
-    //     if(body.selectedDepartment.value === 'gtpDepartment') {
-
-    //     } else if(body.selectedDepartment.value === 'apDepartment') {
-
-    //     } 
-    // } else {
-    //     //no department chosen
-
-    // }
 
     //SHIFTS AND TEAMS
     if(body.selectedShift) {
-        unit = "AND ([Unit] LIKE '" + body.selectedShift[0].label + "'"
+        unit = " AND ([Unit] LIKE '" + body.selectedShift[0].label + "'"
         for(var i = 1; i < body.selectedShift.length; i++) {
             unit += " OR [Unit] LIKE '" + body.selectedShift[i].label + "'"
         }
@@ -834,6 +820,117 @@ module.exports.getTimeCount = function(body) {
     } else {
         unit = ''
     }
+    finalScript+=unit
+
+    //building
+    buildings = ""
+    buildingScript = ''
+    if(body.selectedBuilding != null && body.selectedBuilding.length > 0) {
+        body.selectedBuilding.forEach((item)=>{ buildings += ('\'' + item['Building Name'] + '\'' + ',') })
+        buildings = buildings.substring(0, buildings.length-1)
+        buildingScript = ' AND [Location Landmark] in (' + buildings + ')'
+    }
+    finalScript+=buildingScript
+
+    if(body.selectedOccurredShift) {
+        shift = " AND ([Shift2] LIKE '" + body.selectedOccurredShift[0].label + "'"
+        for(var i = 1; i < body.selectedOccurredShift.length; i++) {
+            shift += " OR [Shift2] LIKE '" + body.selectedOccurredShift[i].label + "'"
+        }
+        shift += ")" 
+    } else {
+        shift = ''
+    }
+    finalScript+=shift
+
+    zone = ""
+    if(body.selectedZone && body.selectedZone.value !== 'Any') {
+        zone = " AND [Patrol Zone] LIKE \'"+body.selectedZone.value+'\''
+    }
+    finalScript+=zone
+    MO = ""
+    if(body.MO && body.MO.value !== 'Any') {
+        MO = " AND [tblIncidentMO].[MO] LIKE \'"+body.MO.value+'\''
+    }
+    finalScript+=MO
+    
+    mentalCriteria = ''
+    if(body.selectedMental) {
+        mentalCriteria = ' AND ('
+        for(var i=0;i<body.selectedMental.length;i++) {
+            if(i>0){
+                mentalCriteria+=' OR '
+            }
+            if(body.selectedMental[i].value === 'EMS'){
+                mentalCriteria+='([EMS] is not null)'
+            } else if(body.selectedMental[i].value === '1013'){
+                mentalCriteria+='([1013] > 0)'
+            }else if(body.selectedMental[i].value === 'Suicide'){
+                mentalCriteria+='([Suicide] is not null)'
+            }else if(body.selectedMental[i].value === 'Injury'){
+            mentalCriteria+='([Injured] is not null)'
+        }
+        }
+        mentalCriteria+=')'
+    }
+    finalScript+=mentalCriteria
+
+    drugAlcCriteria = ''
+    var drugAlc = []
+    if(body.drug) {
+        drugAlc.push('([Drug] > 0)')
+    }
+    if(body.alcohol) {
+        drugAlc.push('([Alcohol] > 0)')
+    }
+    if(body.weapon) {
+        drugAlc.push('([Weapon] is not null)')
+    }
+
+    if(drugAlc.length > 0) {
+        drugAlcCriteria += 'AND ('
+        for(var i=0;i<drugAlc.length;i++) {
+            if(i>0){
+                drugAlcCriteria+=' OR '
+            }
+            drugAlcCriteria += drugAlc[i]
+        }
+        drugAlcCriteria+=')'
+    }
+    finalScript+=drugAlcCriteria
+
+    var outcomeScript = ''
+    if(body.selectedOutcome) {
+        if(body.selectedOutcome.length === 1) {
+            if(body.selectedOutcome[0].value === 'M') {
+                outcomeScript = ' AND [OffenseType] = \'M\''
+            } else {
+                outcomeScript = ' AND [OffenseType] = \'F\''
+            }
+        } else {
+            outcomeScript = ' AND [OffenseType] in (\'M\', \'F\')'
+        }
+    }
+    finalScript+=outcomeScript
+
+    var arrestScript = ''
+    if(body.selectedArrest) {
+        if(body.selectedArrest) {
+            arrestScript=' AND [Arrest] = \'true\''
+        }
+    }
+    finalScript+=arrestScript
+
+    if(body.selectedCitation) {
+        citation = " AND ([Statute] LIKE \'" + body.selectedCitation[0].value + "%\'"
+        for(var i = 1; i < body.selectedCitation.length; i++) {
+            citation += " OR [Statute] LIKE \'" + body.selectedCitation[0].value + "%\'"
+        }
+        citation += ")" 
+    } else {
+        citation = ''
+    }
+    finalScript+=citation
 
     //CRIMES AND CATEGORIES
     if(body.selectedCrimeType) {
@@ -848,20 +945,32 @@ module.exports.getTimeCount = function(body) {
         crime = ''
     }
     return sprintf(
-        "SELECT datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))) as [Hour], \
-        COUNT(*) AS [Count]\
-        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
-        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended]\
+        "SELECT datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))) as [Hour], \n\
+        COUNT(*) AS [Count]\n\
+        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\n\
+        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense]\n\
+            ON [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended]\n\
+        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\
+            ON ([tblIncidentMO].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
+            ON ([tblIncidentOffense].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\n\
+            ON ([tblIncidentOffender].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        Left Join [CrimeAnalytics].[dbo].[Times]\n\
+            ON ([Times].[CASE_NUMBER]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
         WHERE YEAR([Report Date]) =\'%d'\n\
         AND [Officer Name] LIKE \'%%%s%%'\n\
         AND [Address] LIKE \'%%%s%%'\n\
         AND [Location Code] \%s\n\
         AND DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME))) < 4\
         \%s\n\
-        \%s\n\
 		GROUP BY (datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))))\
 		ORDER BY (datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))))"
-        ,body.selectedYear.value, officerName, address, department, unit, crime
+        ,body.selectedYear.value, 
+        officerName, 
+        address, 
+        code, 
+        finalScript
     )
 }
 

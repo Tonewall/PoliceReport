@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Date from ".././FilterComponents/Date"
+import Date from "./DateLocationFilter"
 import {Redirect} from 'react-router-dom'
 
 

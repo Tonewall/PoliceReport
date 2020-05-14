@@ -13,67 +13,67 @@ class LocationStatistics extends Component {
                 columns: [
                     {
                         label: "Location Landmark",
-                        field: "location",
+                        field: "Building Name",
                         width: 200,
                         sort: 'asc'
                     },
                     {
                         label: "Part I",
-                        field: "partI",
+                        field: "PART I",
                         width: 100,
                         sort: 'asc'
                     },
                     {
                         label: "Robbery",
-                        field: "robbery",
+                        field: "Robbery",
                         width: 100,
                         sort: 'asc'
                     },
                     {
                         label: "Larceny",
-                        field: "larceny",
+                        field: "Larceny",
                         width: 100,
                         sort: 'asc'
                     },
                     {
                         label: "Bicycle Theft",
-                        field: "bicycleTheft",
+                        field: "Bicycle Theft",
                         width: 100,
                         sort: 'asc'
                     },
                     {
                         label: "Assault",
-                        field: "assault",
+                        field: "Assault",
                         width: 100,
                         sort: 'asc'
                     },
                     {
                         label: "Burglary",
-                        field: "burglary",
+                        field: "Burglary",
                         width: 100,
                         sort: 'asc'
                     },
                     {
                         label: "Arson",
-                        field: "arson",
+                        field: "Arson",
                         width: 100,
                         sort: 'asc'
                     },
                     {
                         label: "Homicide",
-                        field: "homicide",
+                        field: "Homicide",
                         width: 100,
                         sort: 'asc'
                     },
                     {
                         label: "Sex Offenses",
-                        field: "sexOffenses",
+                        field: "Sex Offenses",
                         width: 100,
                         sort: 'asc'
                     },
                     {
                         label: "Motor Vehicle Theft",
-                        field: "motor",
+                        field: "Motor Vehicle Theft",
                         width: 100,
                         sort: 'asc'
                     },
@@ -111,25 +111,32 @@ class LocationStatistics extends Component {
             .catch(err => console.error(err))
     }
 
+
     populate(data) {
-        console.log(data)
-        var row = [];
-        for (var i = 0; i < data.length; i++) {
-            row[i] = {
-                location: data[i]['Building Name'], 
-                partI: data[i]['PART I'], 
-                robbery: data[i]['Robbery'], 
-                larceny: data[i]['Larceny'],
-                bicycleTheft: data[i]['Bicycle Theft'], 
-                assault: data[i]['Assault'],
-                burglary: data[i]['Burglary'],
-                arson: data[i]['Arson'],
-                homicide: data[i]['Homicide'],
-                sexOffenses: data[i]['Sex Offenses'],
-                motor: data[i]['Motor Vehicle Theft']
+        var rows = [];
+
+        //for every incident, populate a blank row with the selected column data
+        for(var i = 0; i < data.length; i++) {
+            var row = {}
+            row['Building Name'] = data[i]['Building Name']
+            
+            for(var j = 1; j < this.state.crimeData.columns.length; j++) {
+                if(data[i][this.state.crimeData.columns[j].field] == null){ 
+                    row[this.state.crimeData.columns[j].field] = '-'
+                } else {
+                    row[this.state.crimeData.columns[j].field] = data[i][this.state.crimeData.columns[j].field].toString()
+                }
             }
+            rows.push(row)
         }
-        this.setState({crimeData: {rows: row, columns: this.state.crimeData.columns}})
+        this.setState({
+            no_history: false,
+            wrong_query: false,
+            crimeData: {
+                columns: this.state.crimeData.columns,
+                rows: rows
+            }
+        });
     }
 
 
