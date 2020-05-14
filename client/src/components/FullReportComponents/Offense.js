@@ -90,11 +90,11 @@ class Location extends Component {
                         <label>Drug</label>
                         {this.getDrugs()}
                     </div>
-                    <div className='col-1'>
+                    <div className='col-2'>
                         <label>#Premises</label>
                         {this.getPrem()}
                     </div>
-                    <div className='col-10'>
+                    <div className='col-9'>
                         <label>Weapon</label>
                         {this.getWeapons()}
                     </div>
