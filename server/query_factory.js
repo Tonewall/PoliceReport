@@ -634,9 +634,13 @@ module.exports.getBothCount = function(body) {
     buildings = ""
     buildingScript = ''
     if(body.selectedBuilding != null && body.selectedBuilding.length > 0) {
-        body.selectedBuilding.forEach((item)=>{ buildings += ('\'' + item['Building Name'] + '\'' + ',') })
-        buildings = buildings.substring(0, buildings.length-1)
-        buildingScript = ' AND [Location Landmark] in (' + buildings + ')'
+        building_list_scriptx = ''
+        body.selectedBuilding.forEach((item)=>{ building_list_scriptx += ('\'' + item['X_Coord'] + '\'' + ',') })
+        building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-1)
+        building_list_scripty = ''
+        body.selectedBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
+        building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
+        buildingScript = 'AND ([Longitude] in (' + building_list_scriptx + ') AND [Latitude] in (' + building_list_scripty + '))'
     }
     finalScript+=buildingScript
 
@@ -828,9 +832,13 @@ module.exports.getTimeCount = function(body) {
     buildings = ""
     buildingScript = ''
     if(body.selectedBuilding != null && body.selectedBuilding.length > 0) {
-        body.selectedBuilding.forEach((item)=>{ buildings += ('\'' + item['Building Name'] + '\'' + ',') })
-        buildings = buildings.substring(0, buildings.length-1)
-        buildingScript = ' AND [Location Landmark] in (' + buildings + ')'
+        building_list_scriptx = ''
+        body.selectedBuilding.forEach((item)=>{ building_list_scriptx += ('\'' + item['X_Coord'] + '\'' + ',') })
+        building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-1)
+        building_list_scripty = ''
+        body.selectedBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
+        building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
+        buildingScript = 'AND ([Longitude] in (' + building_list_scriptx + ') AND [Latitude] in (' + building_list_scripty + '))'
     }
     finalScript+=buildingScript
 
@@ -1051,11 +1059,13 @@ module.exports.filter = function(criteria) {
         // Make GTPD part
         if(criteria.selectedBuilding != null && criteria.selectedBuilding.length > 0)   // GTPD-Building
         {
-            //here
-            building_list_script = ''
-            criteria.selectedBuilding.forEach((item)=>{ building_list_script += ('\'' + item['Building Name'] + '\'' + ',') })
-            building_list_script = building_list_script.substring(0, building_list_script.length-1)
-            gtpd_criteria_script = '([Location Landmark] in (' + building_list_script + ') AND LEN([OCA Number]) = 8)'
+            building_list_scriptx = ''
+            criteria.selectedBuilding.forEach((item)=>{ building_list_scriptx += ('\'' + item['X_Coord'] + '\'' + ',') })
+            building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-1)
+            building_list_scripty = ''
+            criteria.selectedBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
+            building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
+            gtpd_criteria_script = '([Longitude] in (' + building_list_scriptx + ') AND LEN([OCA Number]) = 8 AND [Latitude] in (' + building_list_scripty + '))'
         }
         else if(criteria.selectedGTLocationType.value == 'Any') // GTPD-Any loc type : all GTPD buildings
         {
@@ -1067,13 +1077,18 @@ module.exports.filter = function(criteria) {
             gtpd_criteria_script = '([Loc Type] = \'' + criteria.selectedGTLocationType.value + '\' AND LEN([OCA Number]) = 8)'
         }
 
+        
+
         // Make APD part
         if(criteria.selectedAPDBuilding != null && criteria.selectedAPDBuilding.length > 0)   // APD-Building
         {
-            building_list_script = ''
-            criteria.selectedAPDBuilding.forEach((item)=>{ building_list_script += ('\'' + item['Building Name'] + '\'' + ',') })
-            building_list_script = building_list_script.substring(0, building_list_script.length-1)
-            apd_criteria_script = '([Location Landmark] in (' + building_list_script + ') AND LEN([OCA Number]) = 9)'
+            building_list_scriptx = ''
+            criteria.selectedAPDBuilding.forEach((item)=>{ building_list_scriptx += ('\'' + item['X_Coord'] + '\'' + ',') })
+            building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-1)
+            building_list_scripty = ''
+            criteria.selectedAPDBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
+            building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
+            apd_criteria_script = '([Longitude] in (' + building_list_scriptx + ') AND LEN([OCA Number]) = 9 AND [Latitude] in (' + building_list_scripty + '))'
         }
         else if(criteria.selectedAPDLocationType.value == 'Any') // APD-Any loc type : all APD buildings
         {
@@ -1083,6 +1098,11 @@ module.exports.filter = function(criteria) {
         {
             codes_address_unique_join = true
             apd_criteria_script = '([Loc Type] = \'' + criteria.selectedAPDLocationType.value + '\' AND LEN([OCA Number]) = 9)'
+        }
+        if((criteria.selectedAPDBuilding == null || criteria.selectedAPDBuilding.length == 0) && criteria.selectedAPDLocationType.value == 'Any'){
+            criteria.selectedDepartment.value = 'gtpDepartment'
+        } else if((criteria.selectedBuilding == null || criteria.selectedBuilding.length == 0) && criteria.selectedGTLocationType.value == 'Any') {
+            criteria.selectedDepartment.value = 'apDepartment'
         }
 
         // Integrate into one according to the department state

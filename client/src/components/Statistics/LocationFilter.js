@@ -174,6 +174,8 @@ class location extends Component {
                 buildingOptions[i] = data[i];
                 buildingOptions[i].value = data[i]['Building Name'];
                 buildingOptions[i].label = data[i]['Building Name'];
+                buildingOptions[i].x = data[i]['X_Coord'];
+                buildingOptions[i].y = data[i]['Y_Coord'];
             }
         }
         buildingOptions.sort((a, b) => (a.value > b.value) ? 1 : -1);

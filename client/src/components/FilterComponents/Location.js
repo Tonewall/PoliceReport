@@ -372,11 +372,15 @@ class location extends Component {
                 APDBuildingOptions[apdCount] = data[i];
                 APDBuildingOptions[apdCount].value =  data[i]['Building Name'];
                 APDBuildingOptions[apdCount].label =  data[i]['Building Name'];
+                APDBuildingOptions[apdCount].x =  data[i]['X_Coord'];
+                APDBuildingOptions[apdCount].y =  data[i]['Y_Coord'];
                 apdCount++;
             } else {
                 buildingOptions[gtCount] = data[i];
                 buildingOptions[gtCount].value = data[i]['Building Name'];
                 buildingOptions[gtCount].label = data[i]['Building Name'];
+                buildingOptions[gtCount].x =  data[i]['X_Coord'];
+                buildingOptions[gtCount].y =  data[i]['Y_Coord'];
                 gtCount++;
             }
         }
