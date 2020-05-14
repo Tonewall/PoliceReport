@@ -100,6 +100,7 @@ function add_router(app) {
     });
     app.post('/getBothCount', function (req, res) {
         query = query_factory.getBothCount(req.body)
+        console.log(query)
         db_query(query, (err, result) => {
             if (!err) {
                 if (result[0] != null)
@@ -442,6 +443,18 @@ function add_router(app) {
             else res.status(400).send(err);
         });
     });
+    app.get('/get-distinct-mo', function (req, res) {
+        query = query_factory.get_distinct_mo()
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
     app.get('/personnel-data/:incident_number', function (req, res) {
         query = query_factory.get_personnel_data(req.params.incident_number)
         db_query(query, (err, result) => {
@@ -540,6 +553,18 @@ function add_router(app) {
     });
     app.get('/get-offense/:incident_number', function (req, res) {
         query = query_factory.get_offense(req.params.incident_number)
+        db_query(query, (err, result) => {
+            if (!err) {
+                if (result != null)
+                    res.send(result);
+                else
+                    res.status(400).send('No data found');
+            }
+            else res.status(400).send(err);
+        });
+    });
+    app.get('/get_wr', function (req, res) {
+        query = query_factory.get_wr()
         db_query(query, (err, result) => {
             if (!err) {
                 if (result != null)

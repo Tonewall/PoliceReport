@@ -6,6 +6,9 @@ const buildingOptions = [];
 var newBuildingOptions = buildingOptions;
 const APDBuildingOptions = [];
 var newAPDBuildingOptions = APDBuildingOptions;
+const MOOptions = [
+    {value: 'Any', label: 'Any'},
+];
 const departmentOptions = [
     {value: 'bothDepartment', label: 'Both Departments'},
     {value: 'gtpDepartment', label: 'Georgia Tech Police Department'},
@@ -52,6 +55,7 @@ const apdLocationTypeOptions = [
 ]
 
 const zoneOptions = [
+    {value: 'Any', label: 'Any'},
     {value: 'Z1', label: 'Z1'},
     {value: 'Z2', label: 'Z2'},
     {value: 'Z3', label: 'Z3'},
@@ -59,6 +63,7 @@ const zoneOptions = [
 ]
 
 const locationCodeOptions = [
+    {value: 'Any', label: 'Any'},
     {value: 'ONCAM', label: 'ONCAM'},
     {value: 'ONCAMRES', label: 'ONCAMRES'},
     {value: 'NONCAM', label: 'NONCAM'},
@@ -79,7 +84,7 @@ class location extends Component {
         selectedAPDLocationType: {value: 'Any', label: 'Any'},
         selectedZone: null,
         selectedLocationCode:null,
-        MO: false,
+        MO: null,
     };
 
     constructor(props) {
@@ -107,12 +112,10 @@ class location extends Component {
         function() {
             this.props.locationHandler(this.state)
         }); }
-    handleCheck = event => {
-        this.setState({[event.target.name]: event.target.checked},
-            function() {
-                this.props.locationHandler(this.state)
-            });
-    }
+    setMO = MO => { this.setState({MO},
+        function() {
+            this.props.locationHandler(this.state)
+        }); }
 
 
 
@@ -142,6 +145,7 @@ class location extends Component {
                         value={this.state.selectedZone} 
                         onChange={this.setZone} 
                         options={zoneOptions} 
+                        placeholder={"Any"}
                         />
                     </div>
                     <label className="col-12 col-form-label" style={{fontSize: 13}}>
@@ -167,14 +171,17 @@ class location extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <div className='col-1'></div>
-                    <label className='col-2'>MO</label>
-                    <input className='row col-2' 
-                        type="checkbox"
-                        name={'MO'}
-                        style={{marginLeft: '0'}}
-                        checked={this.state.MO}
-                        onChange={this.handleCheck}/>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        MO
+                    </label>
+                    <div>
+                        <Select 
+                        value={this.selectedMO} 
+                        onChange={this.setMO} 
+                        options={MOOptions} 
+                        placeholder={"Any"}
+                        />
+                    </div>
                 </div>
             )
         } else if (department.value === "apDepartment") {
@@ -214,14 +221,17 @@ class location extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <div className='col-1'></div>
-                    <label className='col-2'>MO</label>
-                    <input className='row col-2' 
-                        type="checkbox"
-                        name={'MO'}
-                        style={{marginLeft: '0'}}
-                        checked={this.state.MO}
-                        onChange={this.handleCheck}/>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        MO
+                    </label>
+                    <div>
+                        <Select 
+                        value={this.selectedMO} 
+                        onChange={this.setMO} 
+                        options={MOOptions} 
+                        placeholder={"Any"}
+                        />
+                    </div>
                 </div>
             )
         } else if (department.value === "bothDepartment") {
@@ -293,14 +303,17 @@ class location extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <div className='col-1'></div>
-                    <label className='col-2'>MO</label>
-                    <input className='row col-2' 
-                        type="checkbox"
-                        name={'MO'}
-                        style={{marginLeft: '0'}}
-                        checked={this.state.MO}
-                        onChange={this.handleCheck}/>
+                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                        MO
+                    </label>
+                    <div>
+                        <Select 
+                        value={this.selectedMO} 
+                        onChange={this.setMO} 
+                        options={MOOptions} 
+                        placeholder={"Any"}
+                        />
+                    </div>
                 </div>
             )
         }
@@ -370,12 +383,26 @@ class location extends Component {
         buildingOptions.sort((a, b) => (a.value > b.value) ? 1 : -1);
         APDBuildingOptions.sort((a, b) => (a.value > b.value) ? 1 : -1);
     }
+    populateMO(data) {
+        for(var i = 0; i < data.length; i++) {
+            MOOptions[i+1] = data[i];
+            MOOptions[i+1].value =  data[i]['MO'];
+            MOOptions[i+1].label =  data[i]['MO'];
+        }
+    }
 
     componentDidMount() {
         fetch('/locations')
             .then(results => {
                 results.json().then(data=> {
                     this.populateLocations(data)
+                })
+            })
+            .catch(err => console.error(err))
+        fetch('/get-distinct-mo')
+            .then(results => {
+                results.json().then(data=> {
+                    this.populateMO(data)
                 })
             })
             .catch(err => console.error(err))
