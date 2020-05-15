@@ -530,26 +530,37 @@ module.exports.get_distinct_mo = function() {
 
 module.exports.get_repeat_offender = function(date) {
     return sprintf('\
-        Select [First Name]\
-        ,[Last Name]\
-        ,[Middle Name]\
-        ,[Aliases]\
-        ,[Race]\
-        ,[Sex]\
-        ,[DOB]\
-        ,[Height]\
-        From [CrimeAnalytics].[dbo].[RepeatOffenders]\
+        SELECT [Last Name]\
+            ,[First Name]\
+            ,[Middle Name]\
+            ,[Aliases]\
+            ,[Race]\
+            ,[Sex]\
+            ,FORMAT([DOB],\'yyyy-MM-dd\') as [DOB]\
+            ,[DOB2]\
+            ,CASE WHEN [Height] is not null THEN CONCAT(SUBSTRING([Height], 1, 1), \'\'\'\', SUBSTRING([Height], 2, 2))\
+                WHEN [Height] is null THEN null\
+                END AS [Height]\
+            ,[Max Address]\
+            ,[Min ArrDate]\
+            ,FORMAT([Max ArrDate],\'yyyy-MM-dd\') as [Max ArrDate]\
+            ,[Min UCR]\
+            ,[Max UCR]\
+            ,[GT Arrests]\
+            ,[State Custody]\
+            ,[State Release Date]\
+            ,[County Custody]\
+            ,[County Booking Date]\
+            ,[County Release Date]\
+            ,[Parole End Date]\
+            ,[In Custody Now]\
+            ,[Date Updated]\
+            ,[Vine]\
+            ,[SO ID]\
+            ,[GDC ID]\
+        FROM [CrimeAnalytics].[dbo].[GT_Repeat_Offenders]\
+        ORDER BY [Max ArrDate] DESC\
     ')
-    // return sprintf('\
-    // SELECT [PersonID]\
-    // ,count(*)\
-    //     FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
-    //     LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncident]\
-    //                 ON ([tblIncidentOffender].[IncidentNumber] = [tblIncident].[IncidentNumber])\
-    //     where [Arrest]=\'true\' and PersonID is not null and [ReportDate] > \'2017-5-12\'\
-    //     group by [PersonID]\
-    //     having count(*) > 2\
-    // ', date)
 }
 // have another function that checks all of the personid and returns the names in an array
 module.exports.get_repeat_offender_name = function(ids) {

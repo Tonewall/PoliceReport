@@ -17,10 +17,14 @@ class BuildingInformation extends Component {
     
     populateData = function (data) {
         var columns = [
-            {label: 'PersonID', field: 'PersonID', width: 50, sort: 'asc'},
-            {label: 'First Name', field: 'FirstName', width: 100, sort: 'asc'},
-            {label: 'LastName', field: 'Last Name', width: 100, sort: 'asc'},
-            {label: 'DateOfBirth', field: 'Date Of Birth', width: 200, sort: 'asc'},
+            {label: 'First Name', field: 'First Name', width: 100, sort: 'asc'},
+            {label: 'Last Name', field: 'Last Name', width: 100, sort: 'asc'},
+            {label: 'DOB', field: 'DOB', width: 50, sort: 'asc'},
+            {label: 'Race', field: 'Race', width: 50, sort: 'asc'},
+            {label: 'Sex', field: 'Sex', width: 50, sort: 'asc'},
+            {label: 'Height', field: 'Height', width: 50, sort: 'asc'},
+            {label: 'Last Arrest', field: 'Max ArrDate', width: 100, sort: 'asc'},
+            {label: 'Last Address', field: 'Max Address', width: 200, sort: 'asc'},
         ]
         var tempList = []
 
@@ -51,7 +55,7 @@ class BuildingInformation extends Component {
             .then(results => {
                 results.json().then(data => {
                 console.log(data)
-                // this.populateData(data)
+                this.populateData(data)
             })})
             .catch(err => console.error(err))
     }
@@ -67,7 +71,7 @@ class BuildingInformation extends Component {
                             striped
                             bordered
                             hover
-                            entries={15}
+                            entries={30}
                             data={this.state.offenderList}
                         />
                     </div>
