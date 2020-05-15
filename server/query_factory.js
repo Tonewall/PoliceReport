@@ -641,6 +641,8 @@ module.exports.getBothCount = function(body) {
         body.selectedBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
         building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
         buildingScript = 'AND ([Longitude] in (' + building_list_scriptx + ') AND [Latitude] in (' + building_list_scripty + '))'
+    } else if(body.selectedGTLocationType && body.selectedGTLocationType.value != 'Any') {
+        buildingScript = 'AND ([Loc Type] = \'' + body.selectedGTLocationType.value + '\' AND LEN([OCA Number]) = 8)'
     }
     finalScript+=buildingScript
 
@@ -784,9 +786,11 @@ module.exports.getBothCount = function(body) {
             ON ([tblIncidentOffender].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
         Left Join [CrimeAnalytics].[dbo].[Times]\n\
             ON ([Times].[CASE_NUMBER]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        LEFT JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON (CAST([Codes_Addresses_Unique].[St #] as nvarchar(255)) = [Incident Offenses-GTPD+APD].[St Num]\n\
+            AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name])\n\
             WHERE YEAR([Report Date]) =\'%d'\n\
         AND [Officer Name] LIKE \'%%%s%%'\n\
-        AND [Address] LIKE \'%%%s%%'\n\
+        AND [Incident Offenses-GTPD+APD].[Address] LIKE \'%%%s%%'\n\
         AND [Location Code] \%s\n\
         \%s\n\
         GROUP BY MONTH([Report Date])\
@@ -839,6 +843,8 @@ module.exports.getTimeCount = function(body) {
         body.selectedBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
         building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
         buildingScript = 'AND ([Longitude] in (' + building_list_scriptx + ') AND [Latitude] in (' + building_list_scripty + '))'
+    } else if(body.selectedGTLocationType && body.selectedGTLocationType.value != 'Any') {
+        buildingScript = 'AND ([Loc Type] = \'' + body.selectedGTLocationType.value + '\' AND LEN([OCA Number]) = 8)'
     }
     finalScript+=buildingScript
 
@@ -968,9 +974,11 @@ module.exports.getTimeCount = function(body) {
             ON ([tblIncidentOffender].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
         Left Join [CrimeAnalytics].[dbo].[Times]\n\
             ON ([Times].[CASE_NUMBER]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        LEFT JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON (CAST([Codes_Addresses_Unique].[St #] as nvarchar(255)) = [Incident Offenses-GTPD+APD].[St Num]\n\
+            AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name])\n\
         WHERE YEAR([Report Date]) =\'%d'\n\
         AND [Officer Name] LIKE \'%%%s%%'\n\
-        AND [Address] LIKE \'%%%s%%'\n\
+        AND [Incident Offenses-GTPD+APD].[Address] LIKE \'%%%s%%'\n\
         AND [Location Code] \%s\n\
         AND DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME))) < 4\
         \%s\n\

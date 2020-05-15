@@ -399,7 +399,6 @@ class location extends Component {
         fetch('/locations')
             .then(results => {
                 results.json().then(data=> {
-                    console.log(data)
                     this.populateLocations(data)
                 })
             })
