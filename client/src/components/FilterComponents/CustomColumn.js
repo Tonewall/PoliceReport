@@ -20,7 +20,7 @@ const columns = [
     {value: 'Department', field:'Department', label: 'Dept', width: 50},
     /*OPTIONAL*/
     {value: 'Unit', field: 'Unit', label: 'Unit', width: 50},
-    {value: 'Offender Name', field: 'Offenders', label: 'Offenders', width: 100},
+    {value: 'Offenders', field: 'Offenders', label: 'Offenders', width: 200},
     {value: 'Victims', field: 'Victim', label: 'Victims', width: 100},
     {value: 'Property', field: 'Property', label: 'Property', width: 200},
     {value: 'Officer Name', field: 'Officer', label: 'Officer', width: 200},
