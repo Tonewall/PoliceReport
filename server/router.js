@@ -100,7 +100,6 @@ function add_router(app) {
     });
     app.post('/getBothCount', function (req, res) {
         query = query_factory.getBothCount(req.body)
-        console.log(query)
         db_query(query, (err, result) => {
             if (!err) {
                 if (result[0] != null)

@@ -20,7 +20,6 @@ class Incident extends Component {
         fetch('/get-offense/'+this.state.incidentNumber)
                 .then(results => {
                     results.json().then(data => {
-                        console.log(data)
                         this.setState({incident: data})
                     })
                 })
