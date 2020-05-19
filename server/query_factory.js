@@ -40,6 +40,13 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 FROM [SS_GARecords_Incident].[dbo].[tblIncidentVictim] Results \n\
                 where Results.[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
                 group by [IncidentNumber])\n\
+            ,[OffenseType] = (SELECT STUFF((SELECT \', \' + [OffenseType] \n\
+                    FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense] \n\
+                    WHERE ([IncidentNumber] = Results.[IncidentNumber]) \n\
+                    FOR XML PATH (\'\')),1,2,\'\') \n\
+                FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty] Results \n\
+                where Results.[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
+                group by [IncidentNumber])\n\
             , FORMAT([Times].[Avg Date],\'yyyy-MM-dd\') as [Average Day]\n\
             , FORMAT([Times].[Avg Time],\'hh:mm tt\') as [Average Time]\n\
             , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Location]\n\
@@ -52,7 +59,6 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 where Results.[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
                 group by [IncidentNumber])\n\
             , [Officer Name]\n\
-            , [Aggregated_OffenseType].[OffenseType]\n\
             , CASE WHEN LEN([OCA Number]) = 8 THEN \'GTPD\'\n\
                    WHEN LEN([OCA Number]) != 8 THEN \'APD\'\n\
               END as [Department]\n\
@@ -63,8 +69,6 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
             LEFT JOIN [SS_GARecords_Citation].[dbo].[tblCitation]\n\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblCitation].[AgencyCaseNumber])\n\
-            LEFT JOIN [CrimeAnalytics].[dbo].[Aggregated_OffenseType]\n\
-                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [Aggregated_OffenseType].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentVictim]\n\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentVictim].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\

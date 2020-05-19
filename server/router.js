@@ -73,7 +73,6 @@ function add_router(app) {
 
     app.post('/filter', function (req, res) {
         queryString = query_factory.filter(req.body)
-        console.log(queryString)
         db_query(queryString, (err, result) => {
             if (!err) res.send(result);
             else {
@@ -101,7 +100,6 @@ function add_router(app) {
     });
     app.post('/getBothCount', function (req, res) {
         query = query_factory.getBothCount(req.body)
-        console.log(query)
         db_query(query, (err, result) => {
             if (!err) {
                 if (result[0] != null)

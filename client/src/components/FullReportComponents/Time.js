@@ -30,10 +30,9 @@ class Time extends Component {
             var date = this.state.incident['IncidentDate']?this.state.incident['IncidentDate'].substring(0,10):''
             var time = ''
             if(this.state.incident['IncidentTime']) {
-                var te = new Date(this.state.incident['IncidentTime'])
-                console.log(te + (5*60*60*1000))
-                time = (new Date(this.state.incident['IncidentTime'])).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-                console.log(time)
+                time = new Date(this.state.incident['IncidentTime'])
+                time.setHours(time.getHours()+5); 
+                time = (time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
             }
 
             return(
@@ -46,7 +45,9 @@ class Time extends Component {
             var date = this.state.incident['DateIncidentEnded']?this.state.incident['DateIncidentEnded'].substring(0,10):''
             var time = ''
             if(this.state.incident['TimeIncidentEnded']) {
-                time = new Date(this.state.incident['TimeIncidentEnded']).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+                time = new Date(this.state.incident['TimeIncidentEnded'])
+                time.setHours(time.getHours()+5); 
+                time = (time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
             }
 
             return(
@@ -59,7 +60,9 @@ class Time extends Component {
             var date = this.state.incident['ReportDate']?this.state.incident['ReportDate'].substring(0,10):''
             var time = ''
             if(this.state.incident['ReportTime']) {
-                time = new Date(this.state.incident['ReportTime']).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+                time = new Date(this.state.incident['ReportTime'])
+                time.setHours(time.getHours()+5); 
+                time = (time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
             }
             return(
                 <input readOnly value={" "+ date+' '+time} style={{ width: "100%" }}/>

@@ -31,7 +31,6 @@ class gtpdFilter extends Component {
             selectedZone: null,
             selectedLocationCode: null,
             MO: null,
-            selectedCitation: null,
             selectedMental: null,
             alcohol: null,
             drug: null,
