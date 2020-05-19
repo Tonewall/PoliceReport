@@ -30,7 +30,10 @@ class Time extends Component {
             var date = this.state.incident['IncidentDate']?this.state.incident['IncidentDate'].substring(0,10):''
             var time = ''
             if(this.state.incident['IncidentTime']) {
-                time = new Date(this.state.incident['IncidentTime']).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+                var te = new Date(this.state.incident['IncidentTime'])
+                console.log(te + (5*60*60*1000))
+                time = (new Date(this.state.incident['IncidentTime'])).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+                console.log(time)
             }
 
             return(

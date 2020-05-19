@@ -21,7 +21,7 @@ const columns = [
     /*OPTIONAL*/
     {value: 'Unit', field: 'Unit', label: 'Unit', width: 50},
     {value: 'Offenders', field: 'Offenders', label: 'Offenders', width: 200},
-    {value: 'Victims', field: 'Victim', label: 'Victims', width: 100},
+    {value: 'Victims', field: 'Victims', label: 'Victims', width: 100},
     {value: 'Property', field: 'Property', label: 'Property', width: 200},
     {value: 'Officer Name', field: 'Officer', label: 'Officer', width: 200},
     {value: 'Report Date', field: 'Report Date', label: 'Report Date', width: 200},
