@@ -14,6 +14,7 @@ import StatisticsRedirect from './components/Statistics/StatisticsRedirect'
 import BuildingInformation from './components/BuildingInformation'
 import FullReportNew from './components/FullReportNew'
 import RepeatOffender from './components/RepeatOffender'
+import OffenderResult from './components/OffenderResult'
 import 'bootstrap/dist/css/bootstrap.css';
 
 class App extends Component {
@@ -35,7 +36,7 @@ class App extends Component {
                         <Route exact path="/Building-Information" component={BuildingInformation} />
                         <Route exact path="/full-report/:incidentNumber" component={FullReportNew} />
                         <Route exact path="/Repeat-Offenders" component={RepeatOffender} />
-
+                        <Route exact path="/Offender-Result/:personID" component={OffenderResult} />
                 </Router>
             </div>
         );

@@ -1,22 +1,29 @@
 import React, { Component } from 'react';
 import "./Data.css";
 import { MDBDataTable } from 'mdbreact';
+import { Link, Redirect } from 'react-router-dom';
+
 
 class BuildingInformation extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            redirected: false,
+            personID: null,
+            selectedName: [{value: 'offender', label: 'Offender'}],
             offenderList: {
                 coulumns: [],
                 rows: []
             }
         }
+        this.onClick = this.onClick.bind(this)
     }
 
     
     populateData = function (data) {
         var columns = [
+            {label: 'PersonID', field: 'PersonID', width: 50, sort: 'asc'},
             {label: 'First Name', field: 'First Name', width: 100, sort: 'asc'},
             {label: 'Last Name', field: 'Last Name', width: 100, sort: 'asc'},
             {label: 'DOB', field: 'DOB', width: 50, sort: 'asc'},
@@ -29,10 +36,16 @@ class BuildingInformation extends Component {
         var tempList = []
 
         for(var i = 0; i < data.length; i++) {
+            var personID = data[i]['PersonID']
+            data[i]['PersonID'] = <div style={{color:'blue', cursor:'pointer'}}  ><u  onClick={this.onClick} data-name={personID}>{personID}</u></div>
+            var k = 0;
             for(const value in data[i]) {
-                if(data[i][value] == null) {
-                    data[i][value] = '-'
+                if(value !== 'PersonID') {
+                    if(data[i][value] == null) {
+                        data[i][value] = '-'
+                    }
                 }
+                
             }
             tempList.push(data[i])
         }    
@@ -60,9 +73,18 @@ class BuildingInformation extends Component {
             .catch(err => console.error(err))
     }
 
+
+    onClick(event) {
+        this.setState({personID: event.target.dataset.name},
+            function() {
+                this.setState({redirected: true})
+            });
+    }
+
     render() {
         return (
             <div className="main">
+                {this.state.redirected ? <Redirect to={{pathname: '/Offender-Result/'+this.state.personID}}/> : null}
                 <div className="card buildingCard">
                     <h2 className="card-header">Repeat Offenders</h2>
                     <div className="card-body">

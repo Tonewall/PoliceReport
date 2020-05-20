@@ -81,6 +81,26 @@ function add_router(app) {
             }
         });
     });
+    app.post('/get-name', function (req, res) {
+        queryString = query_factory.get_name(req.body)
+        db_query(queryString, (err, result) => {
+            if (!err) res.send(result);
+            else {
+                console.log(err)
+                res.status(400).send(err);
+            }
+        });
+    });
+    app.post('/filter-repeat-offender', function (req, res) {
+        queryString = query_factory.filter_repeat_offender(req.body)
+        db_query(queryString, (err, result) => {
+            if (!err) res.send(result);
+            else {
+                console.log(err)
+                res.status(400).send(err);
+            }
+        });
+    });
 
     app.get('/crimeTypes', function (req, res) {
         db_query(query_factory.crimeTypes, (err, result) => {
