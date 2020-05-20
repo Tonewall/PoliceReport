@@ -20,7 +20,6 @@ class Incident extends Component {
         fetch('/get-offense/'+this.state.incidentNumber)
                 .then(results => {
                     results.json().then(data => {
-                        console.log(data)
                         this.setState({incident: data})
                     })
                 })
@@ -96,11 +95,11 @@ class Incident extends Component {
                     <label>Count</label>
                     {this.getIncidentCount()}
                 </div>
-                <div className='col-1'>
+                <div className='col-2'>
                     <label style={{width:'200%'}}>Offense Code</label>
                     {this.getIncidentCode()}
                 </div>
-                <div className='col-3'>
+                <div className='col-2'>
                     <label>Statute</label>
                     {this.getStatute()}
                 </div>

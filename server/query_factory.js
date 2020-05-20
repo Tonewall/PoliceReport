@@ -12,41 +12,71 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
     return sprintf('\
         SELECT distinct %s [OCA Number] as [Incident Number]\n', top_count) +
         '\
-            , FORMAT(DATEADD(day, 2, [From Date] + [From Time]),\'yyyy-MM-dd hh:mm tt\') as [From]\
-            , FORMAT(DATEADD(day, 2, [To Date] + [To Time]),\'yyyy-MM-dd hh:mm tt\') as [To]\
-            , [Description] as [Offense]\
-            , FORMAT([Report Date], \'yyyy-MM-dd\') as [Report Date]\
-            , [Case Status]\
-            , [Shift2] as [Occurred Shift]\
-            , [Unit]\
-            , [ViolationCode]\
-            , FORMAT([Avg Date],\'yyyy-MM-dd\') as [Average Day]\
-            , FORMAT([Avg Time],\'hh:mm tt\') as [Average Time]\
-            , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Location]\
-            , [Location Landmark] as [Location Landmark]\
-            , CONCAT([tblIncidentOffender].[FirstName], \' \', [tblIncidentOffender].[MiddleName], \' \', [tblIncidentOffender].[LastName]) AS [Offender Name]\
-            , [Officer Name]\
-            , [OffenseType]\
-            , CASE WHEN LEN([OCA Number]) = 8 THEN \'GTPD\'\
-                   WHEN LEN([OCA Number]) != 8 THEN \'APD\'\
+            , FORMAT(DATEADD(day, 2, [From Date] + [From Time]),\'yyyy-MM-dd hh:mm tt\') as [From]\n\
+            , FORMAT(DATEADD(day, 2, [To Date] + [To Time]),\'yyyy-MM-dd hh:mm tt\') as [To]\n\
+            , [Codes-Offense].[Description] as [Offense]\n\
+            , FORMAT([Report Date], \'yyyy-MM-dd\') as [Report Date]\n\
+            , [Case Status]\n\
+            , [Times].[Shift2] as [Occurred Shift]\n\
+            , [Unit]\n\
+            , [ViolationCode] = (SELECT STUFF((SELECT \', \' + [ViolationCode] \n\
+                    FROM [SS_GARecords_Citation].[dbo].[tblCitation] \n\
+                    WHERE (AgencyCaseNumber = Results.AgencyCaseNumber) \n\
+                    FOR XML PATH (\'\')),1,2,\'\') AS ViolationCode\n\
+                FROM [SS_GARecords_Citation].[dbo].[tblCitation] Results\n\
+                where Results.[AgencyCaseNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
+                group by [AgencyCaseNumber])\n\
+            , [Property] = (SELECT STUFF((SELECT \', \' + [ItemDescription] \n\
+                    FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty] \n\
+                    WHERE ([IncidentNumber] = Results.[IncidentNumber]) \n\
+                    FOR XML PATH (\'\')),1,2,\'\') \n\
+                FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty] Results \n\
+                where Results.[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
+                group by [IncidentNumber])\n\
+            , [Victims] = (SELECT STUFF((SELECT \', \' + CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) \n\
+                    FROM [SS_GARecords_Incident].[dbo].[tblIncidentVictim] \n\
+                    WHERE ([IncidentNumber] = Results.[IncidentNumber]) \n\
+                    FOR XML PATH (\'\')),1,2,\'\') \n\
+                FROM [SS_GARecords_Incident].[dbo].[tblIncidentVictim] Results \n\
+                where Results.[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
+                group by [IncidentNumber])\n\
+            ,[OffenseType] = (SELECT STUFF((SELECT \', \' + [OffenseType] \n\
+                    FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense] \n\
+                    WHERE ([IncidentNumber] = Results.[IncidentNumber]) \n\
+                    FOR XML PATH (\'\')),1,2,\'\') \n\
+                FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty] Results \n\
+                where Results.[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
+                group by [IncidentNumber])\n\
+            , FORMAT([Times].[Avg Date],\'yyyy-MM-dd\') as [Average Day]\n\
+            , FORMAT([Times].[Avg Time],\'hh:mm tt\') as [Average Time]\n\
+            , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Location]\n\
+            , [Location Landmark] as [Location Landmark]\n\
+            ,  [Offenders] = (SELECT STUFF((SELECT \', \' + CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) \n\
+                    FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender] \n\
+                    WHERE ([IncidentNumber] = Results.[IncidentNumber]) \n\
+                    FOR XML PATH (\'\')),1,2,\'\') \n\
+                FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender] Results \n\
+                where Results.[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
+                group by [IncidentNumber])\n\
+            , [Officer Name]\n\
+            , CASE WHEN LEN([OCA Number]) = 8 THEN \'GTPD\'\n\
+                   WHEN LEN([OCA Number]) != 8 THEN \'APD\'\n\
               END as [Department]\n\
-        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
-            LEFT JOIN [CrimeAnalytics].[dbo].[Codes-Offense]\
+        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\n\
+            LEFT JOIN [CrimeAnalytics].[dbo].[Codes-Offense]\n\
                 ON ([Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended])\n\
-            LEFT JOIN [CrimeAnalytics].[dbo].[Times]\
+            LEFT JOIN [CrimeAnalytics].[dbo].[Times]\n\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
-            LEFT JOIN [SS_GARecords_Citation].[dbo].[tblCitation]\
+            LEFT JOIN [SS_GARecords_Citation].[dbo].[tblCitation]\n\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblCitation].[AgencyCaseNumber])\n\
-            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\
-                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOffense].[IncidentNumber])\n\
-            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentVictim]\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentVictim]\n\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentVictim].[IncidentNumber])\n\
-            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentMO]\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentMO].[IncidentNumber])\n\
-            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOthersInvolved]\
-                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOthersInvolved].[IncidentNumber])\n\
-            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
-                ON ( [tblIncidentOffender].[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number] )\n'+
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\n\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOffender].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOthersInvolved]\n\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOthersInvolved].[IncidentNumber])\n'+
             (additional_join_statement==null ? '' : additional_join_statement) + '\n'+
         (criteria==null ? '' : ('WHERE ' + criteria + '\n'))+
         'ORDER BY [From] DESC';
@@ -54,7 +84,7 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
 
 
 module.exports.locations = 
-    "SELECT [Building Name],[Loc Type],[St #],[Street-MSAG],[Loc Code] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
+    "SELECT [Building Name],[Loc Type],[St #],[Street-MSAG],[Loc Code], [X_Coord], [Y_Coord] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
 
 module.exports.get_incident_basic = function(incident_number) {
     return sprintf('\
@@ -150,6 +180,8 @@ module.exports.get_location_data = function(incident_number) {
         ,[LocationStreet]\
         ,[PatrolZone]\
         ,[LocationCode]\
+        ,[X_Coord]\
+        ,[Y_Coord]\
         FROM [SS_GARecords_Incident].[dbo].[tblIncident]\
         WHERE ([IncidentNumber]=\'%s\')\
     ', incident_number)
@@ -633,6 +665,8 @@ module.exports.crimeCategories =
 */
  
 module.exports.getBothCount = function(body) {
+    
+    finalScript=''
 
     //OFFICER NAME
     officerName = (body.officerName ? body.officerName : '')
@@ -640,32 +674,111 @@ module.exports.getBothCount = function(body) {
     //ADDRESS
     address = (body.streetName ? body.streetName : '')
 
-    //DEPARTMENT
-    department = "LIKE '%%'"
-    if(body.selectedDepartment) {
-        if(body.selectedDepartment.value === 'gtpDepartment') {
-            department = "NOT LIKE'APD'"
-        } else if(body.selectedDepartment.value === 'apDepartment') {
-            department = "LIKE'APD'"
-        } 
+    //Location code
+    code = "LIKE '%%'"
+    if(body.selectedLocationCode && body.selectedLocationCode.value !== 'Any') {
+        code = "LIKE \'%%"+body.selectedLocationCode.value+'%%\''
+    } else {
+        code = "NOT LIKE \'APD\'"
     }
 
-    // //LOCATION
-    // if(body.selectedDepartment && body.selectedDepartment.value != "bothDepartment") {
-    //     //department chosen
-    //     if(body.selectedDepartment.value === 'gtpDepartment') {
+    //building
+    buildings = ""
+    buildingScript = ''
+    if(body.selectedBuilding != null && body.selectedBuilding.length > 0) {
+        building_list_scriptx = ''
+        body.selectedBuilding.forEach((item)=>{ building_list_scriptx += ('\'' + item['X_Coord'] + '\'' + ',') })
+        building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-1)
+        building_list_scripty = ''
+        body.selectedBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
+        building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
+        buildingScript = 'AND ([Longitude] in (' + building_list_scriptx + ') AND [Latitude] in (' + building_list_scripty + '))'
+    } else if(body.selectedGTLocationType && body.selectedGTLocationType.value != 'Any') {
+        buildingScript = 'AND ([Loc Type] = \'' + body.selectedGTLocationType.value + '\' AND LEN([OCA Number]) = 8)'
+    }
+    finalScript+=buildingScript
 
-    //     } else if(body.selectedDepartment.value === 'apDepartment') {
+    zone = ""
+    if(body.selectedZone && body.selectedZone.value !== 'Any') {
+        zone = " AND [Patrol Zone] LIKE \'"+body.selectedZone.value+'\''
+    }
+    finalScript+=zone
+    MO = ""
+    if(body.MO && body.MO.value !== 'Any') {
+        MO = " AND [tblIncidentMO].[MO] LIKE \'"+body.MO.value+'\''
+    }
+    finalScript+=MO
+    
+    mentalCriteria = ''
+    if(body.selectedMental) {
+        mentalCriteria = ' AND ('
+        for(var i=0;i<body.selectedMental.length;i++) {
+            if(i>0){
+                mentalCriteria+=' OR '
+            }
+            if(body.selectedMental[i].value === 'EMS'){
+                mentalCriteria+='([EMS] is not null)'
+            } else if(body.selectedMental[i].value === '1013'){
+                mentalCriteria+='([1013] > 0)'
+            }else if(body.selectedMental[i].value === 'Suicide'){
+                mentalCriteria+='([Suicide] is not null)'
+            }else if(body.selectedMental[i].value === 'Injury'){
+            mentalCriteria+='([Injured] is not null)'
+        }
+        }
+        mentalCriteria+=')'
+    }
+    finalScript+=mentalCriteria
 
-    //     } 
-    // } else {
-    //     //no department chosen
+    drugAlcCriteria = ''
+    var drugAlc = []
+    if(body.drug) {
+        drugAlc.push('([Drug] > 0)')
+    }
+    if(body.alcohol) {
+        drugAlc.push('([Alcohol] > 0)')
+    }
+    if(body.weapon) {
+        drugAlc.push('([Weapon] is not null)')
+    }
 
-    // }
+    if(drugAlc.length > 0) {
+        drugAlcCriteria += 'AND ('
+        for(var i=0;i<drugAlc.length;i++) {
+            if(i>0){
+                drugAlcCriteria+=' OR '
+            }
+            drugAlcCriteria += drugAlc[i]
+        }
+        drugAlcCriteria+=')'
+    }
+    finalScript+=drugAlcCriteria
+
+    var outcomeScript = ''
+    if(body.selectedOutcome) {
+        if(body.selectedOutcome.length === 1) {
+            if(body.selectedOutcome[0].value === 'M') {
+                outcomeScript = ' AND [OffenseType] = \'M\''
+            } else {
+                outcomeScript = ' AND [OffenseType] = \'F\''
+            }
+        } else {
+            outcomeScript = ' AND [OffenseType] in (\'M\', \'F\')'
+        }
+    }
+    finalScript+=outcomeScript
+
+    var arrestScript = ''
+    if(body.selectedArrest) {
+        if(body.selectedArrest) {
+            arrestScript=' AND [Arrest] = \'true\''
+        }
+    }
+    finalScript+=arrestScript
 
     //SHIFTS AND TEAMS
     if(body.selectedShift) {
-        unit = "AND ([Unit] LIKE '" + body.selectedShift[0].label + "'"
+        unit = " AND ([Unit] LIKE \'" + body.selectedShift[0].label + "\'"
         for(var i = 1; i < body.selectedShift.length; i++) {
             unit += " OR [Unit] LIKE '" + body.selectedShift[i].label + "'"
         }
@@ -673,69 +786,95 @@ module.exports.getBothCount = function(body) {
     } else {
         unit = ''
     }
+    finalScript+=unit
+    if(body.selectedOccurredShift) {
+        shift = " AND ([Shift2] LIKE '" + body.selectedOccurredShift[0].label + "'"
+        for(var i = 1; i < body.selectedOccurredShift.length; i++) {
+            shift += " OR [Shift2] LIKE '" + body.selectedOccurredShift[i].label + "'"
+        }
+        shift += ")" 
+    } else {
+        shift = ''
+    }
+    finalScript+=shift
 
     //CRIMES AND CATEGORIES
     if(body.selectedCrimeType) {
-        crime = "AND ([Offense] LIKE '" + body.selectedCrimeType[0]['NIBRS_Code_Extended'] + "'"
+        crime = " AND ([Offense] LIKE '" + body.selectedCrimeType[0]['NIBRS_Code_Extended'] + "'"
         for(var i = 1; i < body.selectedCrimeType.length; i++) {
             crime += " OR [Offense] LIKE '" + body.selectedCrimeType[i]['NIBRS_Code_Extended'] + "'"
         }
         crime += ")"
     } else if (body.selectedCrimeCategory && body.selectedCrimeCategory.value !== "Any") {
-        crime = "AND [NIBRS_Category] LIKE '" + body.selectedCrimeCategory.value + "'"
+        crime = " AND [NIBRS_Category] LIKE '" + body.selectedCrimeCategory.value + "'"
     } else {
         crime = ''
     }
+    finalScript+=crime
+
+
+    if(body.selectedCitation) {
+        citation = " AND ([Statute] LIKE \'" + body.selectedCitation[0].value + "%\'"
+        for(var i = 1; i < body.selectedCitation.length; i++) {
+            citation += " OR [Statute] LIKE \'" + body.selectedCitation[0].value + "%\'"
+        }
+        citation += ")" 
+    } else {
+        citation = ''
+    }
+    finalScript+=citation
+
 
     
     return sprintf(
-        "SELECT MONTH([Report Date]) as [Month], COUNT(*) as [COUNT]\
-        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
-        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended]\
-        WHERE YEAR([Report Date]) =\'%d'\n\
+        "SELECT MONTH([Report Date]) as [Month], COUNT(*) as [COUNT]\n\
+        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\n\
+        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended]\n\
+        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\
+            ON ([tblIncidentMO].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
+            ON ([tblIncidentOffense].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\n\
+            ON ([tblIncidentOffender].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        Left Join [CrimeAnalytics].[dbo].[Times]\n\
+            ON ([Times].[CASE_NUMBER]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        LEFT JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON (CAST([Codes_Addresses_Unique].[St #] as nvarchar(255)) = [Incident Offenses-GTPD+APD].[St Num]\n\
+            AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name])\n\
+            WHERE YEAR([Report Date]) =\'%d'\n\
         AND [Officer Name] LIKE \'%%%s%%'\n\
-        AND [Address] LIKE \'%%%s%%'\n\
+        AND [Incident Offenses-GTPD+APD].[Address] LIKE \'%%%s%%'\n\
         AND [Location Code] \%s\n\
-        \%s\n\
         \%s\n\
         GROUP BY MONTH([Report Date])\
         ORDER BY MONTH([Report Date])"
-        ,body.selectedYear.value, officerName, address, department, unit, crime
+        ,body.selectedYear.value, 
+        officerName, 
+        address, 
+        code, 
+        finalScript
     )
 }
 module.exports.getTimeCount = function(body) {
+
+    finalScript = ''
     //OFFICER NAME
     officerName = (body.officerName ? body.officerName : '')
 
     //ADDRESS
     address = (body.streetName ? body.streetName : '')
 
-    //DEPARTMENT
-    department = "LIKE '%%'"
-    if(body.selectedDepartment) {
-        if(body.selectedDepartment.value === 'gtpDepartment') {
-            department = "NOT LIKE'APD'"
-        } else if(body.selectedDepartment.value === 'apDepartment') {
-            department = "LIKE'APD'"
-        } 
+
+    //Location code
+    code = "LIKE '%%'"
+    if(body.selectedLocationCode && body.selectedLocationCode.value !== 'Any') {
+        code = "LIKE \'%%"+body.selectedLocationCode.value+'%%\''
+    } else {
+        code = "NOT LIKE \'APD\'"
     }
-
-    // //LOCATION
-    // if(body.selectedDepartment && body.selectedDepartment.value != "bothDepartment") {
-    //     //department chosen
-    //     if(body.selectedDepartment.value === 'gtpDepartment') {
-
-    //     } else if(body.selectedDepartment.value === 'apDepartment') {
-
-    //     } 
-    // } else {
-    //     //no department chosen
-
-    // }
 
     //SHIFTS AND TEAMS
     if(body.selectedShift) {
-        unit = "AND ([Unit] LIKE '" + body.selectedShift[0].label + "'"
+        unit = " AND ([Unit] LIKE '" + body.selectedShift[0].label + "'"
         for(var i = 1; i < body.selectedShift.length; i++) {
             unit += " OR [Unit] LIKE '" + body.selectedShift[i].label + "'"
         }
@@ -743,7 +882,123 @@ module.exports.getTimeCount = function(body) {
     } else {
         unit = ''
     }
+    finalScript+=unit
 
+    //building
+    buildings = ""
+    buildingScript = ''
+    if(body.selectedBuilding != null && body.selectedBuilding.length > 0) {
+        building_list_scriptx = ''
+        body.selectedBuilding.forEach((item)=>{ building_list_scriptx += ('\'' + item['X_Coord'] + '\'' + ',') })
+        building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-1)
+        building_list_scripty = ''
+        body.selectedBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
+        building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
+        buildingScript = 'AND ([Longitude] in (' + building_list_scriptx + ') AND [Latitude] in (' + building_list_scripty + '))'
+    } else if(body.selectedGTLocationType && body.selectedGTLocationType.value != 'Any') {
+        buildingScript = 'AND ([Loc Type] = \'' + body.selectedGTLocationType.value + '\' AND LEN([OCA Number]) = 8)'
+    }
+    finalScript+=buildingScript
+
+    if(body.selectedOccurredShift) {
+        shift = " AND ([Shift2] LIKE '" + body.selectedOccurredShift[0].label + "'"
+        for(var i = 1; i < body.selectedOccurredShift.length; i++) {
+            shift += " OR [Shift2] LIKE '" + body.selectedOccurredShift[i].label + "'"
+        }
+        shift += ")" 
+    } else {
+        shift = ''
+    }
+    finalScript+=shift
+
+    zone = ""
+    if(body.selectedZone && body.selectedZone.value !== 'Any') {
+        zone = " AND [Patrol Zone] LIKE \'"+body.selectedZone.value+'\''
+    }
+    finalScript+=zone
+    MO = ""
+    if(body.MO && body.MO.value !== 'Any') {
+        MO = " AND [tblIncidentMO].[MO] LIKE \'"+body.MO.value+'\''
+    }
+    finalScript+=MO
+    
+    mentalCriteria = ''
+    if(body.selectedMental) {
+        mentalCriteria = ' AND ('
+        for(var i=0;i<body.selectedMental.length;i++) {
+            if(i>0){
+                mentalCriteria+=' OR '
+            }
+            if(body.selectedMental[i].value === 'EMS'){
+                mentalCriteria+='([EMS] is not null)'
+            } else if(body.selectedMental[i].value === '1013'){
+                mentalCriteria+='([1013] > 0)'
+            }else if(body.selectedMental[i].value === 'Suicide'){
+                mentalCriteria+='([Suicide] is not null)'
+            }else if(body.selectedMental[i].value === 'Injury'){
+            mentalCriteria+='([Injured] is not null)'
+        }
+        }
+        mentalCriteria+=')'
+    }
+    finalScript+=mentalCriteria
+
+    drugAlcCriteria = ''
+    var drugAlc = []
+    if(body.drug) {
+        drugAlc.push('([Drug] > 0)')
+    }
+    if(body.alcohol) {
+        drugAlc.push('([Alcohol] > 0)')
+    }
+    if(body.weapon) {
+        drugAlc.push('([Weapon] is not null)')
+    }
+
+    if(drugAlc.length > 0) {
+        drugAlcCriteria += 'AND ('
+        for(var i=0;i<drugAlc.length;i++) {
+            if(i>0){
+                drugAlcCriteria+=' OR '
+            }
+            drugAlcCriteria += drugAlc[i]
+        }
+        drugAlcCriteria+=')'
+    }
+    finalScript+=drugAlcCriteria
+
+    var outcomeScript = ''
+    if(body.selectedOutcome) {
+        if(body.selectedOutcome.length === 1) {
+            if(body.selectedOutcome[0].value === 'M') {
+                outcomeScript = ' AND [OffenseType] = \'M\''
+            } else {
+                outcomeScript = ' AND [OffenseType] = \'F\''
+            }
+        } else {
+            outcomeScript = ' AND [OffenseType] in (\'M\', \'F\')'
+        }
+    }
+    finalScript+=outcomeScript
+
+    var arrestScript = ''
+    if(body.selectedArrest) {
+        if(body.selectedArrest) {
+            arrestScript=' AND [Arrest] = \'true\''
+        }
+    }
+    finalScript+=arrestScript
+
+    if(body.selectedCitation) {
+        citation = " AND ([Statute] LIKE \'" + body.selectedCitation[0].value + "%\'"
+        for(var i = 1; i < body.selectedCitation.length; i++) {
+            citation += " OR [Statute] LIKE \'" + body.selectedCitation[0].value + "%\'"
+        }
+        citation += ")" 
+    } else {
+        citation = ''
+    }
+    finalScript+=citation
 
     //CRIMES AND CATEGORIES
     if(body.selectedCrimeType) {
@@ -758,20 +1013,34 @@ module.exports.getTimeCount = function(body) {
         crime = ''
     }
     return sprintf(
-        "SELECT datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))) as [Hour], \
-        COUNT(*) AS [Count]\
-        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\
-        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense] ON [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended]\
+        "SELECT datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))) as [Hour], \n\
+        COUNT(*) AS [Count]\n\
+        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\n\
+        FULL OUTER JOIN [CrimeAnalytics].[dbo].[Codes-Offense]\n\
+            ON [Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended]\n\
+        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\
+            ON ([tblIncidentMO].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
+            ON ([tblIncidentOffense].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        Left Join [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\n\
+            ON ([tblIncidentOffender].[IncidentNumber]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        Left Join [CrimeAnalytics].[dbo].[Times]\n\
+            ON ([Times].[CASE_NUMBER]=[Incident Offenses-GTPD+APD].[OCA Number])\n\
+        LEFT JOIN [CrimeAnalytics].[dbo].[Codes_Addresses_Unique] ON (CAST([Codes_Addresses_Unique].[St #] as nvarchar(255)) = [Incident Offenses-GTPD+APD].[St Num]\n\
+            AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name])\n\
         WHERE YEAR([Report Date]) =\'%d'\n\
         AND [Officer Name] LIKE \'%%%s%%'\n\
-        AND [Address] LIKE \'%%%s%%'\n\
+        AND [Incident Offenses-GTPD+APD].[Address] LIKE \'%%%s%%'\n\
         AND [Location Code] \%s\n\
         AND DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME))) < 4\
         \%s\n\
-        \%s\n\
 		GROUP BY (datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))))\
 		ORDER BY (datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))))"
-        ,body.selectedYear.value, officerName, address, department, unit, crime
+        ,body.selectedYear.value, 
+        officerName, 
+        address, 
+        code, 
+        finalScript
     )
 }
 
@@ -850,10 +1119,13 @@ module.exports.filter = function(criteria) {
         // Make GTPD part
         if(criteria.selectedBuilding != null && criteria.selectedBuilding.length > 0)   // GTPD-Building
         {
-            building_list_script = ''
-            criteria.selectedBuilding.forEach((item)=>{ building_list_script += ('\'' + item['Building Name'] + '\'' + ',') })
-            building_list_script = building_list_script.substring(0, building_list_script.length-1)
-            gtpd_criteria_script = '([Location Landmark] in (' + building_list_script + ') AND LEN([OCA Number]) = 8)'
+            building_list_scriptx = ''
+            criteria.selectedBuilding.forEach((item)=>{ building_list_scriptx += ('\'' + item['X_Coord'] + '\'' + ',') })
+            building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-1)
+            building_list_scripty = ''
+            criteria.selectedBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
+            building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
+            gtpd_criteria_script = '([Longitude] in (' + building_list_scriptx + ') AND LEN([OCA Number]) = 8 AND [Latitude] in (' + building_list_scripty + '))'
         }
         else if(criteria.selectedGTLocationType.value == 'Any') // GTPD-Any loc type : all GTPD buildings
         {
@@ -865,13 +1137,18 @@ module.exports.filter = function(criteria) {
             gtpd_criteria_script = '([Loc Type] = \'' + criteria.selectedGTLocationType.value + '\' AND LEN([OCA Number]) = 8)'
         }
 
+        
+
         // Make APD part
         if(criteria.selectedAPDBuilding != null && criteria.selectedAPDBuilding.length > 0)   // APD-Building
         {
-            building_list_script = ''
-            criteria.selectedAPDBuilding.forEach((item)=>{ building_list_script += ('\'' + item['Building Name'] + '\'' + ',') })
-            building_list_script = building_list_script.substring(0, building_list_script.length-1)
-            apd_criteria_script = '([Location Landmark] in (' + building_list_script + ') AND LEN([OCA Number]) = 9)'
+            building_list_scriptx = ''
+            criteria.selectedAPDBuilding.forEach((item)=>{ building_list_scriptx += ('\'' + item['X_Coord'] + '\'' + ',') })
+            building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-1)
+            building_list_scripty = ''
+            criteria.selectedAPDBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
+            building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
+            apd_criteria_script = '([Longitude] in (' + building_list_scriptx + ') AND LEN([OCA Number]) = 9 AND [Latitude] in (' + building_list_scripty + '))'
         }
         else if(criteria.selectedAPDLocationType.value == 'Any') // APD-Any loc type : all APD buildings
         {
@@ -881,6 +1158,11 @@ module.exports.filter = function(criteria) {
         {
             codes_address_unique_join = true
             apd_criteria_script = '([Loc Type] = \'' + criteria.selectedAPDLocationType.value + '\' AND LEN([OCA Number]) = 9)'
+        }
+        if((criteria.selectedAPDBuilding == null || criteria.selectedAPDBuilding.length == 0) && criteria.selectedAPDLocationType.value == 'Any'){
+            criteria.selectedDepartment.value = 'gtpDepartment'
+        } else if((criteria.selectedBuilding == null || criteria.selectedBuilding.length == 0) && criteria.selectedGTLocationType.value == 'Any') {
+            criteria.selectedDepartment.value = 'apDepartment'
         }
 
         // Integrate into one according to the department state

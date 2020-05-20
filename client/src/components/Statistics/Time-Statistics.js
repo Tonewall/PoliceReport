@@ -33,7 +33,6 @@ class TimeStatistics extends Component {
     }
 
     getTimeCount() {
-        console.log("here")
         fetch('/getTimeCount',
                 {
                     headers:{'Content-Type' : 'application/json'},

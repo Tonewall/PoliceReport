@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import '../GtpdFilter.css';
 import Year from "../FilterComponents/Year"
-import Crime from "../FilterComponents/Crime"
-import Location from "../FilterComponents/Location"
-import Personnel from "../FilterComponents/Personnel"
+import Crime from "./IncidentFilter"
+import Location from "./LocationFilter"
+import Personnel from "./PersonnelFilter"
 import Select from "react-select";
 import {Redirect} from 'react-router-dom'
 
@@ -25,11 +25,17 @@ class gtpdFilter extends Component {
             selectedOutcome: null,
             officerName: null,
             selectedType: {value: "Date", label: "Date"},
-            selectedAPDBuilding: null,
-            selectedAPDLocationType: null,
             selectedBuilding: null,
-            selectedDepartment: null,
             selectedGTLocationType: null,
+            selectedCitation: null,
+            selectedZone: null,
+            selectedLocationCode: null,
+            MO: null,
+            selectedMental: null,
+            alcohol: null,
+            drug: null,
+            weapon: null,
+            selectedOccurredShift: null,
         };
         this.yearHandler = this.yearHandler.bind(this)
         this.locationHandler = this.locationHandler.bind(this)
@@ -49,12 +55,12 @@ class gtpdFilter extends Component {
 
     locationHandler = (location) => {
         this.setState({
-            selectedAPDBuilding: location.selectedAPDBuilding, 
-            selectedAPDLocationType: location.selectedAPDLocationType, 
             selectedBuilding: location.selectedBuilding, 
-            selectedDepartment: location.selectedDepartment, 
             selectedGTLocationType: location.selectedGTLocationType, 
             streetName: location.streetName, 
+            selectedZone: location.selectedZone,
+            selectedLocationCode: location.selectedLocationCode,
+            MO: location.MO,
         })
     }
 
@@ -64,6 +70,11 @@ class gtpdFilter extends Component {
             selectedCrimeCategory: crime.selectedCrimeCategory, 
             selectedArrest: crime.selectedArrest, 
             selectedOutcome: crime.selectedOutcome, 
+            selectedCitation: crime.selectedCitation,
+            selectedMental: crime.selectedMental,
+            alcohol: crime.alcohol,
+            drug: crime.drug,
+            weapon: crime.weapon,
         })
     }
 
@@ -71,6 +82,7 @@ class gtpdFilter extends Component {
         this.setState({
             officerName: personnel.officerName, 
             selectedShift: personnel.selectedShift, 
+            selectedOccurredShift: personnel.selectedOccurredShift, 
         })
     }
 

@@ -74,8 +74,7 @@ class BuildingInformation extends Component {
                 columns: columns,
                 rows: zone4
             }
-        },
-        function() {console.log(this.state)})
+        })
     }
     
 
