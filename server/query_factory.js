@@ -1083,6 +1083,8 @@ module.exports.getYears = "SELECT DISTINCT YEAR([Report Date]) as [YEAR]\
 
 module.exports.getBuildings = "SELECT [Address]\
     ,[Building Name]\
+    ,[X_Coord]\
+    ,[Y_Coord]\
     ,[Max Bldg #] as [Bldg #]\
     ,[Loc Code] as [Location Code]\
     ,[Loc Type] as [Location Type]\
@@ -1091,6 +1093,22 @@ module.exports.getBuildings = "SELECT [Address]\
     FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]\
     WHERE [Loc Code] not like '%APD%'\
     ORDER BY [Building Name]"
+
+    module.exports.get_coords = function(body) {
+        return sprintf('SELECT top 1 [X_Coord], [Y_Coord]\
+                FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]\
+                    where [Max Bldg #] = \'%s\'',body.buildingNum.toString())
+    }
+    
+    /* Queries for filters */
+    module.exports.filter_building = function(criteria) {
+        top_count = 'top 1000'
+    
+        criteria_script ='[Longitude] = \''+criteria.Xcoord+'\'and [Latitude] = \''+criteria.Ycoord+'\''
+        return this.showall(top_count = top_count, additional_join_statement = null, 
+                            criteria = criteria_script.length==0 ? null : criteria_script)
+    }
+
 module.exports.get_name = function(body) {
     return sprintf('SELECT top 1 [FirstName], [LastName]\
             FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
@@ -1102,7 +1120,6 @@ module.exports.filter_repeat_offender = function(criteria) {
     top_count = 'top 1000'
 
     criteria_script ='(CONCAT([tblIncidentOffender].[FirstName], \' \', [tblIncidentOffender].[LastName]) like \'%%'+criteria.typedName+'%%\')'
-    console.log(criteria_script.length)
     return this.showall(top_count = top_count, additional_join_statement = null, 
                         criteria = criteria_script.length==0 ? null : criteria_script)
 }
