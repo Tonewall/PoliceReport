@@ -1052,6 +1052,7 @@ module.exports.getTimeCount = function(body) {
 module.exports.getLocationRanking = function(body) {
     return sprintf(
         "SELECT [Building Name],\
+        [Max Bldg #],\
         COUNT(*) as [PART I],\
         sum(case when [NIBRS_Category] = 'Robbery' then 1 else 0 end) AS [Robbery],\
         sum(case when [NIBRS_Category] = 'Larceny' then 1 else 0 end) AS [Larceny],\
@@ -1070,7 +1071,7 @@ module.exports.getLocationRanking = function(body) {
         AND [Report Date] <= '%s'\n\
         AND [NIBRS_Category] in ('Robbery', 'Larceny', 'Assault', 'Burglary', 'Motor Vehicle Theft', 'Arson', 'Homicide', 'Sex Offenses')\
         AND [Loc Code] NOT LIKE 'APD'\
-        GROUP BY [Building Name]\
+        GROUP BY [Building Name], [Max Bldg #]\
         ORDER BY COUNT(*) DESC"
         ,body.startDate, body.endDate
     )

@@ -88,7 +88,6 @@ class FilterResult extends Component {
     }
 
     getData() {
-        console.log(this.state)
         fetch('/filter-building',
                 {
                     headers:{'Content-Type' : 'application/json'},

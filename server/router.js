@@ -113,8 +113,6 @@ function add_router(app) {
     });
     app.post('/filter-building', function (req, res) {
         queryString = query_factory.filter_building(req.body)
-        console.log(queryString)
-
         db_query(queryString, (err, result) => {
             if (!err) res.send(result);
             else {

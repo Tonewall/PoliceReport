@@ -47,7 +47,6 @@ class BuildingInformation extends Component {
         for(var i = 0; i < data.length; i++) {
             var bld = data[i]['Bldg #']
             data[i]['Bldg #'] = <div style={{color:'blue', cursor:'pointer'}}  ><u  onClick={this.onClick} data-name={bld}>{bld}</u></div>
-            var k = 0;
             for(const value in data[i]) {
                 if(value !== 'Bldg #') {
                     if(data[i][value] == null) {
@@ -106,7 +105,6 @@ class BuildingInformation extends Component {
         fetch('/getBuildings')
             .then(results => {
                 results.json().then(data => {
-                console.log(data)
                 this.populateData(data)
             })})
             .catch(err => console.error(err))
