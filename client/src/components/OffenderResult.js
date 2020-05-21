@@ -28,17 +28,6 @@ class FilterResult extends Component {
     }
 
     populateData = function (data) {
-        // test for duplicate incidents
-        // var testArray = []
-        // for(var i = 0; i<data.length; i++) {
-        //     if(testArray[data[i]['Incident Number']]) {
-        //         console.log(data[i]['Incident Number'])
-        //     } else {
-        //         testArray[data[i]['Incident Number']] = true
-        //         console.log(testArray[data[i]['Incident Number']])
-        //     }
-        // }
-        // console.log("Finished")
         
 
         //retrieve the selected columns from filter page
@@ -75,7 +64,6 @@ class FilterResult extends Component {
 
     componentDidMount() {
         var {personID} = this.props.match.params;
-        console.log(personID)
         this.setState({personID}, function(){this.getName()})
         
     }
@@ -99,7 +87,6 @@ class FilterResult extends Component {
     }
 
     getData() {
-        console.log(this.state)
         fetch('/filter-repeat-offender',
                 {
                     headers:{'Content-Type' : 'application/json'},

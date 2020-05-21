@@ -54,8 +54,7 @@ class BuildingInformation extends Component {
                 columns: columns,
                 rows: tempList
             }
-        },
-        function() {console.log(this.state)})
+        })
     }
     
 
@@ -67,7 +66,6 @@ class BuildingInformation extends Component {
         fetch('/get-repeat-offender')
             .then(results => {
                 results.json().then(data => {
-                console.log(data)
                 this.populateData(data)
             })})
             .catch(err => console.error(err))
