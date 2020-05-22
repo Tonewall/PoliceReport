@@ -12,12 +12,11 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
     return sprintf('\
         SELECT distinct %s [OCA Number] as [Incident Number]\n', top_count) +
         '\
-            , FORMAT(DATEADD(day, 2, [From Date] + [From Time]),\'yyyy-MM-dd hh:mm tt\') as [From]\n\
-            , FORMAT(DATEADD(day, 2, [To Date] + [To Time]),\'yyyy-MM-dd hh:mm tt\') as [To]\n\
+            , FORMAT(DATEADD(day, 2, [IncidentDate] + [IncidentTime]),\'yyyy-MM-dd hh:mm tt\') as [From]\n\
+            , FORMAT(DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded]),\'yyyy-MM-dd hh:mm tt\') as [To]\n\
             , [Codes-Offense].[Description] as [Offense]\n\
             , FORMAT([Report Date], \'yyyy-MM-dd\') as [Report Date]\n\
             , [Case Status]\n\
-            , [Times].[Shift2] as [Occurred Shift]\n\
             , [Unit]\n\
             , [ViolationCode] = (SELECT STUFF((SELECT \', \' + [ViolationCode] \n\
                     FROM [SS_GARecords_Citation].[dbo].[tblCitation] \n\
@@ -47,8 +46,6 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty] Results \n\
                 where Results.[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
                 group by [IncidentNumber])\n\
-            , FORMAT([Times].[Avg Date],\'yyyy-MM-dd\') as [Average Day]\n\
-            , FORMAT([Times].[Avg Time],\'hh:mm tt\') as [Average Time]\n\
             , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Location]\n\
             , [Location Landmark] as [Location Landmark]\n\
             ,  [Offenders] = (SELECT STUFF((SELECT \', \' + CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) \n\
@@ -62,6 +59,30 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
             , CASE WHEN LEN([OCA Number]) = 8 THEN \'GTPD\'\n\
                    WHEN LEN([OCA Number]) != 8 THEN \'APD\'\n\
               END as [Department]\n\
+              , CASE WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [IncidentDate] + [IncidentTime])), (DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded]))) > 16\
+                        THEN \'-\'\
+                    WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [IncidentDate] + [IncidentTime])), (DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded]))) <= 16\
+                        THEN FORMAT(DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [IncidentDate] + [IncidentTime])), (DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded])))/2, DATEADD(day, 2, [IncidentDate] + [IncidentTime])), \'hh:mm tt\')\
+                    End as [Average Time]\
+            , CASE WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [IncidentDate] + [IncidentTime])), (DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded]))) > 16\
+                        THEN \'-\'\
+                    WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [IncidentDate] + [IncidentTime])), (DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded]))) <= 16\
+                        THEN FORMAT(DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [IncidentDate] + [IncidentTime])), (DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded])))/2, DATEADD(day, 2, [IncidentDate] + [IncidentTime])), \'yyyy-dd-mm\')\
+                    End as [Average Day]\
+            , CASE WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [IncidentDate] + [IncidentTime])), (DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded]))) > 16\
+                        THEN \'Unknown\'\
+                    WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [IncidentDate] + [IncidentTime])), (DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded]))) <= 16 THEN CASE\
+                        WHEN DATEPART(HOUR, DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [IncidentDate] + [IncidentTime])), (DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded])))/2, DATEADD(day, 2, [IncidentDate] + [IncidentTime])))\
+                            IN (6,7,8,9,10,11,12,13)\
+                                THEN \'Day\'\
+                        WHEN DATEPART(HOUR, DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [IncidentDate] + [IncidentTime])), (DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded])))/2, DATEADD(day, 2, [IncidentDate] + [IncidentTime])))\
+                            IN (14,15,16,17,18,19,20,21)\
+                                THEN \'Eve\'\
+                        WHEN DATEPART(HOUR, DATEADD(mi, DATEDIFF(mi, (DATEADD(day, 2, [IncidentDate] + [IncidentTime])), (DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded])))/2, DATEADD(day, 2, [IncidentDate] + [IncidentTime])))\
+                            IN (22,23,0,1,2,3,4,5)\
+                                THEN \'Morn\'\
+                            END\
+                    END AS [Occurred Shift]\
         FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\n\
             LEFT JOIN [CrimeAnalytics].[dbo].[Codes-Offense]\n\
                 ON ([Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended])\n\
@@ -69,6 +90,8 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
             LEFT JOIN [SS_GARecords_Citation].[dbo].[tblCitation]\n\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblCitation].[AgencyCaseNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncident]\n\
+				ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncident].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentVictim]\n\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentVictim].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\

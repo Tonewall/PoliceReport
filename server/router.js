@@ -48,6 +48,7 @@ function db_query(query_string, next) {
 function add_router(app) {
     app.get('/showall', function (req, res) {
         queryString = query_factory.showall();
+        console.log(queryString)
         db_query(queryString, (err, result) => {
             if (!err) res.send(result);
             else res.status(400).send(err);
