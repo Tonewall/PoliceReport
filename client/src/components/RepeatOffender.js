@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import "./Data.css";
 import { MDBDataTable } from 'mdbreact';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 
 class BuildingInformation extends Component {
@@ -38,7 +38,6 @@ class BuildingInformation extends Component {
         for(var i = 0; i < data.length; i++) {
             var personID = data[i]['PersonID']
             data[i]['PersonID'] = <div style={{color:'blue', cursor:'pointer'}}  ><u  onClick={this.onClick} data-name={personID}>{personID}</u></div>
-            var k = 0;
             for(const value in data[i]) {
                 if(value !== 'PersonID') {
                     if(data[i][value] == null) {

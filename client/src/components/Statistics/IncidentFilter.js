@@ -5,10 +5,7 @@ import Select from "react-select";
 const crimeTypeOptions = [];
 var newCrimeTypeOptions = crimeTypeOptions;
 var crimeCategoryOptions = [];
-const arrestOptions = [
-    {value: 'arrests', label: 'Arrests'},
-    {value: 'warnings', label: 'CT Warnings'}
-]
+
 
 const outcomeOptions = [
     {value: 'F', label: 'Felony'},
@@ -147,7 +144,6 @@ class crime extends Component {
     render() {
         const {             
             selectedCrimeType, 
-            selectedArrest, 
             selectedOutcome, 
             selectedCrimeCategory, 
             selectedMental,

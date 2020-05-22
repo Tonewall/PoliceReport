@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import TimePicker from 'react-times';
 import 'react-times/css/material/default.css';
 import 'react-times/css/classic/default.css';
 
@@ -14,10 +13,6 @@ const dateOptions = [
     {value: 'year', label: 'Past Year'},
 ];
 
-const customTimeOptions = [
-    {value: false, label: 'Default'},
-    {value: true, label: 'Custom'},
-]
 
 class date extends Component {
     state = {
@@ -80,7 +75,7 @@ class date extends Component {
 
     
     render() {
-        const { selectedDate, selectedCustomTime } = this.state;
+        const { selectedDate } = this.state;
         return(
             <div className="main">
                 <div className="card filterTypeCards dateCard">
