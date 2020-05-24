@@ -36,18 +36,22 @@ class BuildingInformation extends Component {
         var tempList = []
 
         for(var i = 0; i < data.length; i++) {
+            var row = {}
             var personID = data[i]['PersonID']
-            data[i]['PersonID'] = <div style={{color:'blue', cursor:'pointer'}}  ><u  onClick={this.onClick} data-name={personID}>{personID}</u></div>
-            for(const value in data[i]) {
-                if(value !== 'PersonID') {
-                    if(data[i][value] == null) {
-                        data[i][value] = '-'
-                    }
+            row['PersonID'] = <div style={{color:'blue', cursor:'pointer'}}  ><u  onClick={this.onClick} data-name={personID}>{personID}</u></div>
+            for(var j = 1; j < columns.length; j++) {
+                if(data[i][columns[j].field] == null){ 
+                    row[columns[j].field] = '-'
+                } else {
+                    row[columns[j].field] = data[i][columns[j].field].toString()
                 }
-                
             }
-            tempList.push(data[i])
+
+            tempList.push(row)
         }    
+
+
+
         this.setState({
             offenderList: {
                 columns: columns,

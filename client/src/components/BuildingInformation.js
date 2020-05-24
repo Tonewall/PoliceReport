@@ -33,10 +33,10 @@ class BuildingInformation extends Component {
     populateData = function (data) {
         var columns = [
             {label: 'Bldg #', field: 'Bldg #', width: 50, sort: 'asc'},
+            {label: 'Building Name', field: 'Building Name', width: 200, sort: 'asc'},
             {label: 'Area', field: 'Area', width: 100, sort: 'asc'},
             {label: 'Location Type', field: 'Location Type', width: 100, sort: 'asc'},
             {label: 'Address', field: 'Address', width: 200, sort: 'asc'},
-            {label: 'Building Name', field: 'Building Name', width: 200, sort: 'asc'},
             {label: 'Location Code', field: 'Location Code', width: 100, sort: 'asc'},
         ]
         var zone1 = []
@@ -45,29 +45,26 @@ class BuildingInformation extends Component {
         var zone4 = []
 
         for(var i = 0; i < data.length; i++) {
+            var row = {}
             var bld = data[i]['Bldg #']
-            data[i]['Bldg #'] = <div style={{color:'blue', cursor:'pointer'}}  ><u  onClick={this.onClick} data-name={bld}>{bld}</u></div>
-            for(const value in data[i]) {
-                if(value !== 'Bldg #') {
-                    if(data[i][value] == null) {
-                        data[i][value] = '-'
-                    }
-                }
-                
-            }
-            for(const value in data[i]) {
-                if(data[i][value] == null) {
-                    data[i][value] = '-'
+            row['Bldg #'] = <div style={{color:'blue', cursor:'pointer'}}  ><u  onClick={this.onClick} data-name={bld}>{bld}</u></div>
+            row['Building Name'] = data[i]['Building Name']
+            
+            for(var j = 2; j < columns.length; j++) {
+                if(data[i][columns[j].field] == null){ 
+                    row[columns[j].field] = '-'
+                } else {
+                    row[columns[j].field] = data[i][columns[j].field].toString()
                 }
             }
             if(data[i]['Patrol Zone'] === "Zone 1") {
-                zone1.push(data[i])
+                zone1.push(row)
             } else if(data[i]['Patrol Zone'] === "Zone 2") {
-                zone2.push(data[i])
+                zone2.push(row)
             } else if(data[i]['Patrol Zone'] === "Zone 3") {
-                zone3.push(data[i])
+                zone3.push(row)
             } else if(data[i]['Patrol Zone'] === "Zone 4") {
-                zone4.push(data[i])
+                zone4.push(row)
             }
         }    
         this.setState({
