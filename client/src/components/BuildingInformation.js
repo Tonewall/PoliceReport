@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import "./Data.css";
 import { MDBDataTable } from 'mdbreact';
+import { Redirect } from 'react-router-dom';
 
 class BuildingInformation extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            buildingNum: null,
             zone1: {
                 coulumns: [],
                 rows: []
@@ -24,6 +26,7 @@ class BuildingInformation extends Component {
                 rows: []
             }
         }
+        this.onClick = this.onClick.bind(this)
     }
 
     
@@ -42,6 +45,16 @@ class BuildingInformation extends Component {
         var zone4 = []
 
         for(var i = 0; i < data.length; i++) {
+            var bld = data[i]['Bldg #']
+            data[i]['Bldg #'] = <div style={{color:'blue', cursor:'pointer'}}  ><u  onClick={this.onClick} data-name={bld}>{bld}</u></div>
+            for(const value in data[i]) {
+                if(value !== 'Bldg #') {
+                    if(data[i][value] == null) {
+                        data[i][value] = '-'
+                    }
+                }
+                
+            }
             for(const value in data[i]) {
                 if(data[i][value] == null) {
                     data[i][value] = '-'
@@ -76,6 +89,12 @@ class BuildingInformation extends Component {
             }
         })
     }
+    onClick(event) {
+        this.setState({buildingNum: event.target.dataset.name},
+            function() {
+                this.setState({redirected: true})
+            });
+    }
     
 
     componentDidMount() {
@@ -94,6 +113,7 @@ class BuildingInformation extends Component {
     render() {
         return (
             <div className="main">
+                {this.state.redirected ? <Redirect to={{pathname: '/Building-Result/'+this.state.buildingNum}}/> : null}
                 <div className="card buildingCard">
                     <h2 className="card-header">Zone 1 Buildings</h2>
                     <div className="card-body">

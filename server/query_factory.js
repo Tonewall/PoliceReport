@@ -562,15 +562,42 @@ module.exports.get_distinct_mo = function() {
 
 module.exports.get_repeat_offender = function(date) {
     return sprintf('\
-    SELECT [PersonID]\
-    ,count(*)\
-        FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
-        LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncident]\
-                    ON ([tblIncidentOffender].[IncidentNumber] = [tblIncident].[IncidentNumber])\
-        where [Arrest]=\'true\' and PersonID is not null and [ReportDate] > \'2017-5-12\'\
-        group by [PersonID]\
-        having count(*) > 2\
-    ', date)
+        SELECT [Last Name]\
+            ,[First Name]\
+            ,[Middle Name]\
+            , [PersonID] = (SELECT top 1 [PersonID]\
+                FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender] Results\
+                where Results.[FirstName] = [GT_Repeat_Offenders].[First Name] and Results.[LastName] = [GT_Repeat_Offenders].[Last Name] and Results.[DateOfBirth] = [GT_Repeat_Offenders].[DOB]\
+                group by [PersonID]\
+                order by [PersonID] DESC)\
+            ,[Aliases]\
+            ,[Race]\
+            ,[Sex]\
+            ,FORMAT([DOB],\'yyyy-MM-dd\') as [DOB]\
+            ,[DOB2]\
+            ,CASE WHEN [Height] is not null THEN CONCAT(SUBSTRING([Height], 1, 1), \'\'\'\', SUBSTRING([Height], 2, 2))\
+                WHEN [Height] is null THEN null\
+                END AS [Height]\
+            ,[Max Address]\
+            ,[Min ArrDate]\
+            ,FORMAT([Max ArrDate],\'yyyy-MM-dd\') as [Max ArrDate]\
+            ,[Min UCR]\
+            ,[Max UCR]\
+            ,[GT Arrests]\
+            ,[State Custody]\
+            ,[State Release Date]\
+            ,[County Custody]\
+            ,[County Booking Date]\
+            ,[County Release Date]\
+            ,[Parole End Date]\
+            ,[In Custody Now]\
+            ,[Date Updated]\
+            ,[Vine]\
+            ,[SO ID]\
+            ,[GDC ID]\
+        FROM [CrimeAnalytics].[dbo].[GT_Repeat_Offenders]\
+        ORDER BY [Max ArrDate] DESC\
+    ')
 }
 // have another function that checks all of the personid and returns the names in an array
 module.exports.get_repeat_offender_name = function(ids) {
@@ -1025,6 +1052,7 @@ module.exports.getTimeCount = function(body) {
 module.exports.getLocationRanking = function(body) {
     return sprintf(
         "SELECT [Building Name],\
+        [Max Bldg #],\
         COUNT(*) as [PART I],\
         sum(case when [NIBRS_Category] = 'Robbery' then 1 else 0 end) AS [Robbery],\
         sum(case when [NIBRS_Category] = 'Larceny' then 1 else 0 end) AS [Larceny],\
@@ -1043,7 +1071,7 @@ module.exports.getLocationRanking = function(body) {
         AND [Report Date] <= '%s'\n\
         AND [NIBRS_Category] in ('Robbery', 'Larceny', 'Assault', 'Burglary', 'Motor Vehicle Theft', 'Arson', 'Homicide', 'Sex Offenses')\
         AND [Loc Code] NOT LIKE 'APD'\
-        GROUP BY [Building Name]\
+        GROUP BY [Building Name], [Max Bldg #]\
         ORDER BY COUNT(*) DESC"
         ,body.startDate, body.endDate
     )
@@ -1056,6 +1084,8 @@ module.exports.getYears = "SELECT DISTINCT YEAR([Report Date]) as [YEAR]\
 
 module.exports.getBuildings = "SELECT [Address]\
     ,[Building Name]\
+    ,[X_Coord]\
+    ,[Y_Coord]\
     ,[Max Bldg #] as [Bldg #]\
     ,[Loc Code] as [Location Code]\
     ,[Loc Type] as [Location Type]\
@@ -1065,8 +1095,36 @@ module.exports.getBuildings = "SELECT [Address]\
     WHERE [Loc Code] not like '%APD%'\
     ORDER BY [Building Name]"
 
+    module.exports.get_coords = function(body) {
+        return sprintf('SELECT top 1 [X_Coord], [Y_Coord]\
+                FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]\
+                    where [Max Bldg #] = \'%s\'',body.buildingNum.toString())
+    }
+    
+    /* Queries for filters */
+    module.exports.filter_building = function(criteria) {
+        top_count = 'top 1000'
+    
+        criteria_script ='[Longitude] = \''+criteria.Xcoord+'\'and [Latitude] = \''+criteria.Ycoord+'\''
+        return this.showall(top_count = top_count, additional_join_statement = null, 
+                            criteria = criteria_script.length==0 ? null : criteria_script)
+    }
+
+module.exports.get_name = function(body) {
+    return sprintf('SELECT top 1 [FirstName], [LastName]\
+            FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\
+                where [PersonID] = \'%s\'',body.personID.toString())
+}
 
 /* Queries for filters */
+module.exports.filter_repeat_offender = function(criteria) {
+    top_count = 'top 1000'
+
+    criteria_script ='(CONCAT([tblIncidentOffender].[FirstName], \' \', [tblIncidentOffender].[LastName]) like \'%%'+criteria.typedName+'%%\')'
+    return this.showall(top_count = top_count, additional_join_statement = null, 
+                        criteria = criteria_script.length==0 ? null : criteria_script)
+}
+
 module.exports.filter = function(criteria) {
 
     criteria_script = ''
