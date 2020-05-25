@@ -12,7 +12,10 @@ import LocationStatsFilter from './components/Statistics/LocationStatsFilter'
 import LocationStatistics from './components/Statistics/LocationStatistics'
 import StatisticsRedirect from './components/Statistics/StatisticsRedirect'
 import BuildingInformation from './components/BuildingInformation'
+import BuildingResult from './components/BuildingResult'
 import FullReportNew from './components/FullReportNew'
+import RepeatOffender from './components/RepeatOffender'
+import OffenderResult from './components/OffenderResult'
 import 'bootstrap/dist/css/bootstrap.css';
 
 class App extends Component {
@@ -33,7 +36,9 @@ class App extends Component {
                         <Route exact path="/Location-Statistics/" component={LocationStatistics} />
                         <Route exact path="/Building-Information" component={BuildingInformation} />
                         <Route exact path="/full-report/:incidentNumber" component={FullReportNew} />
-
+                        <Route exact path="/Repeat-Offenders" component={RepeatOffender} />
+                        <Route exact path="/Offender-Result/:personID" component={OffenderResult} />
+                        <Route exact path="/Building-Result/:buildingNum" component={BuildingResult} />
                 </Router>
             </div>
         );

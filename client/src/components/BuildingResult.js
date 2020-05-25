@@ -8,29 +8,31 @@ class FilterResult extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            buildingNum: null,
             crimeData: {
                 coulumns: [],
                 rows: []
             },
+            selectedColumns: [
+                {value: 'Offense', field:'Offense', label: 'Offense', width: 200},
+                {value: 'Location', field:'Location', label: 'Location', width: 250},
+                {value: 'Location Landmark', field:'Location Landmark', label: 'Landmark', width: 200},
+                {value: 'From', field:'From', label: 'From Date/Time', width: 100},
+                {value: 'To', field:'To', label: 'To Date/Time', width: 100},
+                {value: 'Average Day', field:'Average Day', label: 'Avg Day', width: 100},
+                {value: 'Average Time', field:'Average Time', label: 'Avg Time', width: 100},
+                {value: 'Occurred Shift', field:'Occurred Shift', label: 'Occurred Shift', width: 100},
+                {value: 'Case Status', field:'Case Status', label: 'Status', width: 50},
+                {value: 'Department', field:'Department', label: 'Dept', width: 50},
+            ]
         }
     }
 
     populateData = function (data) {
-        //test for duplicate incidents
-        // var testArray = []
-        // for(var i = 0; i<data.length; i++) {
-        //     if(testArray[data[i]['Incident Number']]) {
-        //         console.log(data[i]['Incident Number'])
-        //     } else {
-        //         testArray[data[i]['Incident Number']] = true
-        //         console.log(testArray[data[i]['Incident Number']])
-        //     }
-        // }
-        // console.log("Finished")
         
 
         //retrieve the selected columns from filter page
-        var selectedColumns = this.props.location.state.selectedColumns
+        var selectedColumns = this.state.selectedColumns
         //add incident number to the columns
         selectedColumns.unshift({value: 'Incident Number', field:'Incident Number', label: 'Incident Number', width: 100})
         var rows = [];
@@ -62,22 +64,35 @@ class FilterResult extends Component {
     }
 
     componentDidMount() {
-        var temp = new Date()
-        temp = this.props.location.state.startDate
-        temp.setMinutes(temp.getMinutes() - 240)
-        this.props.location.state.startDate = temp
-        temp = this.props.location.state.endDate
-        temp.setMinutes(temp.getMinutes() - 240)
-        this.props.location.state.endDate = temp
-        this.getData();
+        var {buildingNum} = this.props.match.params;
+        this.setState({buildingNum}, function(){this.getCoords()})
+        
+    }
+
+    getCoords() {
+        fetch('/get-coords',
+            {
+                headers:{'Content-Type' : 'application/json'},
+                method: 'post',
+                body: JSON.stringify(this.state)
+            }
+            )
+
+            .then(results => {
+                results.json().then(data => {
+                    this.setState({Xcoord: data[0]['X_Coord'], Ycoord: data[0]['Y_Coord']},
+                    function() {this.getData()})
+                })
+            })
+            .catch(err => console.error(err))
     }
 
     getData() {
-        fetch('/filter',
+        fetch('/filter-building',
                 {
                     headers:{'Content-Type' : 'application/json'},
                     method: 'post',
-                    body: JSON.stringify(this.props.location.state)
+                    body: JSON.stringify(this.state)
                 }
             )
             .then(function(response) {
@@ -97,11 +112,6 @@ class FilterResult extends Component {
     render() {
         return (
             <div className="main">
-                <div className="row">
-                    <div className="col-12">
-                        <button style={{marginLeft:'3%', marginBottom:'10px', fontSize:'150%'}}className="btn btn-lg btn-primary"> <a style={{color:'white'}}href="/GTPD-Filter">Filter</a></button>
-                    </div>
-                </div>
                 <div className="card">
                     <div className="card-body" style={{marginBottom:30, fontSize: 12}}>
                         <MDBDataTable
@@ -111,7 +121,7 @@ class FilterResult extends Component {
                             hover
                             entries={20}
                             data={this.state.crimeData}
-                        />
+                            />
                     </div>
                 </div>
             </div>
