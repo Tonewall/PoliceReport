@@ -10,55 +10,57 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
             - criteria: ( len([OCA Number]) = 8 )
      */
     return sprintf('\
-        SELECT distinct %s [OCA Number] as [Incident Number]\n', top_count) +
+        SELECT distinct %s [tblIncident].[IncidentNumber] as [Incident Number]\n', top_count) +
         '\
             , FORMAT(DATEADD(day, 2, [IncidentDate] + [IncidentTime]),\'yyyy-MM-dd hh:mm tt\') as [From]\n\
             , FORMAT(DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded]),\'yyyy-MM-dd hh:mm tt\') as [To]\n\
-            , [Codes-Offense].[Description] as [Offense]\n\
-            , FORMAT([Report Date], \'yyyy-MM-dd\') as [Report Date]\n\
-            , [Case Status]\n\
-            , [Unit]\n\
+            , FORMAT([ReportDate], \'yyyy-MM-dd\') as [Report Date]\n\
+            , [tblIncident].[CaseStatus] as [Case Status]\n\
+            , [tblIncidentOffense].[OffenseDescription] as [Offense]\n\
+            , [tblIncident].[OtherZone] as [Unit]\n\
             , [ViolationCode] = (SELECT STUFF((SELECT \', \' + [ViolationCode] \n\
                     FROM [SS_GARecords_Citation].[dbo].[tblCitation] \n\
                     WHERE (AgencyCaseNumber = Results.AgencyCaseNumber) \n\
                     FOR XML PATH (\'\')),1,2,\'\') AS ViolationCode\n\
                 FROM [SS_GARecords_Citation].[dbo].[tblCitation] Results\n\
-                where Results.[AgencyCaseNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
+                where Results.[AgencyCaseNumber] = [tblIncident].[IncidentNumber]\n\
                 group by [AgencyCaseNumber])\n\
             , [Property] = (SELECT STUFF((SELECT \', \' + [ItemDescription] \n\
                     FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty] \n\
                     WHERE ([IncidentNumber] = Results.[IncidentNumber]) \n\
                     FOR XML PATH (\'\')),1,2,\'\') \n\
                 FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty] Results \n\
-                where Results.[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
+                where Results.[IncidentNumber] = [tblIncident].[IncidentNumber]\n\
                 group by [IncidentNumber])\n\
             , [Victims] = (SELECT STUFF((SELECT \', \' + CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) \n\
                     FROM [SS_GARecords_Incident].[dbo].[tblIncidentVictim] \n\
                     WHERE ([IncidentNumber] = Results.[IncidentNumber]) \n\
                     FOR XML PATH (\'\')),1,2,\'\') \n\
                 FROM [SS_GARecords_Incident].[dbo].[tblIncidentVictim] Results \n\
-                where Results.[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
+                where Results.[IncidentNumber] = [tblIncident].[IncidentNumber]\n\
                 group by [IncidentNumber])\n\
             ,[OffenseType] = (SELECT STUFF((SELECT \', \' + [OffenseType] \n\
                     FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffense] \n\
                     WHERE ([IncidentNumber] = Results.[IncidentNumber]) \n\
                     FOR XML PATH (\'\')),1,2,\'\') \n\
                 FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty] Results \n\
-                where Results.[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
+                where Results.[IncidentNumber] = [tblIncident].[IncidentNumber]\n\
                 group by [IncidentNumber])\n\
-            , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Location]\n\
-            , [Location Landmark] as [Location Landmark]\n\
+            , [LocationLandmark] as [Location Landmark]\n\
             ,  [Offenders] = (SELECT STUFF((SELECT \', \' + CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) \n\
                     FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender] \n\
                     WHERE ([IncidentNumber] = Results.[IncidentNumber]) \n\
                     FOR XML PATH (\'\')),1,2,\'\') \n\
                 FROM [SS_GARecords_Incident].[dbo].[tblIncidentOffender] Results \n\
-                where Results.[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
+                where Results.[IncidentNumber] = [tblIncident].[IncidentNumber]\n\
                 group by [IncidentNumber])\n\
-            , [Officer Name]\n\
-            , CASE WHEN LEN([OCA Number]) = 8 THEN \'GTPD\'\n\
-                   WHEN LEN([OCA Number]) != 8 THEN \'APD\'\n\
+            , [OfficerName] as [Officer Name]\n\
+            , CASE WHEN LEN([tblIncident].[IncidentNumber]) = 8 THEN \'GTPD\'\n\
+                   WHEN LEN([tblIncident].[IncidentNumber]) != 8 THEN \'APD\'\n\
               END as [Department]\n\
+            , CASE WHEN LEN([LocationStreet]) is null THEN [tblIncident].[Location]\n\
+                WHEN LEN([LocationStreet]) is not null THEN CONCAT([LocationStreetNumber], \' \', [LocationStreet])\n\
+                END as [Location]\n\
               , CASE WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [IncidentDate] + [IncidentTime])), (DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded]))) > 16\
                         THEN \'-\'\
                     WHEN DATEDIFF(HOUR, (DATEADD(day, 2, [IncidentDate] + [IncidentTime])), (DATEADD(day, 2, [DateIncidentEnded] + [TimeIncidentEnded]))) <= 16\
@@ -83,25 +85,22 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                                 THEN \'Morn\'\
                             END\
                     END AS [Occurred Shift]\
-        FROM [CrimeAnalytics].[dbo].[Incident Offenses-GTPD+APD]\n\
-            LEFT JOIN [CrimeAnalytics].[dbo].[Codes-Offense]\n\
-                ON ([Incident Offenses-GTPD+APD].[Offense] = [Codes-Offense].[NIBRS_Code_Extended])\n\
-            LEFT JOIN [CrimeAnalytics].[dbo].[Times]\n\
-                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [Times].[CASE_NUMBER])\n\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncident]\n\
             LEFT JOIN [SS_GARecords_Citation].[dbo].[tblCitation]\n\
-                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblCitation].[AgencyCaseNumber])\n\
-            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncident]\n\
-				ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncident].[IncidentNumber])\n\
+                ON ([tblIncident].[IncidentNumber] = [tblCitation].[AgencyCaseNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentVictim]\n\
-                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentVictim].[IncidentNumber])\n\
+                ON ([tblIncident].[IncidentNumber] = [tblIncidentVictim].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\
-                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentMO].[IncidentNumber])\n\
+                ON ([tblIncident].[IncidentNumber] = [tblIncidentMO].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\n\
-                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOffender].[IncidentNumber])\n\
+                ON ([tblIncident].[IncidentNumber] = [tblIncidentOffender].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
+                ON ([tblIncident].[IncidentNumber] = [tblIncidentOffense].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOthersInvolved]\n\
-                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOthersInvolved].[IncidentNumber])\n'+
-            (additional_join_statement==null ? '' : additional_join_statement) + '\n'+
-        (criteria==null ? '' : ('WHERE ' + criteria + '\n'))+
+                ON ([tblIncident].[IncidentNumber] = [tblIncidentOthersInvolved].[IncidentNumber])\n'+
+            (additional_join_statement==null ? '' : additional_join_statement) + '\n\
+            WHERE LEN([tblIncident].[IncidentNumber]) = 8\n'+
+        (criteria==null ? '' : ('AND ' + criteria + '\n'))+
         'ORDER BY [From] DESC';
 }
 
@@ -518,6 +517,29 @@ module.exports.get_supplements = function(incident_number) {
         ORDER BY [SequenceNumber] ASC\
     ', incident_number)
 }
+
+module.exports.incident =
+        "SELECT top (1000) *\n\
+        FROM [SS_GARecords_Incident].[dbo].[tblIncident]\n\
+            LEFT JOIN [SS_GARecords_Citation].[dbo].[tblCitation]\n\
+                ON ([tblIncident].[IncidentNumber] = [tblCitation].[AgencyCaseNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentVictim]\n\
+                ON ([tblIncident].[IncidentNumber] = [tblIncidentVictim].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\
+                ON ([tblIncident].[IncidentNumber] = [tblIncidentMO].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\n\
+                ON ([tblIncident].[IncidentNumber] = [tblIncidentOffender].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
+                ON ([tblIncident].[IncidentNumber] = [tblIncidentOffense].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOthersInvolved]\n\
+                ON ([tblIncident].[IncidentNumber] = [tblIncidentOthersInvolved].[IncidentNumber])\
+    "
+
+module.exports.offensecode = 
+"SELECT top (1000) *\n\
+FROM [SS_GARecords_Incident].[dbo].[tblIncident]\n\
+Where Year([ReportDate]) = '2019'\
+"
 
 module.exports.get_offender_info = function(incident_number) {
     return sprintf('\

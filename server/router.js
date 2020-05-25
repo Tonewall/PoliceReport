@@ -195,6 +195,18 @@ function add_router(app) {
             else res.status(400).send(err);
         });
     });
+    app.get('/incident', function (req, res) {
+        db_query(query_factory.incident, (err, result) => {
+            if (!err) res.send(result);
+            else res.status(400).send(err);
+        });
+    });
+    app.get('/offensecode', function (req, res) {
+        db_query(query_factory.offensecode, (err, result) => {
+            if (!err) res.send(result);
+            else res.status(400).send(err);
+        });
+    });
 
     
     /*

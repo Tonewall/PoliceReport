@@ -69,9 +69,25 @@ class Data extends Component {
         fetch('/showall')
             .then(results => {
                 results.json().then(data => {
+                    console.log(data)
                 this.populateData(data)
             })})
             .catch(err => console.error(err))
+        fetch('/incident')
+            .then(results => {
+                results.json().then(data=> {
+                    console.log(data)
+                })
+            })
+            .catch(err => console.error(err))
+
+        // fetch('/offensecode')
+        //     .then(results => {
+        //         results.json().then(data => {
+        //         console.log(data)
+        //     })
+        // })
+        //     .catch(err => console.error(err))
     }
 
     render() {
