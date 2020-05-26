@@ -47,8 +47,8 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 FROM [SS_GARecords_Incident].[dbo].[tblIncidentProperty] Results \n\
                 where Results.[IncidentNumber] = [Incident Offenses-GTPD+APD].[OCA Number]\n\
                 group by [IncidentNumber])\n\
-            , FORMAT([Times].[Avg Date],\'yyyy-MM-dd\') as [Average Day]\n\
-            , FORMAT([Times].[Avg Time],\'hh:mm tt\') as [Average Time]\n\
+            , [Times].[Avg Date] as [Average Day]\n\
+            , [Times].[Avg Time] as [Average Time]\n\
             , CONCAT([St Num], \' \', [Incident Offenses-GTPD+APD].[Street]) as [Location]\n\
             , [Location Landmark] as [Location Landmark]\n\
             ,  [Offenders] = (SELECT STUFF((SELECT \', \' + CONCAT([FirstName], \' \', [MiddleName], \' \', [LastName]) \n\
