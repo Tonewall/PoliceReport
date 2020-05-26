@@ -41,7 +41,7 @@ class FilterResult extends Component {
         for(var i = 0; i < data.length; i++) {
             var row = {}
             var incidentNumber = data[i]['Incident Number']
-            var link = "./full-report/"+incidentNumber
+            var link = "/full-report/"+incidentNumber
             row['Incident Number'] = <Link to={link}>{incidentNumber}</Link>
             
             for(var j = 1; j < selectedColumns.length; j++) {
