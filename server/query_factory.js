@@ -180,8 +180,6 @@ module.exports.get_location_data = function(incident_number) {
         ,[LocationStreet]\
         ,[PatrolZone]\
         ,[LocationCode]\
-        ,[X_Coord]\
-        ,[Y_Coord]\
         FROM [SS_GARecords_Incident].[dbo].[tblIncident]\
         WHERE ([IncidentNumber]=\'%s\')\
     ', incident_number)
