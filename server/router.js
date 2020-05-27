@@ -113,7 +113,6 @@ function add_router(app) {
     });
     app.post('/filter-building', function (req, res) {
         queryString = query_factory.filter_building(req.body)
-        console.log(queryString)
         db_query(queryString, (err, result) => {
             if (!err) res.send(result);
             else {
@@ -509,7 +508,6 @@ function add_router(app) {
     });
     app.get('/location-data/:incident_number', function (req, res) {
         query = query_factory.get_location_data(req.params.incident_number)
-        console.log(query)
         db_query(query, (err, result) => {
             if (!err) {
                 if (result != null)
