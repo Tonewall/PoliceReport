@@ -1249,7 +1249,7 @@ module.exports.filter = function(criteria) {
     if(criteria.dateTimeOption === 'avg' || criteria.dateTimeOption === null) {
         dateTimeOptionScript = '((' + '[Avg Date] >= \'' + criteria.startDate + '\' AND [Avg Date] <= \'' + criteria.endDate + '\') OR (' + '[From Date] >= \'' + criteria.startDate + '\' AND [To Date] <= \'' + criteria.endDate + '\'))'
         if(criteria.selectedCustomTime) {
-            dateTimeOptionScript +='AND (' + '[Avg Time] >= \'1899-12-30 ' + criteria.fromTime + '\' AND [Avg Time] <= \'1899-12-30 ' + criteria.toTime + '\')'
+            dateTimeOptionScript +='AND (' + '[Avg Time] >= \'' + criteria.fromTime + '\' AND [Avg Time] <= \'' + criteria.toTime + '\')'
         }
         
     } else if(criteria.dateTimeOption === 'from') {
