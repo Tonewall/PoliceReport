@@ -73,6 +73,14 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentVictim].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentMO].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentDrug]\n\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentDrug].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOffense].[IncidentNumber])\n\
+            left join [SS_GARecords_Incident].[dbo].[tblIncidentOffenseWeapon] \n\
+                on ([tblIncidentOffenseWeapon].[ForeignKey] = [tblIncidentOffense].[PrimaryKey])\n\
+            left join [SS_GARecords_Incident].[dbo].[tblIncidentOffenseOffenderUsed] \n\
+                on ([tblIncidentOffenseOffenderUsed].[ForeignKey] = [tblIncidentOffense].[PrimaryKey])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\n\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOffender].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOthersInvolved]\n\
@@ -742,10 +750,10 @@ module.exports.getBothCount = function(body) {
     drugAlcCriteria = ''
     var drugAlc = []
     if(body.drug) {
-        drugAlc.push('([Drug] > 0)')
+        drugAlc.push('([Drug] is not null)')
     }
     if(body.alcohol) {
-        drugAlc.push('([Alcohol] > 0)')
+        drugAlc.push('([ViolationCode] in (\'40-6-391\', \'40-6-253\', \'3-3-23\', \'3-3-3\', \'16-11-41\'))')
     }
     if(body.weapon) {
         drugAlc.push('([Weapon] is not null)')
@@ -958,10 +966,10 @@ module.exports.getTimeCount = function(body) {
     drugAlcCriteria = ''
     var drugAlc = []
     if(body.drug) {
-        drugAlc.push('([Drug] > 0)')
+        drugAlc.push('([Drug] is not null)')
     }
     if(body.alcohol) {
-        drugAlc.push('([Alcohol] > 0)')
+        drugAlc.push('([ViolationCode] in (\'40-6-391\', \'40-6-253\', \'3-3-23\', \'3-3-3\', \'16-11-41\'))')
     }
     if(body.weapon) {
         drugAlc.push('([Weapon] is not null)')
@@ -1392,10 +1400,10 @@ module.exports.filter = function(criteria) {
     drugAlcCriteria = ''
     var drugAlc = []
     if(criteria.drug) {
-        drugAlc.push('([Drug] > 0)')
+        drugAlc.push('([Drug] is not null)')
     }
     if(criteria.alcohol) {
-        drugAlc.push('([Alcohol] > 0)')
+        drugAlc.push('([ViolationCode] in (\'40-6-391\', \'40-6-253\', \'3-3-23\', \'3-3-3\', \'16-11-41\') or [OffenderUsed] = \'A\')')
     }
     if(criteria.weapon) {
         drugAlc.push('([Weapon] is not null)')

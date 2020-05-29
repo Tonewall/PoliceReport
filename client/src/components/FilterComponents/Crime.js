@@ -26,12 +26,12 @@ const citationOptions = [
     {value: '40-', label: 'Motor Vehicle and Traffic (Title 40)'},
     {value: 'Other', label: 'Other'}
 ]
-const mentalOptions = [
-    {value: 'EMS', label: 'EMS Response'},
-    {value: 'Injury', label: 'Injury'},
-    {value: 'Suicide', label: 'Mental Health'},
-    {value: '1013', label: '1013 Form'},
-]
+// const mentalOptions = [
+//     {value: 'EMS', label: 'EMS Response'},
+//     {value: 'Injury', label: 'Injury'},
+//     {value: 'Suicide', label: 'Mental Health'},
+//     {value: '1013', label: '1013 Form'},
+// ]
 
 
 
@@ -163,7 +163,6 @@ class crime extends Component {
             selectedOutcome, 
             selectedCrimeCategory, 
             selectedCaseStatus,
-            selectedMental,
             selectedCitation
         } = this.state;
         return(
@@ -194,7 +193,7 @@ class crime extends Component {
                         placeholder={"Any"}
                         />
                     </div>
-                    <label className="col-12 col-form-label" style={{fontSize: 13}}>
+                    {/* <label className="col-12 col-form-label" style={{fontSize: 13}}>
                         Injury/Mental Health
                     </label>
                     <div>
@@ -205,7 +204,7 @@ class crime extends Component {
                         isMulti={true}
                         placeholder={"Any"}
                         />
-                    </div>
+                    </div> */}
                     <input 
                         type="checkbox"
                         name={'alcohol'}
