@@ -170,6 +170,11 @@ class LocationStatistics extends Component {
         return (
             <div className="regularChartMain">
                 {this.state.redirected ? <Redirect to={{pathname: '/Building-Result/'+this.state.buildingNum}}/> : null}
+                <div className="row">
+                    <div className="col-12">
+                        <button style={{marginLeft:'3%', marginBottom:'10px', fontSize:'150%'}}className="btn btn-lg btn-primary"> <a style={{color:'white'}}href="/Location-Stats-Filter">Filter</a></button>
+                    </div>
+                </div>
                <div className="card locationStatsCard">
                     <h2 className="card-header">Campus Locations with Part I Crimes ({this.props.location.state.startDate!=null && this.props.location.state.startDate.toLocaleDateString()} - {this.props.location.state.endDate!=null && this.props.location.state.endDate.toLocaleDateString()})</h2>
                     <div className="card-body">

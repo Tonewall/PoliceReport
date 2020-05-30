@@ -73,6 +73,14 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentVictim].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentMO]\n\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentMO].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentDrug]\n\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentDrug].[IncidentNumber])\n\
+            LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffense]\n\
+                ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOffense].[IncidentNumber])\n\
+            left join [SS_GARecords_Incident].[dbo].[tblIncidentOffenseWeapon] \n\
+                on ([tblIncidentOffenseWeapon].[ForeignKey] = [tblIncidentOffense].[PrimaryKey])\n\
+            left join [SS_GARecords_Incident].[dbo].[tblIncidentOffenseOffenderUsed] \n\
+                on ([tblIncidentOffenseOffenderUsed].[ForeignKey] = [tblIncidentOffense].[PrimaryKey])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOffender]\n\
                 ON ([Incident Offenses-GTPD+APD].[OCA Number] = [tblIncidentOffender].[IncidentNumber])\n\
             LEFT JOIN [SS_GARecords_Incident].[dbo].[tblIncidentOthersInvolved]\n\
@@ -84,7 +92,7 @@ module.exports.showall = function(top_count="TOP 1000", additional_join_statemen
 
 
 module.exports.locations = 
-    "SELECT [Building Name],[Loc Type],[St #],[Street-MSAG],[Loc Code], [X_Coord], [Y_Coord] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
+    "SELECT [Building Name],[Loc Type],[St #],[Street Name],[Street-MSAG],[Loc Code], [X_Coord], [Y_Coord] FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]"
 
 module.exports.get_incident_basic = function(incident_number) {
     return sprintf('\
@@ -180,8 +188,6 @@ module.exports.get_location_data = function(incident_number) {
         ,[LocationStreet]\
         ,[PatrolZone]\
         ,[LocationCode]\
-        ,[X_Coord]\
-        ,[Y_Coord]\
         FROM [SS_GARecords_Incident].[dbo].[tblIncident]\
         WHERE ([IncidentNumber]=\'%s\')\
     ', incident_number)
@@ -677,7 +683,11 @@ module.exports.getBothCount = function(body) {
     officerName = (body.officerName ? body.officerName : '')
 
     //ADDRESS
-    address = (body.streetName ? body.streetName : '')
+    if(body.streetName){
+        addressScript = 'AND [Incident Offenses-GTPD+APD].[Address] LIKE \'%%'+body.streetName+'%%\''
+        finalScript+=addressScript
+    }
+    
 
     //Location code
     code = "LIKE '%%'"
@@ -691,13 +701,15 @@ module.exports.getBothCount = function(body) {
     buildings = ""
     buildingScript = ''
     if(body.selectedBuilding != null && body.selectedBuilding.length > 0) {
-        building_list_scriptx = ''
-        body.selectedBuilding.forEach((item)=>{ building_list_scriptx += ('\'' + item['X_Coord'] + '\'' + ',') })
-        building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-1)
-        building_list_scripty = ''
-        body.selectedBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
-        building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
-        buildingScript = 'AND ([Longitude] in (' + building_list_scriptx + ') AND [Latitude] in (' + building_list_scripty + '))'
+        building_list_scriptx = '('
+        body.selectedBuilding.forEach((item)=>{ building_list_scriptx += ('[Incident Offenses-GTPD+APD].[Street Name] like \'%%' + item['Street Name'] + '%%\'' + ' or ') })
+        building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-4)
+        building_list_scriptx += ')'
+        building_list_scripty = '('
+        body.selectedBuilding.forEach((item)=>{ building_list_scripty += ('[St Num] like \'%%' + item['St #'] + '%%\'' + ' or ') })
+        building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-4)
+        building_list_scripty += ')'
+        buildingScript = 'AND (('+building_list_scriptx+') AND ('+building_list_scripty+'))'
     } else if(body.selectedGTLocationType && body.selectedGTLocationType.value != 'Any') {
         buildingScript = 'AND ([Loc Type] = \'' + body.selectedGTLocationType.value + '\' AND LEN([OCA Number]) = 8)'
     }
@@ -738,10 +750,10 @@ module.exports.getBothCount = function(body) {
     drugAlcCriteria = ''
     var drugAlc = []
     if(body.drug) {
-        drugAlc.push('([Drug] > 0)')
+        drugAlc.push('([Drug] is not null)')
     }
     if(body.alcohol) {
-        drugAlc.push('([Alcohol] > 0)')
+        drugAlc.push('([ViolationCode] in (\'40-6-391\', \'40-6-253\', \'3-3-23\', \'3-3-3\', \'16-11-41\'))')
     }
     if(body.weapon) {
         drugAlc.push('([Weapon] is not null)')
@@ -847,14 +859,12 @@ module.exports.getBothCount = function(body) {
             AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name])\n\
             WHERE YEAR([Report Date]) =\'%d'\n\
         AND [Officer Name] LIKE \'%%%s%%'\n\
-        AND [Incident Offenses-GTPD+APD].[Address] LIKE \'%%%s%%'\n\
         AND [Location Code] \%s\n\
         \%s\n\
         GROUP BY MONTH([Report Date])\
         ORDER BY MONTH([Report Date])"
         ,body.selectedYear.value, 
         officerName, 
-        address, 
         code, 
         finalScript
     )
@@ -866,7 +876,10 @@ module.exports.getTimeCount = function(body) {
     officerName = (body.officerName ? body.officerName : '')
 
     //ADDRESS
-    address = (body.streetName ? body.streetName : '')
+    if(body.streetName){
+        addressScript = 'AND [Incident Offenses-GTPD+APD].[Address] LIKE \'%%'+body.streetName+'%%\''
+        finalScript+=addressScript
+    }
 
 
     //Location code
@@ -893,13 +906,15 @@ module.exports.getTimeCount = function(body) {
     buildings = ""
     buildingScript = ''
     if(body.selectedBuilding != null && body.selectedBuilding.length > 0) {
-        building_list_scriptx = ''
-        body.selectedBuilding.forEach((item)=>{ building_list_scriptx += ('\'' + item['X_Coord'] + '\'' + ',') })
-        building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-1)
-        building_list_scripty = ''
-        body.selectedBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
-        building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
-        buildingScript = 'AND ([Longitude] in (' + building_list_scriptx + ') AND [Latitude] in (' + building_list_scripty + '))'
+        building_list_scriptx = '('
+        body.selectedBuilding.forEach((item)=>{ building_list_scriptx += ('[Incident Offenses-GTPD+APD].[Street Name] like \'%%' + item['Street Name'] + '%%\'' + ' or ') })
+        building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-4)
+        building_list_scriptx += ')'
+        building_list_scripty = '('
+        body.selectedBuilding.forEach((item)=>{ building_list_scripty += ('[St Num] like \'%%' + item['St #'] + '%%\'' + ' or ') })
+        building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-4)
+        building_list_scripty += ')'
+        buildingScript = 'AND (('+building_list_scriptx+') AND ('+building_list_scripty+'))'
     } else if(body.selectedGTLocationType && body.selectedGTLocationType.value != 'Any') {
         buildingScript = 'AND ([Loc Type] = \'' + body.selectedGTLocationType.value + '\' AND LEN([OCA Number]) = 8)'
     }
@@ -951,10 +966,10 @@ module.exports.getTimeCount = function(body) {
     drugAlcCriteria = ''
     var drugAlc = []
     if(body.drug) {
-        drugAlc.push('([Drug] > 0)')
+        drugAlc.push('([Drug] is not null)')
     }
     if(body.alcohol) {
-        drugAlc.push('([Alcohol] > 0)')
+        drugAlc.push('([ViolationCode] in (\'40-6-391\', \'40-6-253\', \'3-3-23\', \'3-3-3\', \'16-11-41\'))')
     }
     if(body.weapon) {
         drugAlc.push('([Weapon] is not null)')
@@ -1035,7 +1050,6 @@ module.exports.getTimeCount = function(body) {
             AND [Codes_Addresses_Unique].[Street Name] = [Incident Offenses-GTPD+APD].[Street Name])\n\
         WHERE YEAR([Report Date]) =\'%d'\n\
         AND [Officer Name] LIKE \'%%%s%%'\n\
-        AND [Incident Offenses-GTPD+APD].[Address] LIKE \'%%%s%%'\n\
         AND [Location Code] \%s\n\
         AND DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME))) < 4\
         \%s\n\
@@ -1043,7 +1057,6 @@ module.exports.getTimeCount = function(body) {
 		ORDER BY (datepart(hour, DATEADD(HOUR,  DATEDIFF(HOUR, (CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME)), (CAST([To Date] as DATETIME) + CAST([To Time] as DATETIME)))/2, CAST([From Date] as DATETIME) + CAST([From Time] as DATETIME))))"
         ,body.selectedYear.value, 
         officerName, 
-        address, 
         code, 
         finalScript
     )
@@ -1085,6 +1098,8 @@ module.exports.getYears = "SELECT DISTINCT YEAR([Report Date]) as [YEAR]\
 module.exports.getBuildings = "SELECT [Address]\
     ,[Building Name]\
     ,[X_Coord]\
+    ,[Street Name]\
+    ,[St #]\
     ,[Y_Coord]\
     ,[Max Bldg #] as [Bldg #]\
     ,[Loc Code] as [Location Code]\
@@ -1096,7 +1111,7 @@ module.exports.getBuildings = "SELECT [Address]\
     ORDER BY [Building Name]"
 
     module.exports.get_coords = function(body) {
-        return sprintf('SELECT top 1 [X_Coord], [Y_Coord]\
+        return sprintf('SELECT top 1 [Street Name], [St #]\
                 FROM [CrimeAnalytics].[dbo].[Codes_Addresses_Unique]\
                     where [Max Bldg #] = \'%s\'',body.buildingNum.toString())
     }
@@ -1105,7 +1120,7 @@ module.exports.getBuildings = "SELECT [Address]\
     module.exports.filter_building = function(criteria) {
         top_count = 'top 1000'
     
-        criteria_script ='[Longitude] = \''+criteria.Xcoord+'\'and [Latitude] = \''+criteria.Ycoord+'\''
+        criteria_script ='[Street Name] like \'%%'+criteria.StreetName+'%%\'and [St Num] like \'%%'+criteria.StreetNum+'%%\''
         return this.showall(top_count = top_count, additional_join_statement = null, 
                             criteria = criteria_script.length==0 ? null : criteria_script)
     }
@@ -1155,13 +1170,15 @@ module.exports.filter = function(criteria) {
         // Make GTPD part
         if(criteria.selectedBuilding != null && criteria.selectedBuilding.length > 0)   // GTPD-Building
         {
-            building_list_scriptx = ''
-            criteria.selectedBuilding.forEach((item)=>{ building_list_scriptx += ('\'' + item['X_Coord'] + '\'' + ',') })
-            building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-1)
-            building_list_scripty = ''
-            criteria.selectedBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
-            building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
-            gtpd_criteria_script = '([Longitude] in (' + building_list_scriptx + ') AND LEN([OCA Number]) = 8 AND [Latitude] in (' + building_list_scripty + '))'
+            building_list_scriptx = '('
+            criteria.selectedBuilding.forEach((item)=>{ building_list_scriptx += ('[Street Name] like \'%%' + item['Street Name'] + '%%\'' + ' or ') })
+            building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-4)
+            building_list_scriptx += ')'
+            building_list_scripty = '('
+            criteria.selectedBuilding.forEach((item)=>{ building_list_scripty += ('[St Num] like \'%%' + item['St #'] + '%%\'' + ' or ') })
+            building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-4)
+            building_list_scripty += ')'
+            gtpd_criteria_script = '(('+building_list_scriptx+') AND ('+building_list_scripty+'))'
         }
         else if(criteria.selectedGTLocationType.value == 'Any') // GTPD-Any loc type : all GTPD buildings
         {
@@ -1178,13 +1195,15 @@ module.exports.filter = function(criteria) {
         // Make APD part
         if(criteria.selectedAPDBuilding != null && criteria.selectedAPDBuilding.length > 0)   // APD-Building
         {
-            building_list_scriptx = ''
-            criteria.selectedAPDBuilding.forEach((item)=>{ building_list_scriptx += ('\'' + item['X_Coord'] + '\'' + ',') })
-            building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-1)
-            building_list_scripty = ''
-            criteria.selectedAPDBuilding.forEach((item)=>{ building_list_scripty += ('\'' + item['Y_Coord'] + '\'' + ',') })
-            building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-1)
-            apd_criteria_script = '([Longitude] in (' + building_list_scriptx + ') AND LEN([OCA Number]) = 9 AND [Latitude] in (' + building_list_scripty + '))'
+            building_list_scriptx = '('
+            criteria.selectedBuilding.forEach((item)=>{ building_list_scriptx += ('[Street Name] like \'%%' + item['Street Name'] + '%%\'' + ' or ') })
+            building_list_scriptx = building_list_scriptx.substring(0, building_list_scriptx.length-4)
+            building_list_scriptx += ')'
+            building_list_scripty = '('
+            criteria.selectedBuilding.forEach((item)=>{ building_list_scripty += ('[St Num] like \'%%' + item['St #'] + '%%\'' + ' or ') })
+            building_list_scripty = building_list_scripty.substring(0, building_list_scripty.length-4)
+            building_list_scripty += ')'
+            apd_criteria_script = '(('+building_list_scriptx+') AND ('+building_list_scripty+'))'
         }
         else if(criteria.selectedAPDLocationType.value == 'Any') // APD-Any loc type : all APD buildings
         {
@@ -1238,7 +1257,7 @@ module.exports.filter = function(criteria) {
     if(criteria.dateTimeOption === 'avg' || criteria.dateTimeOption === null) {
         dateTimeOptionScript = '((' + '[Avg Date] >= \'' + criteria.startDate + '\' AND [Avg Date] <= \'' + criteria.endDate + '\') OR (' + '[From Date] >= \'' + criteria.startDate + '\' AND [To Date] <= \'' + criteria.endDate + '\'))'
         if(criteria.selectedCustomTime) {
-            dateTimeOptionScript +='AND (' + '[Avg Time] >= \'1899-12-30 ' + criteria.fromTime + '\' AND [Avg Time] <= \'1899-12-30 ' + criteria.toTime + '\')'
+            dateTimeOptionScript +='AND (' + '[Avg Time] >= \'' + criteria.fromTime + '\' AND [Avg Time] <= \'' + criteria.toTime + '\')'
         }
         
     } else if(criteria.dateTimeOption === 'from') {
@@ -1381,10 +1400,10 @@ module.exports.filter = function(criteria) {
     drugAlcCriteria = ''
     var drugAlc = []
     if(criteria.drug) {
-        drugAlc.push('([Drug] > 0)')
+        drugAlc.push('([Drug] is not null)')
     }
     if(criteria.alcohol) {
-        drugAlc.push('([Alcohol] > 0)')
+        drugAlc.push('([ViolationCode] in (\'40-6-391\', \'40-6-253\', \'3-3-23\', \'3-3-3\', \'16-11-41\') or [OffenderUsed] = \'A\')')
     }
     if(criteria.weapon) {
         drugAlc.push('([Weapon] is not null)')

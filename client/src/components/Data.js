@@ -77,6 +77,11 @@ class Data extends Component {
     render() {
         return (
             <div className="main">
+                <div className="row">
+                    <div className="col-12">
+                        <button style={{marginLeft:'3%', marginBottom:'10px', fontSize:'150%'}}className="btn btn-lg btn-primary"> <a style={{color:'white'}}href="/GTPD-Filter">Filter</a></button>
+                    </div>
+                </div>
                 <div className="card" style={{marginBottom:30, fontSize: 12}}>
                     <div className="card-body" >
                         <MDBDataTable

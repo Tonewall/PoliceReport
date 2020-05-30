@@ -103,6 +103,11 @@ class TimeStatistics extends Component {
         return (
             <div className="regularChartMain">
                 <div className="row">
+                    <div className="col-12">
+                        <button style={{marginLeft:'3%', marginBottom:'10px', fontSize:'150%'}}className="btn btn-lg btn-primary"> <a style={{color:'white'}}href="/Date-Time-Filter">Filter</a></button>
+                    </div>
+                </div>
+                <div className="row">
                     <div className=" col-lg-12">
                         <div className="card dataCard shadow p-3 mb-5 bg-white rounded">
                             <div className="card-body">
