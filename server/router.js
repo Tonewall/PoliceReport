@@ -768,18 +768,20 @@ module.exports = function (app) {
     db_connection_check = () => {
         config_db((conn, error_reason) => {
             if (conn) {
-                console.log('\x1b[34m', "[Server] Database configuration successful!\n");
-                add_router(app);
-                console.log('\x1b[0m', "[Server] Now attaching router...\n")
-                console.log('[Server] Router successfully attached.\n');
+              console.log('\x1b[34m', "[Server] Database configuration successful!\n");
+              add_router(app);
+              console.log('\x1b[0m', "[Server] Now attaching router...\n")
+              console.log('[Server] Router successfully attached.\n');
+              if (!process.argv[2] || !(process.argv[2] == '--server-only' || process.argv[2] == '--deploy')) {
                 console.log("[Client] Now starting the client");
                 client = exec('npm run client')
                 client.stdout.on('data', (data) => { console.log('[Client] : ' + data) });
+              }
             }
             else {
-                console.log('\x1b[31m', "[Server] Database configuration failed!\n" + error_reason + '\n');
-                console.log('\x1b[0m', "[Server] Retrying database configuration\n")
-                db_connection_check()
+              console.log('\x1b[31m', "[Server] Database configuration failed!\n" + error_reason + '\n');
+              console.log('\x1b[0m', "[Server] Retrying database configuration\n")
+              db_connection_check()
             }
         })
     }
