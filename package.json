@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./server/index.js",
-    "client": "npm run start --prefix client"
+    "client": "npm run start --prefix client",
+    "build": "npm run build --prefix client"
   },
   "dependencies": {
     "async-mutex": "^0.1.4",
