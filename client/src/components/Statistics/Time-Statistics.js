@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import Chart from "chart.js";
 import "./Statistics.css";
-
-
+import {server} from './config'
 
 class TimeStatistics extends Component {
     bothChart = React.createRef();
@@ -33,7 +32,7 @@ class TimeStatistics extends Component {
     }
 
     getTimeCount() {
-        fetch('/getTimeCount',
+        fetch(server+'/getTimeCount',
                 {
                     headers:{'Content-Type' : 'application/json'},
                     method: 'post',

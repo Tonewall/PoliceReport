@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Select from "react-select";
-
+import {server} from './config'
 
 const buildingOptions = [];
 var newBuildingOptions = buildingOptions;
@@ -187,14 +187,14 @@ class location extends Component {
     }
 
     componentDidMount() {
-        fetch('/locations')
+        fetch(server+'/locations')
             .then(results => {
                 results.json().then(data=> {
                     this.populateLocations(data)
                 })
             })
             .catch(err => console.error(err))
-        fetch('/get-distinct-mo')
+        fetch(server+'/get-distinct-mo')
             .then(results => {
                 results.json().then(data=> {
                     this.populateMO(data)

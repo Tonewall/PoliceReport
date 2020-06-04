@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import "./Statistics.css";
 import { MDBDataTable } from 'mdbreact';
 import { Redirect } from 'react-router-dom';
-
-
-
+import {server} from './config'
 
 class LocationStatistics extends Component {
     constructor(props) {
@@ -99,7 +97,7 @@ class LocationStatistics extends Component {
     }
 
     getLocationRanking() {
-        fetch('/getLocationRanking',
+        fetch(server+'/getLocationRanking',
                 {
                     headers:{'Content-Type' : 'application/json'},
                     method: 'post',

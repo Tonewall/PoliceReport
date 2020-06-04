@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import "./Data.css";
 import { MDBDataTable } from 'mdbreact';
 import { Link } from 'react-router-dom';
+import {server} from './config'
 
 class FilterResult extends Component {
 
@@ -70,7 +71,7 @@ class FilterResult extends Component {
     }
 
     getCoords() {
-        fetch('/get-coords',
+        fetch(server+'/get-coords',
             {
                 headers:{'Content-Type' : 'application/json'},
                 method: 'post',
@@ -88,7 +89,7 @@ class FilterResult extends Component {
     }
 
     getData() {
-        fetch('/filter-building',
+        fetch(server+'/filter-building',
                 {
                     headers:{'Content-Type' : 'application/json'},
                     method: 'post',

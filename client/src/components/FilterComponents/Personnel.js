@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Select from "react-select";
-
+import {server} from './config'
 
 const shiftOptions = [
     {value: 'dayShift', label: 'Day'},
@@ -44,7 +44,7 @@ class personnel extends Component {
         }); }
 
     componentDidMount() {
-        fetch('/getOfficers')
+        fetch(server+'/getOfficers')
             .then(results => {
                 results.json().then(data=> {
                     this.getOfficers(data)

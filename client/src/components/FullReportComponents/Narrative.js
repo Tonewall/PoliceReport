@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "react-datepicker/dist/react-datepicker.css";
+import {server} from './config'
 
 class Narrative extends Component {
     state = {
@@ -20,7 +21,7 @@ class Narrative extends Component {
     getIncidentData() {
         if(this.state.incidentNumber != null) {
             if(this.state.incidentNumber.length === 9) {
-                fetch('/narrative_APD/'+this.state.incidentNumber)
+                fetch(server+'/narrative_APD/'+this.state.incidentNumber)
                     .then(results => {
                         results.json().then(data => {
                             if(data) {
@@ -36,7 +37,7 @@ class Narrative extends Component {
                     })
                     .catch(err => console.error(err))
             } else {
-                fetch('/narrative_GTPD/'+this.state.incidentNumber)
+                fetch(server+'/narrative_GTPD/'+this.state.incidentNumber)
                     .then(results => {
                         results.json().then(data => {
                             this.setState({narrative: data})
@@ -45,7 +46,7 @@ class Narrative extends Component {
                     .catch(err => console.error(err))
             }
         }
-        fetch('/supplements/'+ this.state.incidentNumber)
+        fetch(server+'/supplements/'+ this.state.incidentNumber)
             .then(results => {
                 results.json().then(data => {
                     this.setState({supplements: data})

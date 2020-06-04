@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import Chart from "chart.js";
 import "./Statistics.css";
-
-
+import {server} from './config'
 
 class DateStatistics extends Component {
     bothChart = React.createRef();
@@ -32,7 +31,7 @@ class DateStatistics extends Component {
     }
 
     getBothCount() {
-        fetch('/getBothCount',
+        fetch(server+'/getBothCount',
                 {
                     headers:{'Content-Type' : 'application/json'},
                     method: 'post',

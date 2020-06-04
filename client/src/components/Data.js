@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import "./Data.css";
 import { MDBDataTable } from 'mdbreact';
 import { Link } from 'react-router-dom';
+import {server} from './config'
 
 class Data extends Component {
 
@@ -66,7 +67,7 @@ class Data extends Component {
     }
 
     getData() {
-        fetch('/showall')
+        fetch(server+'/showall')
             .then(results => {
                 results.json().then(data => {
                 this.populateData(data)

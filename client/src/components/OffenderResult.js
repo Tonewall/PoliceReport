@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import "./Data.css";
 import { MDBDataTable } from 'mdbreact';
 import { Link } from 'react-router-dom';
+import {server} from './config'
 
 class FilterResult extends Component {
 
@@ -69,7 +70,7 @@ class FilterResult extends Component {
     }
 
     getName() {
-        fetch('/get-name',
+        fetch(server+'/get-name',
             {
                 headers:{'Content-Type' : 'application/json'},
                 method: 'post',
@@ -87,7 +88,7 @@ class FilterResult extends Component {
     }
 
     getData() {
-        fetch('/filter-repeat-offender',
+        fetch(server+'/filter-repeat-offender',
                 {
                     headers:{'Content-Type' : 'application/json'},
                     method: 'post',

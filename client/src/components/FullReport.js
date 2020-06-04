@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import './FullReport.css';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
+import {server} from './config'
 
 class fullReport extends Component {
 
@@ -24,7 +25,7 @@ class fullReport extends Component {
 
     populateReport(incidentNumber) {
         var getDetails = ()=>{
-            fetch('/offense-description/'+incidentNumber)
+            fetch(server+'/offense-description/'+incidentNumber)
                 .then(results => {
                     results.json().then(data=> {
                         this.setState({offenseDescription: data})
@@ -33,7 +34,7 @@ class fullReport extends Component {
                 .catch(err => console.error(err))
             if(incidentNumber.toString().length===9)
             {
-                fetch('/narrative_APD/'+incidentNumber)
+                fetch(server+'/narrative_APD/'+incidentNumber)
                     .then(results => {
                         if(!results.ok) {
                             results.text().then(txt=>console.log(txt))
@@ -60,7 +61,7 @@ class fullReport extends Component {
             }
             else
             {
-                fetch('/narrative_GTPD/'+incidentNumber)
+                fetch(server+'/narrative_GTPD/'+incidentNumber)
                     .then(results => {
                         if(!results.ok) {
                             results.text().then(txt=>console.log(txt))
@@ -73,35 +74,35 @@ class fullReport extends Component {
                     })
                     .catch(err => console.error(err))
             }
-            fetch('/supplements/'+incidentNumber)
+            fetch(server+'/supplements/'+incidentNumber)
                 .then(results => {
                     results.json().then(data => {
                         this.setState({supplements: data})
                     })
                 })
                 .catch(err => console.error(err))
-            fetch('/offender-info/'+incidentNumber)
+            fetch(server+'/offender-info/'+incidentNumber)
                 .then(results => {
                     results.json().then(data => {
                         this.setState({offenderInfo: data})
                     })
                 })
                 .catch(err => console.error(err))
-            fetch('/arrest-info/'+incidentNumber)
+            fetch(server+'/arrest-info/'+incidentNumber)
                 .then(results => {
                     results.json().then(data => {
                         this.setState({arrestInfo: data})
                     })
                 })
                 .catch(err => console.error(err))
-            fetch('/property-info/'+incidentNumber)
+            fetch(server+'/property-info/'+incidentNumber)
                 .then(results => {
                     results.json().then(data => {
                         this.setState({propertyInfo: data})
                     })
                 })
                 .catch(err => console.error(err))
-            fetch('/MO/'+incidentNumber)
+            fetch(server+'/MO/'+incidentNumber)
                 .then(results => {
                     results.json().then(data=> {
                         this.setState({MO: data})
@@ -110,7 +111,7 @@ class fullReport extends Component {
                 .catch(err => console.error(err))
             }
 
-        fetch('/incident-number-basic/'+incidentNumber)
+        fetch(server+'/incident-number-basic/'+incidentNumber)
             .then(results => {
                 results.json().then(data=> {
                     this.setState({case: data})

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {server} from './config'
 
 class Complainant extends Component {
     state = {
@@ -15,7 +16,7 @@ class Complainant extends Component {
     }
 
     getIncidentData() {
-        fetch('/get_complainant/'+this.state.incidentNumber)
+        fetch(server+'/get_complainant/'+this.state.incidentNumber)
                 .then(results => {
                     results.json().then(data => {
                         this.setState({complainant: data})

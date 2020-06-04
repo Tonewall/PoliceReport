@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "react-datepicker/dist/react-datepicker.css";
+import {server} from './config'
 
 class Location extends Component {
     state = {
@@ -18,7 +19,7 @@ class Location extends Component {
     }
 
     getIncidentData() {
-        fetch('/drug-data/'+this.state.incidentNumber)
+        fetch(server+'/drug-data/'+this.state.incidentNumber)
                 .then(results => {
                     if(results.status !== 400) {
                         results.json().then(data => {
@@ -28,7 +29,7 @@ class Location extends Component {
                     }
                 })
                 .catch(err => console.error(err))
-        fetch('/weapon-data/'+this.state.incidentNumber)
+        fetch(server+'/weapon-data/'+this.state.incidentNumber)
                 .then(results => {
                     if(results.status !== 400) {
                         results.json().then(data => {
@@ -44,7 +45,7 @@ class Location extends Component {
                     }
                 })
                 .catch(err => console.error(err))
-        fetch('/premise-data/'+this.state.incidentNumber)
+        fetch(server+'/premise-data/'+this.state.incidentNumber)
                 .then(results => {
                     if(results.status !== 400) {
                         results.json().then(data => {

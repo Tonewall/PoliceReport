@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Select from "react-select";
-
+import {server} from './config'
 
 const crimeTypeOptions = [];
 var newCrimeTypeOptions = crimeTypeOptions;
@@ -119,14 +119,14 @@ class crime extends Component {
         this.forceUpdate()  // If this function runs slow and could not be completed before render call, Select options may not be populated. so force update at the end.
     }
     componentDidMount() {
-        fetch('/crimeCategories')
+        fetch(server+'/crimeCategories')
             .then(results => {
                 results.json().then(data=> {
                     this.populateCategories(data)
                 })
             })
             .catch(err => console.error(err))
-        fetch('/crimeTypes')
+        fetch(server+'/crimeTypes')
             .then(results => {
                 results.json().then(data=> {
                     this.populateCrimes(data)

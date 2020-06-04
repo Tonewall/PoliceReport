@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import Date from "./DateLocationFilter"
 import {Redirect} from 'react-router-dom'
-
-
+import {server} from './config'
 
 class LocationStatsFilter extends Component {
     constructor(props) {
@@ -23,7 +22,7 @@ class LocationStatsFilter extends Component {
 
     handleSubmit = () => {
         this.setState({redirected: true})
-        // fetch('/getLocationRanking',
+        // fetch(server+'/getLocationRanking',
         //         {
         //             headers:{'Content-Type' : 'application/json'},
         //             method: 'post',
