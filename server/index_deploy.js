@@ -36,6 +36,6 @@ app.use(function(req, res, next) {
 require('./router')(app);
 https.createServer({
   key: fs.readFileSync('/etc/ssl/private/gtpd-crimeanalysis.key'),
-  cert: fs.readFileSync('/etc/ssl/certs/gtpd-crimeanalysis_police_gatech_edu.cer')
+  cert: fs.readFileSync('/etc/ssl/certs/gtpd-crimeanalysis_police_gatech_edu_cert.cer')
 }, app)
 .listen(5000, '0.0.0.0')
