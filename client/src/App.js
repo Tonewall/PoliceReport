@@ -18,6 +18,9 @@ import RepeatOffender from './components/RepeatOffender'
 import OffenderResult from './components/OffenderResult'
 import 'bootstrap/dist/css/bootstrap.css';
 import {server} from './config'
+import Cookies from 'js-cookie'
+import queryString from 'query-string'
+
 
 class App extends Component {
 
