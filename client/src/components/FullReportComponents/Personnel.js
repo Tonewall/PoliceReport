@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import {server} from './config'
+import {server} from '../../config'
 
 class Personnel extends Component {
     state = {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import "./Data.css";
 import { MDBDataTable } from 'mdbreact';
 import { Link } from 'react-router-dom';
-import {server} from './config'
+import {server} from '../config'
 
 class FilterResult extends Component {
 

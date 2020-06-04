@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Select from "react-select";
-import {server} from './config'
+import {server} from '../../config'
 
 const crimeTypeOptions = [];
 var newCrimeTypeOptions = crimeTypeOptions;

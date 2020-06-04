@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {server} from './config'
+import {server} from '../../config'
 
 class Complainant extends Component {
     state = {

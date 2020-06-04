@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import "./Statistics.css";
 import { MDBDataTable } from 'mdbreact';
 import { Redirect } from 'react-router-dom';
-import {server} from './config'
+import {server} from '../../config'
 
 class LocationStatistics extends Component {
     constructor(props) {

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Date from "./DateLocationFilter"
 import {Redirect} from 'react-router-dom'
-import {server} from './config'
+import {server} from '../../config'
 
 class LocationStatsFilter extends Component {
     constructor(props) {

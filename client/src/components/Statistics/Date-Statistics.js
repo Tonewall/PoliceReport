@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Chart from "chart.js";
 import "./Statistics.css";
-import {server} from './config'
+import {server} from '../../config'
 
 class DateStatistics extends Component {
     bothChart = React.createRef();
