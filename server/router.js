@@ -729,24 +729,29 @@ function add_router(app) {
 config_db = async (next) => {
     var error_reason = null;
     var conn;
-
-    username_resolver = new Promise(async (res, err) => {
+  
+    if (process.argv[2] && process.argv[2] == '--deploy') {
+      username = process.argv[3]
+      password = process.argv[4]
+    }
+    else {
+      username_resolver = new Promise(async (res, err) => {
         read({ prompt: 'GT username: ' }, (err, result, def) => {
-            res(result)
+          res(result)
         })
-    })
-    username = await username_resolver
-
-    password_resolver = new Promise(async (res, err) => {
+      })
+      username = await username_resolver
+  
+      password_resolver = new Promise(async (res, err) => {
         read({ prompt: 'Password: ', silent: true, replace: '*' }, (err, result, def) => {
-            res(result)
+          res(result)
         })
-    })
-    password = await password_resolver
-
+      })
+      password = await password_resolver
+    }
     config.user = username;
     config.password = password;
-
+  
     db_connector = new Promise(async (res, err) => {
         conn = new sql.ConnectionPool(config)
         conn.connect().then((conn) => {
