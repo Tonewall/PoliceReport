@@ -25,7 +25,10 @@ class fullReport extends Component {
 
     populateReport(incidentNumber) {
         var getDetails = ()=>{
-            fetch(server+'/offense-description/'+incidentNumber)
+            fetch(server+'/offense-description/'+incidentNumber,
+            {
+                credentials: 'include'
+            })
                 .then(results => {
                     results.json().then(data=> {
                         this.setState({offenseDescription: data})
@@ -34,7 +37,10 @@ class fullReport extends Component {
                 .catch(err => console.error(err))
             if(incidentNumber.toString().length===9)
             {
-                fetch(server+'/narrative_APD/'+incidentNumber)
+                fetch(server+'/narrative_APD/'+incidentNumber,
+                {
+                    credentials: 'include'
+                })
                     .then(results => {
                         if(!results.ok) {
                             results.text().then(txt=>console.log(txt))
@@ -61,7 +67,10 @@ class fullReport extends Component {
             }
             else
             {
-                fetch(server+'/narrative_GTPD/'+incidentNumber)
+                fetch(server+'/narrative_GTPD/'+incidentNumber,
+                {
+                    credentials: 'include'
+                })
                     .then(results => {
                         if(!results.ok) {
                             results.text().then(txt=>console.log(txt))
@@ -74,35 +83,50 @@ class fullReport extends Component {
                     })
                     .catch(err => console.error(err))
             }
-            fetch(server+'/supplements/'+incidentNumber)
+            fetch(server+'/supplements/'+incidentNumber,
+            {
+                credentials: 'include'
+            })
                 .then(results => {
                     results.json().then(data => {
                         this.setState({supplements: data})
                     })
                 })
                 .catch(err => console.error(err))
-            fetch(server+'/offender-info/'+incidentNumber)
+            fetch(server+'/offender-info/'+incidentNumber,
+            {
+                credentials: 'include'
+            })
                 .then(results => {
                     results.json().then(data => {
                         this.setState({offenderInfo: data})
                     })
                 })
                 .catch(err => console.error(err))
-            fetch(server+'/arrest-info/'+incidentNumber)
+            fetch(server+'/arrest-info/'+incidentNumber,
+            {
+                credentials: 'include'
+            })
                 .then(results => {
                     results.json().then(data => {
                         this.setState({arrestInfo: data})
                     })
                 })
                 .catch(err => console.error(err))
-            fetch(server+'/property-info/'+incidentNumber)
+            fetch(server+'/property-info/'+incidentNumber,
+            {
+                credentials: 'include'
+            })
                 .then(results => {
                     results.json().then(data => {
                         this.setState({propertyInfo: data})
                     })
                 })
                 .catch(err => console.error(err))
-            fetch(server+'/MO/'+incidentNumber)
+            fetch(server+'/MO/'+incidentNumber,
+            {
+                credentials: 'include'
+            })
                 .then(results => {
                     results.json().then(data=> {
                         this.setState({MO: data})
@@ -111,7 +135,10 @@ class fullReport extends Component {
                 .catch(err => console.error(err))
             }
 
-        fetch(server+'/incident-number-basic/'+incidentNumber)
+        fetch(server+'/incident-number-basic/'+incidentNumber,
+        {
+            credentials: 'include'
+        })
             .then(results => {
                 results.json().then(data=> {
                     this.setState({case: data})

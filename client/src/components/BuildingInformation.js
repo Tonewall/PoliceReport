@@ -100,7 +100,11 @@ class BuildingInformation extends Component {
     }
 
     getData() {
-        fetch(server+'/getBuildings')
+        fetch(server+'/getBuildings',
+            {
+            headers:{'Content-Type' : 'application/json'},
+            credentials: 'include'  // include cookies
+            })
             .then(results => {
                 results.json().then(data => {
                 this.populateData(data)

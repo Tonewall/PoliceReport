@@ -20,7 +20,10 @@ class Personnel extends Component {
 
 
     getPersonnel() {
-        fetch(server+'/personnel-data/'+this.state.incidentNumber)
+        fetch(server+'/personnel-data/'+this.state.incidentNumber,
+        {
+            credentials: 'include'
+        })
                 .then(results => {
                     results.json().then(data => {
                         if(data.length > 0){

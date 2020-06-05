@@ -17,7 +17,10 @@ class OffenseDesc extends Component {
     }
 
     getIncidentData() {
-        fetch(server+'/offense-description/'+this.state.incidentNumber)
+        fetch(server+'/offense-description/'+this.state.incidentNumber,
+        {
+            credentials: 'include'
+        })
         .then(results => {
             results.json().then(data=> {
                 this.setState({offenseDescription: data})

@@ -22,7 +22,10 @@ class Location extends Component {
     }
 
     getIncidentData() {
-        fetch(server+'/location-data/'+this.state.incidentNumber)
+        fetch(server+'/location-data/'+this.state.incidentNumber,
+        {
+            credentials: 'include'
+        })
             .then(results => {
                 results.json().then(data => {
                     if(data.length){
@@ -36,7 +39,10 @@ class Location extends Component {
                 })
             })
             .catch(err => console.error(err))
-        fetch(server+'/location-type/'+this.state.incidentNumber)
+        fetch(server+'/location-type/'+this.state.incidentNumber,
+        {
+            credentials: 'include'
+        })
                 .then(results => {
                     results.json().then(data => {
                         if(data.length){

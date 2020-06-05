@@ -392,14 +392,20 @@ class location extends Component {
     }
 
     componentDidMount() {
-        fetch(server+'/locations')
+        fetch(server+'/locations',
+        {
+            credentials: 'include'
+        })
             .then(results => {
                 results.json().then(data=> {
                     this.populateLocations(data)
                 })
             })
             .catch(err => console.error(err))
-        fetch(server+'/get-distinct-mo')
+        fetch(server+'/get-distinct-mo',
+        {
+            credentials: 'include'
+        })
             .then(results => {
                 results.json().then(data=> {
                     this.populateMO(data)

@@ -36,7 +36,8 @@ class TimeStatistics extends Component {
                 {
                     headers:{'Content-Type' : 'application/json'},
                     method: 'post',
-                    body: JSON.stringify(this.props.data)
+                    body: JSON.stringify(this.props.data),
+                    credentials: 'include'
                 }
             )
             .then(function(response) {

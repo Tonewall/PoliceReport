@@ -17,7 +17,10 @@ class Personnel extends Component {
     }
 
     getIncidentData() {
-        fetch(server+'/incident-number-integrated/'+this.state.incidentNumber)
+        fetch(server+'/incident-number-integrated/'+this.state.incidentNumber,
+        {
+            credentials: 'include'
+        })
                 .then(results => {
                     results.json().then(data => {
                         this.setState({incident: data})

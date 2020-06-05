@@ -17,7 +17,10 @@ class Arrest extends Component {
     }
 
     getIncidentData() {
-        fetch(server+'/arrest-info/'+this.state.incidentNumber)
+        fetch(server+'/arrest-info/'+this.state.incidentNumber,
+        {
+            credentials: 'include'
+        })
                 .then(results => {
                     results.json().then(data => {
                         this.setState({arrest: data})

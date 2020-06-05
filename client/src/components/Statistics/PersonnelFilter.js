@@ -44,7 +44,10 @@ class personnel extends Component {
         }); }
 
     componentDidMount() {
-        fetch(server+'/getOfficers')
+        fetch(server+'/getOfficers',
+        {
+            credentials: 'include'
+        })
             .then(results => {
                 results.json().then(data=> {
                     this.getOfficers(data)

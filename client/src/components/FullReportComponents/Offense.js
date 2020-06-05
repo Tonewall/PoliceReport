@@ -19,7 +19,10 @@ class Location extends Component {
     }
 
     getIncidentData() {
-        fetch(server+'/drug-data/'+this.state.incidentNumber)
+        fetch(server+'/drug-data/'+this.state.incidentNumber,
+        {
+            credentials: 'include'
+        })
                 .then(results => {
                     if(results.status !== 400) {
                         results.json().then(data => {
@@ -29,7 +32,10 @@ class Location extends Component {
                     }
                 })
                 .catch(err => console.error(err))
-        fetch(server+'/weapon-data/'+this.state.incidentNumber)
+        fetch(server+'/weapon-data/'+this.state.incidentNumber,
+        {
+            credentials: 'include'
+        })
                 .then(results => {
                     if(results.status !== 400) {
                         results.json().then(data => {
@@ -45,7 +51,10 @@ class Location extends Component {
                     }
                 })
                 .catch(err => console.error(err))
-        fetch(server+'/premise-data/'+this.state.incidentNumber)
+        fetch(server+'/premise-data/'+this.state.incidentNumber,
+        {
+            credentials: 'include'
+        })
                 .then(results => {
                     if(results.status !== 400) {
                         results.json().then(data => {

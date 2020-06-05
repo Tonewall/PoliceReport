@@ -66,7 +66,10 @@ class BuildingInformation extends Component {
     }
 
     getData() {
-        fetch(server+'/get-repeat-offender')
+        fetch(server+'/get-repeat-offender',
+        {
+            credentials: 'include'
+        })
             .then(results => {
                 results.json().then(data => {
                 this.populateData(data)

@@ -17,7 +17,10 @@ class Victim extends Component {
     }
 
     getIncidentData() {
-        fetch(server+'/get_victim/'+this.state.incidentNumber)
+        fetch(server+'/get_victim/'+this.state.incidentNumber,
+        {
+            credentials: 'include'
+        })
                 .then(results => {
                     results.json().then(data => {
                         this.setState({victim: data})

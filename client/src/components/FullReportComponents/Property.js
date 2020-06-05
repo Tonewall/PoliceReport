@@ -17,7 +17,10 @@ class Property extends Component {
     }
 
     getIncidentData() {
-        fetch(server+'/property-data/'+this.state.incidentNumber)
+        fetch(server+'/property-data/'+this.state.incidentNumber,
+        {
+            credentials: 'include'
+        })
             .then(results => {
                 results.json().then(data => {
                     this.setState({property: data})

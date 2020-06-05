@@ -17,7 +17,10 @@ class Time extends Component {
     }
 
     getIncidentData() {
-        fetch(server+'/get-time/'+this.state.incidentNumber)
+        fetch(server+'/get-time/'+this.state.incidentNumber,
+        {
+            credentials: 'include'
+        })
                 .then(results => {
                     results.json().then(data => {
                         this.setState({incident: data})

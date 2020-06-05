@@ -17,7 +17,10 @@ class MO extends Component {
     }
 
     getIncidentData() {
-        fetch(server+'/MO/'+ this.state.incidentNumber)
+        fetch(server+'/MO/'+ this.state.incidentNumber,
+        {
+            credentials: 'include'
+        })
             .then(results => {
                 results.json().then(data => {
                     this.setState({MO: data})

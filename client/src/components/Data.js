@@ -67,7 +67,10 @@ class Data extends Component {
     }
 
     getData() {
-        fetch(server+'/showall')
+        fetch(server+'/showall',
+        {
+            credentials: 'include'
+        })
             .then(results => {
                 results.json().then(data => {
                 this.populateData(data)

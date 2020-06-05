@@ -119,14 +119,20 @@ class crime extends Component {
         this.forceUpdate()  // If this function runs slow and could not be completed before render call, Select options may not be populated. so force update at the end.
     }
     componentDidMount() {
-        fetch(server+'/crimeCategories')
+        fetch(server+'/crimeCategories',
+        {
+            credentials: 'include'
+        })
             .then(results => {
                 results.json().then(data=> {
                     this.populateCategories(data)
                 })
             })
             .catch(err => console.error(err))
-        fetch(server+'/crimeTypes')
+        fetch(server+'/crimeTypes',
+        {
+            credentials: 'include'
+        })
             .then(results => {
                 results.json().then(data=> {
                     this.populateCrimes(data)
