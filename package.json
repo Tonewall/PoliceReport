@@ -18,7 +18,7 @@
     "express": "~4.16.1",
     "jquery": "^3.5.0",
     "mdbreact": "^4.22.0",
-    "moment-timezone": "^0.5.28",
+    "moment-timezone": "^0.5.35",
     "morgan": "~1.9.1",
     "mssql": "^6.0.0",
     "react": "^16.10.2",
